@@ -475,41 +475,92 @@
       // Location tag - show QR code text
       document.getElementById('locationText').textContent = 'QR Code';
       
-      // QR Code display in device-metrics area
+      // Device metrics - only for software accounts
       const metricsContainer = document.getElementById('deviceMetrics');
-      if (currentDevice.qrCode) {
-        metricsContainer.innerHTML = `
-          <div class="qr-code-metrics-container">
-            <div class="qr-code-metrics-display" onclick="showQRCodeModal('${currentDevice.qrCode}', '${currentDevice.name}', '${currentDevice.id}')" style="cursor: pointer;">
-              <canvas id="qr-canvas-metrics" style="background: white; padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); width: 100%; max-width: 200px; height: auto; margin: 0 auto; display: block;"></canvas>
-              <div style="margin-top: 1rem; text-align: center;">
-                <div style="font-family: monospace; font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.5rem;">${currentDevice.qrCode}</div>
-                <div style="font-size: 0.75rem; color: var(--text-secondary);">Click to view full size</div>
+      if (isSoftwareAccount) {
+        const metrics = [];
+        
+        // Software account metrics
+        if (currentDevice.totalLicenses !== undefined) {
+          const used = currentDevice.usedLicenses || 0;
+          const total = currentDevice.totalLicenses || 0;
+          const available = total - used;
+          metrics.push({
+            icon: '📊',
+            value: `${used}/${total}`,
+            label: 'Licenses Used'
+          });
+          metrics.push({
+            icon: '✅',
+            value: available,
+            label: 'Available'
+          });
+        }
+        
+        if (currentDevice.assignedUsers && currentDevice.assignedUsers.length > 0) {
+          metrics.push({
+            icon: '👥',
+            value: currentDevice.assignedUsers.length,
+            label: 'Users'
+          });
+        }
+        
+        if (currentDevice.expiryDate) {
+          const expiryDate = new Date(currentDevice.expiryDate);
+          const today = new Date();
+          const daysLeft = Math.floor((expiryDate - today) / (1000 * 60 * 60 * 24));
+          metrics.push({
+            icon: '📅',
+            value: daysLeft > 0 ? `${daysLeft} days` : 'Expired',
+            label: 'Expires'
+          });
+        }
+        
+        metricsContainer.innerHTML = metrics.map(metric => `
+          <div class="metric-item">
+            <div class="metric-icon">${metric.icon}</div>
+            <div class="metric-value">${metric.value}</div>
+            <div class="metric-label">${metric.label}</div>
+          </div>
+        `).join('');
+        metricsContainer.style.display = 'grid';
+      } else {
+        // For regular devices, show QR code if available
+        if (currentDevice.qrCode) {
+          metricsContainer.innerHTML = `
+            <div class="qr-code-metrics-container">
+              <div class="qr-code-metrics-display" onclick="showQRCodeModal('${currentDevice.qrCode}', '${currentDevice.name}', '${currentDevice.id}')" style="cursor: pointer;">
+                <canvas id="qr-canvas-metrics" style="background: white; padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); width: 100%; max-width: 200px; height: auto; margin: 0 auto; display: block;"></canvas>
+                <div style="margin-top: 1rem; text-align: center;">
+                  <div style="font-family: monospace; font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.5rem;">${currentDevice.qrCode}</div>
+                  <div style="font-size: 0.75rem; color: var(--text-secondary);">Click to view full size</div>
+                </div>
               </div>
             </div>
-          </div>
-        `;
-        
-        // Generate QR code
-        setTimeout(() => {
-          const canvas = document.getElementById('qr-canvas-metrics');
-          if (canvas) {
-            QRCode.toCanvas(canvas, currentDevice.qrCode, {
-              width: 200,
-              color: {
-                dark: "#000000",
-                light: "#ffffff"
-              }
-            }, function (error) {
-              if (error) {
-                console.error('QR Code generation error:', error);
-              }
-            });
-          }
-        }, 100);
-      } else {
-        metricsContainer.innerHTML = '';
-        metricsContainer.style.display = 'none';
+          `;
+          
+          // Generate QR code
+          setTimeout(() => {
+            const canvas = document.getElementById('qr-canvas-metrics');
+            if (canvas) {
+              QRCode.toCanvas(canvas, currentDevice.qrCode, {
+                width: 200,
+                color: {
+                  dark: "#000000",
+                  light: "#ffffff"
+                }
+              }, function (error) {
+                if (error) {
+                  console.error('QR Code generation error:', error);
+                }
+              });
+            }
+          }, 100);
+          metricsContainer.style.display = 'flex';
+        } else {
+          metricsContainer.innerHTML = '';
+          metricsContainer.style.display = 'none';
+        }
       }
       
       // Control modes - empty (not used)
