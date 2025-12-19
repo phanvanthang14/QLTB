@@ -173,7 +173,7 @@
     
     async function loadDevice() {
       const urlParams = new URLSearchParams(window.location.search);
-      const deviceId = urlParams.get('id') || 'DEV001';
+      const deviceId = 'ACC001';//urlParams.get('id') || 'DEV001';
       
       // Load devices, software accounts và users song song
       const [devices, softwareAccounts, users] = await Promise.all([
@@ -460,7 +460,27 @@
       document.getElementById('detailTitle').textContent = isSoftwareAccount ? 'Software Account' : currentDevice.type;
       document.getElementById('deviceNameLarge').textContent = currentDevice.name;
       
-      // Icon with software account info
+      // Icon - only show key icon for software accounts
+      if (isSoftwareAccount) {
+        document.getElementById('deviceImageLarge').innerHTML = '<i class="fas fa-key" style="font-size: 4rem; color: var(--primary-color);"></i>';
+      } else {
+        document.getElementById('deviceImageLarge').textContent = AssetFlowUtils.getDeviceIcon(currentDevice.type);
+      }
+      
+      // Status badge in header
+      const headerStatusBadge = document.getElementById('headerStatusBadge');
+      headerStatusBadge.className = `status-badge status-${currentDevice.status}`;
+      headerStatusBadge.textContent = AssetFlowUtils.getStatusDisplayName(currentDevice.status);
+      
+      // Location tag - show appropriate text
+      if (isSoftwareAccount) {
+        document.getElementById('locationText').textContent = 'Subscription Details';
+      } else {
+        document.getElementById('locationText').textContent = 'QR Code';
+      }
+      
+      // Device metrics - only for software accounts
+      const metricsContainer = document.getElementById('deviceMetrics');
       if (isSoftwareAccount) {
         const used = currentDevice.usedLicenses || 0;
         const total = currentDevice.totalLicenses || 0;
@@ -471,91 +491,27 @@
         const isExpired = daysLeft !== null && daysLeft < 0;
         const expiryColor = isExpired ? '#ef4444' : (daysLeft !== null && daysLeft < 30 ? '#f59e0b' : '#10b981');
         
-        document.getElementById('deviceImageLarge').innerHTML = `
-          <div class="software-image-content">
-            <i class="fas fa-key" style="font-size: 4rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
-            <div class="software-info-stats-grid">
-              <div class="software-stat-item">
-                <i class="fas fa-calendar-times" style="font-size: 1.5rem; color: ${expiryColor}; margin-bottom: 0.5rem;"></i>
-                <div class="software-stat-label">Ngày hết hạn</div>
-                <div class="software-stat-value" style="color: ${expiryColor};">${expiryDate}</div>
-                ${daysLeft !== null ? `<div class="software-stat-subtext" style="color: ${expiryColor};">${isExpired ? 'Đã hết hạn' : `${daysLeft} ngày còn lại`}</div>` : ''}
-              </div>
-              <div class="software-stat-item">
-                <i class="fas fa-users" style="font-size: 1.5rem; color: var(--primary-color); margin-bottom: 0.5rem;"></i>
-                <div class="software-stat-label">Đang sử dụng</div>
-                <div class="software-stat-value">${used}</div>
-                <div class="software-stat-subtext">người</div>
-              </div>
-              <div class="software-stat-item">
-                <i class="fas fa-user-check" style="font-size: 1.5rem; color: var(--primary-color); margin-bottom: 0.5rem;"></i>
-                <div class="software-stat-label">Tổng số</div>
-                <div class="software-stat-value">${total}</div>
-                <div class="software-stat-subtext">người</div>
-              </div>
-            </div>
+        metricsContainer.innerHTML = `
+          <div class="software-stat-item">
+            <i class="fas fa-calendar-times" style="font-size: 1.5rem; color: ${expiryColor}; margin-bottom: 0.5rem;"></i>
+            <div class="software-stat-label">Expiry Date</div>
+            <div class="software-stat-value" style="color: ${expiryColor};">${expiryDate}</div>
+            ${daysLeft !== null ? `<div class="software-stat-subtext" style="color: ${expiryColor};">${isExpired ? 'Expired' : `${daysLeft} days left`}</div>` : ''}
+          </div>
+          <div class="software-stat-item">
+            <i class="fas fa-users" style="font-size: 1.5rem; color: var(--primary-color); margin-bottom: 0.5rem;"></i>
+            <div class="software-stat-label">In Use</div>
+            <div class="software-stat-value">${used}</div>
+            <div class="software-stat-subtext">users</div>
+          </div>
+          <div class="software-stat-item">
+            <i class="fas fa-user-check" style="font-size: 1.5rem; color: var(--primary-color); margin-bottom: 0.5rem;"></i>
+            <div class="software-stat-label">Total</div>
+            <div class="software-stat-value">${total}</div>
+            <div class="software-stat-subtext">users</div>
           </div>
         `;
-      } else {
-        document.getElementById('deviceImageLarge').textContent = AssetFlowUtils.getDeviceIcon(currentDevice.type);
-      }
-      
-      // Status badge in header
-      const headerStatusBadge = document.getElementById('headerStatusBadge');
-      headerStatusBadge.className = `status-badge status-${currentDevice.status}`;
-      headerStatusBadge.textContent = AssetFlowUtils.getStatusDisplayName(currentDevice.status);
-      
-      // Location tag - show QR code text
-      document.getElementById('locationText').textContent = 'QR Code';
-      
-      // Device metrics - only for software accounts
-      const metricsContainer = document.getElementById('deviceMetrics');
-      if (isSoftwareAccount) {
-        const metrics = [];
-        
-        // Software account metrics
-        if (currentDevice.totalLicenses !== undefined) {
-          const used = currentDevice.usedLicenses || 0;
-          const total = currentDevice.totalLicenses || 0;
-          const available = total - used;
-          metrics.push({
-            icon: '📊',
-            value: `${used}/${total}`,
-            label: 'Licenses Used'
-          });
-          metrics.push({
-            icon: '✅',
-            value: available,
-            label: 'Available'
-          });
-        }
-        
-        if (currentDevice.assignedUsers && currentDevice.assignedUsers.length > 0) {
-          metrics.push({
-            icon: '👥',
-            value: currentDevice.assignedUsers.length,
-            label: 'Users'
-          });
-        }
-        
-        if (currentDevice.expiryDate) {
-          const expiryDate = new Date(currentDevice.expiryDate);
-          const today = new Date();
-          const daysLeft = Math.floor((expiryDate - today) / (1000 * 60 * 60 * 24));
-          metrics.push({
-            icon: '📅',
-            value: daysLeft > 0 ? `${daysLeft} days` : 'Expired',
-            label: 'Expires'
-          });
-        }
-        
-        metricsContainer.innerHTML = metrics.map(metric => `
-          <div class="metric-item">
-            <div class="metric-icon">${metric.icon}</div>
-            <div class="metric-value">${metric.value}</div>
-            <div class="metric-label">${metric.label}</div>
-          </div>
-        `).join('');
+        metricsContainer.className = 'device-metrics software-metrics-grid';
         metricsContainer.style.display = 'grid';
       } else {
         // For regular devices, show QR code if available

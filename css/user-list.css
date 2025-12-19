@@ -290,6 +290,8 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   border: 1px solid var(--border-color);
   overflow: hidden;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .table-controls {
@@ -326,6 +328,7 @@
 .user-table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 800px;
 }
 
 .user-table thead {
@@ -721,6 +724,15 @@
     padding: 0.5rem;
     min-width: 36px;
     font-size: 0.75rem;
+  }
+  
+  .user-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .user-table {
+    min-width: 800px;
   }
 }
 

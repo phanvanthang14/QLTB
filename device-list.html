@@ -75,24 +75,42 @@
         <i class="fas fa-search search-icon"></i>
         <input type="text" class="search-input-main" id="searchInput" placeholder="Search by name, asset code, user...">
       </div>
-      <select class="filter-dropdown" id="typeFilter">
-        <option value="">All types</option>
-      </select>
-      <select class="filter-dropdown" id="categoryFilter">
-        <option value="">All categories</option>
-        <option value="Container">Container</option>
-        <option value="Component">Component</option>
-        <option value="Software Account">Software Account</option>
-      </select>
-      <select class="filter-dropdown" id="statusFilter">
-        <option value="">All statuses</option>
-        <option value="IN_STOCK">In Stock</option>
-        <option value="IN_USE">In Use</option>
-        <option value="MAINTENANCE">Maintenance</option>
-        <option value="BROKEN">Broken</option>
-        <option value="ACTIVE">Active</option>
-        <option value="EXPIRED">Expired</option>
-      </select>
+      <div class="custom-dropdown" id="typeCategoryDropdown">
+        <button class="custom-dropdown-button" type="button">
+          <span class="custom-dropdown-text">All types & categories</span>
+          <i class="fas fa-chevron-down custom-dropdown-icon"></i>
+        </button>
+        <div class="custom-dropdown-menu">
+          <div class="custom-dropdown-option" data-value="">All types & categories</div>
+        </div>
+        <select class="filter-dropdown hidden" id="typeCategoryFilter">
+          <option value="">All types & categories</option>
+        </select>
+      </div>
+      <div class="custom-dropdown" id="statusDropdown">
+        <button class="custom-dropdown-button" type="button">
+          <span class="custom-dropdown-text">All statuses</span>
+          <i class="fas fa-chevron-down custom-dropdown-icon"></i>
+        </button>
+        <div class="custom-dropdown-menu">
+          <div class="custom-dropdown-option" data-value="">All statuses</div>
+          <div class="custom-dropdown-option" data-value="IN_STOCK">In Stock</div>
+          <div class="custom-dropdown-option" data-value="IN_USE">In Use</div>
+          <div class="custom-dropdown-option" data-value="MAINTENANCE">Maintenance</div>
+          <div class="custom-dropdown-option" data-value="BROKEN">Broken</div>
+          <div class="custom-dropdown-option" data-value="ACTIVE">Active</div>
+          <div class="custom-dropdown-option" data-value="EXPIRED">Expired</div>
+        </div>
+        <select class="filter-dropdown hidden" id="statusFilter">
+          <option value="">All statuses</option>
+          <option value="IN_STOCK">In Stock</option>
+          <option value="IN_USE">In Use</option>
+          <option value="MAINTENANCE">Maintenance</option>
+          <option value="BROKEN">Broken</option>
+          <option value="ACTIVE">Active</option>
+          <option value="EXPIRED">Expired</option>
+        </select>
+      </div>
       <button class="btn-export" onclick="downloadCSV()">
         <i class="fas fa-download"></i>
         <span>Export</span>
@@ -317,15 +335,71 @@
         if (account.type) typeSet.add(account.type);
       });
       
-      // Populate type filter dropdown
-      const typeFilter = document.getElementById('typeFilter');
-      if (typeFilter) {
-        const sortedTypes = Array.from(typeSet).sort();
-        sortedTypes.forEach(type => {
-          const option = document.createElement('option');
-          option.value = type;
-          option.textContent = type;
-          typeFilter.appendChild(option);
+      // Populate combined type & category filter dropdown
+      const typeCategoryFilter = document.getElementById('typeCategoryFilter');
+      const typeCategoryDropdown = document.getElementById('typeCategoryDropdown');
+      const typeCategoryMenu = typeCategoryDropdown?.querySelector('.custom-dropdown-menu');
+      
+      if (typeCategoryFilter && typeCategoryMenu) {
+        // Clear existing options except "All"
+        typeCategoryMenu.innerHTML = '<div class="custom-dropdown-option" data-value="">All types & categories</div>';
+        
+        // Group by category first
+        const categoryGroups = {
+          'Container': [],
+          'Component': [],
+          'Software Account': []
+        };
+        
+        // Collect all items with their categories
+        allItems.forEach(item => {
+          const category = item.category || 'Component';
+          const type = item.type || '';
+          if (type && categoryGroups[category]) {
+            if (!categoryGroups[category].includes(type)) {
+              categoryGroups[category].push(type);
+            }
+          }
+        });
+        
+        // Build options grouped by category
+        Object.keys(categoryGroups).forEach(category => {
+          const types = categoryGroups[category].sort();
+          if (types.length > 0) {
+            // Add category header (disabled option)
+            const categoryDiv = document.createElement('div');
+            categoryDiv.className = 'custom-dropdown-option disabled';
+            categoryDiv.textContent = `── ${category} ──`;
+            typeCategoryMenu.appendChild(categoryDiv);
+            
+            // Add types under this category
+            types.forEach(type => {
+              const optionDiv = document.createElement('div');
+              optionDiv.className = 'custom-dropdown-option';
+              optionDiv.dataset.value = `${type}|${category}`;
+              optionDiv.textContent = `${type} (${category})`;
+              typeCategoryMenu.appendChild(optionDiv);
+            });
+          }
+        });
+        
+        // Also populate hidden select for compatibility
+        typeCategoryFilter.innerHTML = '<option value="">All types & categories</option>';
+        Object.keys(categoryGroups).forEach(category => {
+          const types = categoryGroups[category].sort();
+          if (types.length > 0) {
+            const categoryOption = document.createElement('option');
+            categoryOption.disabled = true;
+            categoryOption.textContent = `── ${category} ──`;
+            typeCategoryFilter.appendChild(categoryOption);
+            
+            types.forEach(type => {
+              const option = document.createElement('option');
+              option.value = `${type}|${category}`;
+              option.textContent = `${type} (${category})`;
+              typeCategoryFilter.appendChild(option);
+            });
+          }
         });
       }
       
@@ -338,8 +412,20 @@
       if (statusFilter) {
         filteredDevices = allDevices.filter(d => d.status === statusFilter);
         const statusFilterEl = document.getElementById('statusFilter');
+        const statusDropdown = document.getElementById('statusDropdown');
         if (statusFilterEl) {
           statusFilterEl.value = statusFilter;
+        }
+        // Update custom dropdown
+        if (statusDropdown) {
+          const menu = statusDropdown.querySelector('.custom-dropdown-menu');
+          const options = menu.querySelectorAll('.custom-dropdown-option');
+          const selectedOption = Array.from(options).find(opt => opt.dataset.value === statusFilter);
+          if (selectedOption) {
+            statusDropdown.querySelector('.custom-dropdown-text').textContent = selectedOption.textContent;
+            options.forEach(opt => opt.classList.remove('selected'));
+            selectedOption.classList.add('selected');
+          }
         }
       }
       
@@ -349,6 +435,129 @@
       // Initialize event listeners after devices are loaded
       initializeEventListeners();
       initializeSearchInput();
+      initializeCustomDropdowns();
+    }
+    
+    // Initialize custom dropdowns
+    function initializeCustomDropdowns() {
+      // Type Category Dropdown
+      const typeCategoryDropdown = document.getElementById('typeCategoryDropdown');
+      if (typeCategoryDropdown) {
+        const button = typeCategoryDropdown.querySelector('.custom-dropdown-button');
+        const menu = typeCategoryDropdown.querySelector('.custom-dropdown-menu');
+        const hiddenSelect = typeCategoryDropdown.querySelector('select');
+        const options = menu.querySelectorAll('.custom-dropdown-option:not(.disabled)');
+        
+        button.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = menu.classList.contains('show');
+          closeAllDropdowns();
+          if (!isOpen) {
+            menu.classList.add('show');
+            button.classList.add('active');
+          }
+        });
+        
+        options.forEach(option => {
+          option.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const value = option.dataset.value || '';
+            const text = option.textContent;
+            
+            // Update button text
+            button.querySelector('.custom-dropdown-text').textContent = text;
+            
+            // Update selected state
+            options.forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+            
+            // Update hidden select
+            if (hiddenSelect) {
+              hiddenSelect.value = value;
+              hiddenSelect.dispatchEvent(new Event('change'));
+            }
+            
+            // Close menu
+            menu.classList.remove('show');
+            button.classList.remove('active');
+            
+            // Trigger filter
+            filterDevices();
+          });
+        });
+      }
+      
+      // Status Dropdown
+      const statusDropdown = document.getElementById('statusDropdown');
+      if (statusDropdown) {
+        const button = statusDropdown.querySelector('.custom-dropdown-button');
+        const menu = statusDropdown.querySelector('.custom-dropdown-menu');
+        const hiddenSelect = statusDropdown.querySelector('select');
+        const options = menu.querySelectorAll('.custom-dropdown-option');
+        
+        button.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = menu.classList.contains('show');
+          closeAllDropdowns();
+          if (!isOpen) {
+            menu.classList.add('show');
+            button.classList.add('active');
+          }
+        });
+        
+        options.forEach(option => {
+          option.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const value = option.dataset.value || '';
+            const text = option.textContent;
+            
+            // Update button text
+            button.querySelector('.custom-dropdown-text').textContent = text;
+            
+            // Update selected state
+            options.forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+            
+            // Update hidden select
+            if (hiddenSelect) {
+              hiddenSelect.value = value;
+              hiddenSelect.dispatchEvent(new Event('change'));
+            }
+            
+            // Close menu
+            menu.classList.remove('show');
+            button.classList.remove('active');
+            
+            // Trigger filter
+            filterDevices();
+          });
+        });
+        
+        // Set initial selected option based on hidden select
+        if (hiddenSelect && hiddenSelect.value) {
+          const selectedOption = Array.from(options).find(opt => opt.dataset.value === hiddenSelect.value);
+          if (selectedOption) {
+            selectedOption.classList.add('selected');
+            button.querySelector('.custom-dropdown-text').textContent = selectedOption.textContent;
+          }
+        }
+      }
+      
+      // Close dropdowns when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.custom-dropdown')) {
+          closeAllDropdowns();
+        }
+      });
+    }
+    
+    function closeAllDropdowns() {
+      document.querySelectorAll('.custom-dropdown-menu').forEach(menu => {
+        menu.classList.remove('show');
+      });
+      document.querySelectorAll('.custom-dropdown-button').forEach(button => {
+        button.classList.remove('active');
+      });
     }
     
     // Initialize search input on page load
@@ -362,11 +571,21 @@
       const searchTerm = document.getElementById('searchInput')?.value.toLowerCase() || '';
       
       // Advanced filters
-      const typeFilter = document.getElementById('typeFilter')?.value || '';
-      const categoryFilter = document.getElementById('categoryFilter')?.value || '';
+      const typeCategoryFilterValue = document.getElementById('typeCategoryFilter')?.value || '';
       const statusFilter = document.getElementById('statusFilter')?.value || '';
       const warrantyFilter = document.getElementById('warrantyFilter')?.value || '';
       const specsFilter = document.getElementById('specsFilter')?.value.toLowerCase() || '';
+      
+      // Parse type and category from combined filter
+      let typeFilter = '';
+      let categoryFilter = '';
+      if (typeCategoryFilterValue) {
+        const parts = typeCategoryFilterValue.split('|');
+        if (parts.length === 2) {
+          typeFilter = parts[0];
+          categoryFilter = parts[1];
+        }
+      }
       
       // Check URL params for status filter
       const urlParams = new URLSearchParams(window.location.search);
@@ -638,8 +857,7 @@
       });
       
       // Advanced filter handlers
-      const typeFilter = document.getElementById('typeFilter');
-      const categoryFilter = document.getElementById('categoryFilter');
+      const typeCategoryFilter = document.getElementById('typeCategoryFilter');
       const statusFilter = document.getElementById('statusFilter');
       const warrantyFilter = document.getElementById('warrantyFilter');
       const specsFilter = document.getElementById('specsFilter');
@@ -649,11 +867,9 @@
       debouncedFilterDevices = AssetFlowUtils.debounce(filterDevices, 300);
       debouncedSpecsFilter = AssetFlowUtils.debounce(filterDevices, 300);
       
-      if (typeFilter) {
-        typeFilter.onchange = filterDevices;
-      }
-      if (categoryFilter) {
-        categoryFilter.onchange = filterDevices;
+      if (typeCategoryFilter) {
+        // Custom dropdowns handle their own events, but keep for compatibility
+        typeCategoryFilter.onchange = filterDevices;
       }
       if (statusFilter) {
         statusFilter.onchange = filterDevices;
@@ -671,11 +887,34 @@
     
     function clearAllFilters() {
       document.getElementById('searchInput').value = '';
-      document.getElementById('typeFilter').value = '';
-      document.getElementById('categoryFilter').value = '';
+      document.getElementById('typeCategoryFilter').value = '';
       document.getElementById('statusFilter').value = '';
       document.getElementById('warrantyFilter').value = '';
       document.getElementById('specsFilter').value = '';
+      
+      // Reset custom dropdowns
+      const typeCategoryDropdown = document.getElementById('typeCategoryDropdown');
+      if (typeCategoryDropdown) {
+        const button = typeCategoryDropdown.querySelector('.custom-dropdown-button');
+        const menu = typeCategoryDropdown.querySelector('.custom-dropdown-menu');
+        const options = menu.querySelectorAll('.custom-dropdown-option');
+        button.querySelector('.custom-dropdown-text').textContent = 'All types & categories';
+        options.forEach(opt => opt.classList.remove('selected'));
+        const firstOption = menu.querySelector('.custom-dropdown-option[data-value=""]');
+        if (firstOption) firstOption.classList.add('selected');
+      }
+      
+      const statusDropdown = document.getElementById('statusDropdown');
+      if (statusDropdown) {
+        const button = statusDropdown.querySelector('.custom-dropdown-button');
+        const menu = statusDropdown.querySelector('.custom-dropdown-menu');
+        const options = menu.querySelectorAll('.custom-dropdown-option');
+        button.querySelector('.custom-dropdown-text').textContent = 'All statuses';
+        options.forEach(opt => opt.classList.remove('selected'));
+        const firstOption = menu.querySelector('.custom-dropdown-option[data-value=""]');
+        if (firstOption) firstOption.classList.add('selected');
+      }
+      
       filterDevices();
     }
     
