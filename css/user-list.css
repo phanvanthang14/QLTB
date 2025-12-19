@@ -286,9 +286,11 @@
 
 .user-table-wrapper {
   background: var(--bg-primary);
-  border-radius: var(--radius-lg);
+  border-radius: 0;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   border: 1px solid var(--border-color);
+  border-top: none;
+  border-bottom: none;
   overflow: hidden;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
@@ -299,7 +301,12 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem 1.5rem;
+  background: var(--bg-tertiary);
   border-bottom: 1px solid var(--border-color);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  border: 1px solid var(--border-color);
+  border-bottom: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .table-info {
@@ -460,8 +467,16 @@
 }
 
 .table-pagination {
-  padding: 1rem 1.5rem;
+  padding: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-top: 1px solid var(--border-color);
+  background: var(--bg-tertiary);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  border: 1px solid var(--border-color);
+  border-top: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .pagination-controls {
@@ -477,9 +492,8 @@
   border: 1px solid var(--border-color);
   background: var(--bg-primary);
   border-radius: var(--radius-md);
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 500;
-  line-height: 1.5;
   color: var(--text-primary);
   cursor: pointer;
   transition: var(--transition);
@@ -711,9 +725,7 @@
   }
   
   .table-controls {
-    flex-direction: column;
-    gap: 1rem;
-    align-items: flex-start;
+    padding: 0.75rem 1rem;
   }
   
   .pagination-controls {

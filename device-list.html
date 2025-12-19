@@ -152,21 +152,22 @@
     </div>
     
     <div class="device-grid" id="deviceGrid"></div>
-    
-    <div class="device-table-wrapper hidden" id="deviceTableWrapper">
-      <div class="table-controls">
-        <div class="table-info">
-          <span id="tableInfo">Showing 0 devices</span>
-        </div>
-        <div class="table-pagination-controls">
-          <select class="page-size-select" id="pageSizeSelect">
-            <option value="10">10 per page</option>
-            <option value="25" selected>25 per page</option>
-            <option value="50">50 per page</option>
-            <option value="100">100 per page</option>
-          </select>
-        </div>
+
+    <div class="table-controls">
+      <div class="table-info">
+        <span id="tableInfo">Showing 0 devices</span>
       </div>
+      <div class="table-pagination-controls">
+        <select class="page-size-select" id="pageSizeSelect">
+          <option value="10">10 per page</option>
+          <option value="25" selected>25 per page</option>
+          <option value="50">50 per page</option>
+          <option value="100">100 per page</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="device-table-wrapper hidden" id="deviceTableWrapper">
       <table class="device-table" id="deviceTable">
         <thead>
           <tr>
@@ -217,8 +218,9 @@
         </thead>
         <tbody id="deviceTableBody"></tbody>
       </table>
-      <div class="table-pagination" id="tablePagination"></div>
     </div>
+
+    <div class="table-pagination" id="tablePagination"></div>
   </main>
 
   <!-- QR Code Modal -->
