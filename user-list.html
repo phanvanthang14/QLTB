@@ -74,18 +74,36 @@
         <i class="fas fa-search search-icon"></i>
         <input type="text" class="search-input-main" id="searchInput" placeholder="Search by name, email, department...">
       </div>
-      <select class="filter-dropdown" id="roleFilter">
-        <option value="">All roles</option>
-        <option value="Employee">Employee</option>
-        <option value="Technician">Technician</option>
-        <option value="Admin">Admin</option>
-      </select>
-      <select class="filter-dropdown" id="departmentFilter">
-        <option value="">All departments</option>
-      </select>
-      <select class="filter-dropdown" id="teamFilter">
-        <option value="">All teams</option>
-      </select>
+      <div class="custom-dropdown" id="roleDropdown">
+        <button class="custom-dropdown-button" type="button">
+          <span class="custom-dropdown-text">All roles</span>
+          <i class="fas fa-chevron-down custom-dropdown-icon"></i>
+        </button>
+        <div class="custom-dropdown-menu">
+          <div class="custom-dropdown-option" data-value="">All roles</div>
+          <div class="custom-dropdown-option" data-value="Employee">Employee</div>
+          <div class="custom-dropdown-option" data-value="Technician">Technician</div>
+          <div class="custom-dropdown-option" data-value="Admin">Admin</div>
+        </div>
+        <select class="filter-dropdown hidden" id="roleFilter">
+          <option value="">All roles</option>
+          <option value="Employee">Employee</option>
+          <option value="Technician">Technician</option>
+          <option value="Admin">Admin</option>
+        </select>
+      </div>
+      <div class="custom-dropdown" id="teamDropdown">
+        <button class="custom-dropdown-button" type="button">
+          <span class="custom-dropdown-text">All teams</span>
+          <i class="fas fa-chevron-down custom-dropdown-icon"></i>
+        </button>
+        <div class="custom-dropdown-menu">
+          <div class="custom-dropdown-option" data-value="">All teams</div>
+        </div>
+        <select class="filter-dropdown hidden" id="teamFilter">
+          <option value="">All teams</option>
+        </select>
+      </div>
       <button class="clear-filters-btn" id="clearFiltersBtn">Clear All</button>
     </div>
     
@@ -250,6 +268,7 @@
       // Initialize event listeners after users are loaded
       initializeEventListeners();
       initializeSearchInput();
+      initializeCustomDropdowns();
     }
     
     // Initialize search input on page load
@@ -263,25 +282,49 @@
       const departments = [...new Set(allUsers.map(u => u.department).filter(Boolean))].sort();
       const teams = [...new Set(allUsers.map(u => u.team).filter(Boolean))].sort();
       
+      // Populate department dropdown
       const deptSelect = document.getElementById('departmentFilter');
-      if (deptSelect) {
+      const deptDropdown = document.getElementById('departmentDropdown');
+      const deptMenu = deptDropdown?.querySelector('.custom-dropdown-menu');
+      
+      if (deptSelect && deptMenu) {
         deptSelect.innerHTML = '<option value="">All departments</option>';
+        deptMenu.innerHTML = '<div class="custom-dropdown-option" data-value="">All departments</div>';
+        
         departments.forEach(dept => {
           const option = document.createElement('option');
           option.value = dept;
           option.textContent = dept;
           deptSelect.appendChild(option);
+          
+          const optionDiv = document.createElement('div');
+          optionDiv.className = 'custom-dropdown-option';
+          optionDiv.dataset.value = dept;
+          optionDiv.textContent = dept;
+          deptMenu.appendChild(optionDiv);
         });
       }
       
+      // Populate team dropdown
       const teamSelect = document.getElementById('teamFilter');
-      if (teamSelect) {
+      const teamDropdown = document.getElementById('teamDropdown');
+      const teamMenu = teamDropdown?.querySelector('.custom-dropdown-menu');
+      
+      if (teamSelect && teamMenu) {
         teamSelect.innerHTML = '<option value="">All teams</option>';
+        teamMenu.innerHTML = '<div class="custom-dropdown-option" data-value="">All teams</div>';
+        
         teams.forEach(team => {
           const option = document.createElement('option');
           option.value = team;
           option.textContent = team;
           teamSelect.appendChild(option);
+          
+          const optionDiv = document.createElement('div');
+          optionDiv.className = 'custom-dropdown-option';
+          optionDiv.dataset.value = team;
+          optionDiv.textContent = team;
+          teamMenu.appendChild(optionDiv);
         });
       }
     }
@@ -581,6 +624,157 @@
       }
     }
     
+    // Initialize custom dropdowns
+    function initializeCustomDropdowns() {
+      // Role Dropdown
+      const roleDropdown = document.getElementById('roleDropdown');
+      if (roleDropdown) {
+        const button = roleDropdown.querySelector('.custom-dropdown-button');
+        const menu = roleDropdown.querySelector('.custom-dropdown-menu');
+        const hiddenSelect = roleDropdown.querySelector('select');
+        const options = menu.querySelectorAll('.custom-dropdown-option');
+        
+        // Set initial selected option
+        const firstOption = menu.querySelector('.custom-dropdown-option[data-value=""]');
+        if (firstOption) firstOption.classList.add('selected');
+        
+        button.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = menu.classList.contains('show');
+          closeAllDropdowns();
+          if (!isOpen) {
+            menu.classList.add('show');
+            button.classList.add('active');
+          }
+        });
+        
+        options.forEach(option => {
+          option.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const value = option.dataset.value || '';
+            const text = option.textContent;
+            
+            button.querySelector('.custom-dropdown-text').textContent = text;
+            options.forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+            
+            if (hiddenSelect) {
+              hiddenSelect.value = value;
+              hiddenSelect.dispatchEvent(new Event('change'));
+            }
+            
+            menu.classList.remove('show');
+            button.classList.remove('active');
+            filterUsers();
+          });
+        });
+      }
+      
+      // Department Dropdown
+      const departmentDropdown = document.getElementById('departmentDropdown');
+      if (departmentDropdown) {
+        const button = departmentDropdown.querySelector('.custom-dropdown-button');
+        const menu = departmentDropdown.querySelector('.custom-dropdown-menu');
+        const hiddenSelect = departmentDropdown.querySelector('select');
+        
+        // Set initial selected option
+        const firstOption = menu.querySelector('.custom-dropdown-option[data-value=""]');
+        if (firstOption) firstOption.classList.add('selected');
+        
+        button.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = menu.classList.contains('show');
+          closeAllDropdowns();
+          if (!isOpen) {
+            menu.classList.add('show');
+            button.classList.add('active');
+          }
+        });
+        
+        menu.addEventListener('click', (e) => {
+          const option = e.target.closest('.custom-dropdown-option');
+          if (option) {
+            e.stopPropagation();
+            const value = option.dataset.value || '';
+            const text = option.textContent;
+            
+            button.querySelector('.custom-dropdown-text').textContent = text;
+            menu.querySelectorAll('.custom-dropdown-option').forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+            
+            if (hiddenSelect) {
+              hiddenSelect.value = value;
+              hiddenSelect.dispatchEvent(new Event('change'));
+            }
+            
+            menu.classList.remove('show');
+            button.classList.remove('active');
+            filterUsers();
+          }
+        });
+      }
+      
+      // Team Dropdown
+      const teamDropdown = document.getElementById('teamDropdown');
+      if (teamDropdown) {
+        const button = teamDropdown.querySelector('.custom-dropdown-button');
+        const menu = teamDropdown.querySelector('.custom-dropdown-menu');
+        const hiddenSelect = teamDropdown.querySelector('select');
+        
+        // Set initial selected option
+        const firstOption = menu.querySelector('.custom-dropdown-option[data-value=""]');
+        if (firstOption) firstOption.classList.add('selected');
+        
+        button.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = menu.classList.contains('show');
+          closeAllDropdowns();
+          if (!isOpen) {
+            menu.classList.add('show');
+            button.classList.add('active');
+          }
+        });
+        
+        menu.addEventListener('click', (e) => {
+          const option = e.target.closest('.custom-dropdown-option');
+          if (option) {
+            e.stopPropagation();
+            const value = option.dataset.value || '';
+            const text = option.textContent;
+            
+            button.querySelector('.custom-dropdown-text').textContent = text;
+            menu.querySelectorAll('.custom-dropdown-option').forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+            
+            if (hiddenSelect) {
+              hiddenSelect.value = value;
+              hiddenSelect.dispatchEvent(new Event('change'));
+            }
+            
+            menu.classList.remove('show');
+            button.classList.remove('active');
+            filterUsers();
+          }
+        });
+      }
+      
+      // Close dropdowns when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.custom-dropdown')) {
+          closeAllDropdowns();
+        }
+      });
+    }
+    
+    function closeAllDropdowns() {
+      document.querySelectorAll('.custom-dropdown-menu').forEach(menu => {
+        menu.classList.remove('show');
+      });
+      document.querySelectorAll('.custom-dropdown-button').forEach(button => {
+        button.classList.remove('active');
+      });
+    }
+    
     // Initialize event listeners
     function initializeEventListeners() {
       // Advanced filter handlers
@@ -623,6 +817,41 @@
       document.getElementById('roleFilter').value = '';
       document.getElementById('departmentFilter').value = '';
       document.getElementById('teamFilter').value = '';
+      
+      // Reset custom dropdowns
+      const roleDropdown = document.getElementById('roleDropdown');
+      if (roleDropdown) {
+        const button = roleDropdown.querySelector('.custom-dropdown-button');
+        const menu = roleDropdown.querySelector('.custom-dropdown-menu');
+        const options = menu.querySelectorAll('.custom-dropdown-option');
+        button.querySelector('.custom-dropdown-text').textContent = 'All roles';
+        options.forEach(opt => opt.classList.remove('selected'));
+        const firstOption = menu.querySelector('.custom-dropdown-option[data-value=""]');
+        if (firstOption) firstOption.classList.add('selected');
+      }
+      
+      const departmentDropdown = document.getElementById('departmentDropdown');
+      if (departmentDropdown) {
+        const button = departmentDropdown.querySelector('.custom-dropdown-button');
+        const menu = departmentDropdown.querySelector('.custom-dropdown-menu');
+        const options = menu.querySelectorAll('.custom-dropdown-option');
+        button.querySelector('.custom-dropdown-text').textContent = 'All departments';
+        options.forEach(opt => opt.classList.remove('selected'));
+        const firstOption = menu.querySelector('.custom-dropdown-option[data-value=""]');
+        if (firstOption) firstOption.classList.add('selected');
+      }
+      
+      const teamDropdown = document.getElementById('teamDropdown');
+      if (teamDropdown) {
+        const button = teamDropdown.querySelector('.custom-dropdown-button');
+        const menu = teamDropdown.querySelector('.custom-dropdown-menu');
+        const options = menu.querySelectorAll('.custom-dropdown-option');
+        button.querySelector('.custom-dropdown-text').textContent = 'All teams';
+        options.forEach(opt => opt.classList.remove('selected'));
+        const firstOption = menu.querySelector('.custom-dropdown-option[data-value=""]');
+        if (firstOption) firstOption.classList.add('selected');
+      }
+      
       filterUsers();
     }
     
