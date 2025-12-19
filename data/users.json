@@ -1,0 +1,57 @@
+[
+  {
+    "id": "EMP001",
+    "name": "Nguyen Van A",
+    "email": "nguyenvana@company.com",
+    "department": "Engineering",
+    "team": "Engineering",
+    "position": "Software Developer",
+    "role": "Employee"
+  },
+  {
+    "id": "EMP002",
+    "name": "Tran Thi B",
+    "email": "tranthib@company.com",
+    "department": "Marketing",
+    "team": "Marketing",
+    "position": "Marketing Manager",
+    "role": "Employee"
+  },
+  {
+    "id": "EMP003",
+    "name": "Hoang Van E",
+    "email": "hoangvane@company.com",
+    "department": "Engineering",
+    "team": "Engineering",
+    "position": "Senior Developer",
+    "role": "Employee"
+  },
+  {
+    "id": "EMP004",
+    "name": "Le Thi F",
+    "email": "lethif@company.com",
+    "department": "Sales",
+    "team": "Sales",
+    "position": "Sales Manager",
+    "role": "Employee"
+  },
+  {
+    "id": "TECH001",
+    "name": "Le Van C",
+    "email": "levanc@company.com",
+    "department": "IT",
+    "team": "IT",
+    "position": "IT Technician",
+    "role": "Technician"
+  },
+  {
+    "id": "ADMIN001",
+    "name": "Pham Van D",
+    "email": "phamvand@company.com",
+    "department": "IT",
+    "team": "IT",
+    "position": "IT Manager",
+    "role": "Admin"
+  }
+]
+

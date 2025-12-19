@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Scan - AssetFlow IT</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/shared.css">
+  <link rel="stylesheet" href="css/qr-scan.css">
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <div class="header-left">
+        <button class="sidebar-toggle" title="Toggle Sidebar">☰</button>
+        <a href="index.html" class="logo">
+          <div class="logo-icon">💻</div>
+          <span>AssetFlow IT</span>
+        </a>
+      </div>
+      <div class="header-right">
+        <button class="mobile-menu-toggle">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="sidebar">
+    <div class="sidebar-content">
+      <div class="sidebar-section">
+        <div class="sidebar-section-header">Admin Desktop</div>
+        <a href="dashboard.html" class="sidebar-item" data-title="Dashboard">
+          <i class="fas fa-th-large sidebar-item-icon"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="device-list.html" class="sidebar-item" data-title="Device List">
+          <i class="fas fa-box sidebar-item-icon"></i>
+          <span>Device List</span>
+        </a>
+        <a href="import-device.html" class="sidebar-item" data-title="Import Device">
+          <i class="fas fa-file-import sidebar-item-icon"></i>
+          <span>Import Device</span>
+        </a>
+        <a href="user-list.html" class="sidebar-item" data-title="User List">
+          <i class="fas fa-users sidebar-item-icon"></i>
+          <span>User List</span>
+        </a>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-section-header">Mobile/Tablet UI</div>
+        <a href="qr-scan.html" class="sidebar-item active" data-title="QR Scan">
+          <i class="fas fa-qrcode sidebar-item-icon"></i>
+          <span>QR Scan</span>
+        </a>
+      </div>
+    </div>
+    
+    <div class="sidebar-user-profile">
+      <div class="user-profile">
+        <div class="user-avatar">JD</div>
+        <div class="user-info">
+          <span class="user-name">John Doe</span>
+          <span class="user-email">johndoe@company.com</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="main-content">
+    <h1 class="page-title">QR Scan</h1>
+    <div class="scan-container">
+      <div class="scan-area">
+        <div style="text-align: center; padding: 0rem 2rem;">
+          <div style="font-size: 4rem; margin-bottom: 1rem;">📷</div>
+          <h2 style="margin-bottom: 0.5rem;">QR Code Scanner</h2>
+          <p style="color: var(--text-secondary); margin-bottom: 2rem;">Click the button below to start scanning QR codes</p>
+        </div>
+        
+        <div class="camera-controls">
+          <button class="scan-button" id="startCameraBtn" onclick="startCamera()">
+            <span>📷</span>
+            <span>Start Camera</span>
+          </button>
+        </div>
+        
+        <div class="manual-input">
+          <div class="form-group">
+            <label class="form-label">Or enter QR code manually:</label>
+            <input type="text" class="form-input" id="manualQRInput" placeholder="Enter QR code">
+            <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" onclick="processQRCode()">Check Device</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="device-result" id="deviceResult">
+        <div class="result-header">
+          <div style="display: flex; align-items: center;">
+            <div class="result-icon" id="resultIcon">📦</div>
+            <div class="result-info">
+              <div class="result-name" id="resultName">Device Name</div>
+              <div class="result-serial" id="resultSerial">Serial: -</div>
+            </div>
+          </div>
+          <span class="status-badge" id="resultStatus">Status</span>
+        </div>
+        
+        <div id="resultDetails"></div>
+        
+        <div class="result-actions" id="resultActions"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Fullscreen Camera Overlay -->
+  <div class="camera-fullscreen" id="cameraFullscreen">
+    <div class="camera-fullscreen-header">
+      <div class="camera-fullscreen-title">Scan QR Code</div>
+      <button class="camera-fullscreen-close" onclick="stopCamera()" title="Close Camera">✕</button>
+    </div>
+    <div class="camera-fullscreen-content">
+      <div id="html5-qrcode-reader" style="width: 100%; height: 100%; position: relative;"></div>
+      <div class="scan-overlay-guide"></div>
+      <div class="scan-instruction">
+        <div style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem;">Point camera at QR code</div>
+        <div style="font-size: 0.875rem; opacity: 0.9;">Position the QR code within the frame</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Permission Modal -->
+  <div class="permission-modal" id="permissionModal">
+    <div class="permission-modal-content">
+      <div class="permission-modal-header">
+        <div class="permission-modal-icon">📷</div>
+        <div class="permission-modal-title">Camera Permission Required</div>
+      </div>
+      <div class="permission-modal-body">
+        <p><strong>Camera permission was previously denied.</strong> To scan QR codes, we need access to your camera. The browser will automatically show a permission popup when you click "Start Camera" - just click "Allow" when it appears!</p>
+        <p style="margin-top: 1rem; padding: 1rem; background: #dbeafe; border-radius: var(--radius-md); border-left: 4px solid var(--primary-color);">
+          <strong>💡 Tip:</strong> If you've blocked camera access before, you need to reset it in browser settings first (see instructions below), then the browser will show the permission popup automatically when you try again.
+        </p>
+        
+        <div class="permission-steps">
+          <div class="permission-step">
+            <div class="permission-step-number">1</div>
+            <div class="permission-step-content">
+              <div class="permission-step-title">Click the camera/lock icon</div>
+              <div class="permission-step-desc">Look for the camera (📷) or lock (🔒) icon in your browser's address bar</div>
+            </div>
+          </div>
+          <div class="permission-step">
+            <div class="permission-step-number">2</div>
+            <div class="permission-step-content">
+              <div class="permission-step-title">Change Camera to "Allow"</div>
+              <div class="permission-step-desc">Find "Camera" in the permissions list and change it from "Block" to "Allow"</div>
+            </div>
+          </div>
+          <div class="permission-step">
+            <div class="permission-step-number">3</div>
+            <div class="permission-step-content">
+              <div class="permission-step-title">Click "Try Again" below</div>
+              <div class="permission-step-desc">After changing the permission, click "Try Again" to start the camera</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="browser-specific" id="browserSpecificGuide"></div>
+      </div>
+      <div class="permission-modal-footer">
+        <button class="btn btn-secondary" onclick="closePermissionModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="retryCamera()">Try Again</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/shared.js"></script>
+  <script>
+    let currentDevice = null;
+    let users = [];
+    let html5QrcodeScanner = null;
+    let isScanning = false;
+    
+    const cameraFullscreen = document.getElementById('cameraFullscreen');
+    const startCameraBtn = document.getElementById('startCameraBtn');
+    const readerElement = document.getElementById('html5-qrcode-reader');
+    
+    async function loadUsers() {
+      users = await AssetFlowUtils.loadJSON('data/users.json');
+    }
+    
+    function detectBrowser() {
+      const userAgent = navigator.userAgent.toLowerCase();
+      if (userAgent.includes('chrome') && !userAgent.includes('edg')) {
+        return 'chrome';
+      } else if (userAgent.includes('firefox')) {
+        return 'firefox';
+      } else if (userAgent.includes('safari') && !userAgent.includes('chrome')) {
+        return 'safari';
+      } else if (userAgent.includes('edg')) {
+        return 'edge';
+      }
+      return 'other';
+    }
+    
+    function showBrowserSpecificGuide() {
+      const browser = detectBrowser();
+      const guideDiv = document.getElementById('browserSpecificGuide');
+      
+      let guideHTML = '';
+      
+      switch(browser) {
+        case 'chrome':
+        case 'edge':
+          guideHTML = `
+            <div class="browser-specific-title">Chrome/Edge Instructions:</div>
+            <div class="browser-specific-steps">
+              <strong>Step 1:</strong> Click the lock icon (🔒) or camera icon (📷) in the address bar<br>
+              <strong>Step 2:</strong> Find "Camera" in the permissions list<br>
+              <strong>Step 3:</strong> Change from "Block" to "Allow"<br>
+              <strong>Step 4:</strong> Refresh the page and try again
+            </div>
+          `;
+          break;
+        case 'firefox':
+          guideHTML = `
+            <div class="browser-specific-title">Firefox Instructions:</div>
+            <div class="browser-specific-steps">
+              <strong>Step 1:</strong> Click the shield icon (🛡️) or camera icon (📷) in the address bar<br>
+              <strong>Step 2:</strong> Click "Permissions" tab<br>
+              <strong>Step 3:</strong> Find "Use the Camera" and click "Allow"<br>
+              <strong>Step 4:</strong> Refresh the page and try again
+            </div>
+          `;
+          break;
+        case 'safari':
+          guideHTML = `
+            <div class="browser-specific-title">Safari Instructions:</div>
+            <div class="browser-specific-steps">
+              <strong>Step 1:</strong> Go to Safari > Settings > Websites > Camera<br>
+              <strong>Step 2:</strong> Find this website in the list<br>
+              <strong>Step 3:</strong> Change permission to "Allow"<br>
+              <strong>Step 4:</strong> Refresh the page and try again
+            </div>
+          `;
+          break;
+        default:
+          guideHTML = `
+            <div class="browser-specific-title">General Instructions:</div>
+            <div class="browser-specific-steps">
+              Look for a camera or lock icon in your browser's address bar. Click it and allow camera access for this website.
+            </div>
+          `;
+      }
+      
+      guideDiv.innerHTML = guideHTML;
+    }
+    
+    function showPermissionModal() {
+      showBrowserSpecificGuide();
+      document.getElementById('permissionModal').classList.add('show');
+    }
+    
+    function closePermissionModal() {
+      document.getElementById('permissionModal').classList.remove('show');
+    }
+    
+    function retryCamera() {
+      closePermissionModal();
+      setTimeout(() => {
+        startCamera();
+      }, 300);
+    }
+    
+    async function checkCameraPermission() {
+      // Check if Permissions API is available
+      if (navigator.permissions && navigator.permissions.query) {
+        try {
+          const result = await navigator.permissions.query({ name: 'camera' });
+          return result.state; // 'granted', 'denied', or 'prompt'
+        } catch (e) {
+          // Permissions API might not support 'camera' name in some browsers
+          return 'prompt'; // Assume we can prompt
+        }
+      }
+      return 'prompt'; // If API not available, assume we can prompt
+    }
+    
+    async function startCamera() {
+      try {
+        if (isScanning) {
+          AssetFlowUtils.showToast('Camera is already running', 'info');
+          return;
+        }
+        
+        // Check permission state first
+        const permissionState = await checkCameraPermission();
+        
+        if (permissionState === 'denied') {
+          // Permission was previously denied, show modal to guide user
+          showPermissionModal();
+          AssetFlowUtils.showToast('Camera permission was denied. Please allow access in browser settings.', 'error');
+          return;
+        }
+        
+        // If permission is 'prompt' or 'granted', proceed - browser will show popup automatically
+        if (permissionState === 'prompt') {
+          // Show a brief message that browser will ask for permission
+          AssetFlowUtils.showToast('Browser will ask for camera permission...', 'info');
+        }
+        
+        // Check if Html5Qrcode is available
+        if (typeof Html5Qrcode === 'undefined') {
+          throw new Error('QR Scanner library failed to load. Please refresh the page.');
+        }
+        
+        // Show fullscreen first
+        cameraFullscreen.classList.add('active');
+        closePermissionModal(); // Close modal if open
+        
+        // Prevent body scroll when camera is open
+        document.body.style.overflow = 'hidden';
+        
+        // Small delay to ensure fullscreen is visible before starting camera
+        await new Promise(resolve => setTimeout(resolve, 200));
+        
+        // Initialize scanner
+        html5QrcodeScanner = new Html5Qrcode("html5-qrcode-reader");
+        
+        const config = {
+          fps: 10,
+          qrbox: function(viewfinderWidth, viewfinderHeight) {
+            // Make QR box responsive - 70% of viewfinder
+            const minEdgePercentage = 0.7;
+            const minEdgeSize = Math.min(viewfinderWidth, viewfinderHeight);
+            const qrboxSize = Math.floor(minEdgeSize * minEdgePercentage);
+            return {
+              width: qrboxSize,
+              height: qrboxSize
+            };
+          },
+          aspectRatio: 1.0,
+          disableFlip: false,
+          videoConstraints: {
+            facingMode: "environment" // Use back camera on mobile
+          }
+        };
+        
+        // Start scanning - browser will automatically show permission popup if needed
+        await html5QrcodeScanner.start(
+          { facingMode: "environment" },
+          config,
+          onScanSuccess,
+          onScanError
+        );
+        
+        isScanning = true;
+        
+        // Force video to be visible after a short delay
+        setTimeout(() => {
+          const video = document.querySelector('#html5-qrcode-reader__scan_region video');
+          if (video) {
+            video.style.display = 'block';
+            video.style.visibility = 'visible';
+            video.style.opacity = '1';
+            video.style.width = '100%';
+            video.style.height = '100%';
+            video.style.objectFit = 'cover';
+          }
+        }, 500);
+      } catch (error) {
+        console.error('Error starting camera:', error);
+        let errorMsg = 'Failed to start camera. ';
+        let showModal = false;
+        
+        if (error.message) {
+          if (error.message.includes('Permission denied') || 
+              error.message.includes('NotAllowedError') ||
+              error.message.includes('NotAllowed') ||
+              error.name === 'NotAllowedError') {
+            errorMsg = 'Camera access was denied. Please click "Allow" when browser asks for permission.';
+            // Check if it's permanently denied
+            const permissionState = await checkCameraPermission();
+            if (permissionState === 'denied') {
+              showModal = true;
+              errorMsg = 'Camera permission was denied. Please allow camera access in browser settings.';
+            } else {
+              // User just denied this time, but can try again
+              errorMsg = 'Camera access was denied. Please click "Allow" when browser asks for permission, then try again.';
+            }
+          } else if (error.message.includes('No camera') || 
+                     error.message.includes('NotFoundError') ||
+                     error.name === 'NotFoundError') {
+            errorMsg = 'No camera found on this device.';
+          } else if (error.message.includes('already in use') ||
+                     error.name === 'NotReadableError') {
+            errorMsg = 'Camera is already in use by another application.';
+          } else {
+            errorMsg += error.message;
+          }
+        } else {
+          errorMsg += 'Please check your browser permissions and try again.';
+          showModal = true;
+        }
+        
+        AssetFlowUtils.showToast(errorMsg, 'error');
+        
+        // Show permission modal only if permission was permanently denied
+        if (showModal) {
+          showPermissionModal();
+        } else {
+          // Show error message as toast only
+          // No need to show in preview area since we don't have preview anymore
+        }
+      }
+    }
+    
+    function stopCamera() {
+      if (html5QrcodeScanner && isScanning) {
+        html5QrcodeScanner.stop().then(() => {
+          html5QrcodeScanner.clear();
+          html5QrcodeScanner = null;
+          isScanning = false;
+          
+          cameraFullscreen.classList.remove('active');
+          document.body.style.overflow = '';
+          
+          // Clear the reader element
+          const reader = document.getElementById('html5-qrcode-reader');
+          if (reader) {
+            reader.innerHTML = '';
+          }
+          
+          AssetFlowUtils.showToast('Camera stopped', 'info');
+        }).catch((error) => {
+          console.error('Error stopping camera:', error);
+          isScanning = false;
+          html5QrcodeScanner = null;
+          cameraFullscreen.classList.remove('active');
+          document.body.style.overflow = '';
+          
+          // Clear the reader element
+          const reader = document.getElementById('html5-qrcode-reader');
+          if (reader) {
+            reader.innerHTML = '';
+          }
+        });
+      } else {
+        cameraFullscreen.classList.remove('active');
+        document.body.style.overflow = '';
+        
+        // Clear the reader element
+        const reader = document.getElementById('html5-qrcode-reader');
+        if (reader) {
+          reader.innerHTML = '';
+        }
+      }
+    }
+    
+    function onScanSuccess(decodedText, decodedResult) {
+      // QR code scanned successfully
+      stopCamera();
+      setTimeout(() => {
+        processQRCode(decodedText);
+        AssetFlowUtils.showToast('QR code scanned successfully!', 'success');
+      }, 300); // Small delay to allow camera to close smoothly
+    }
+    
+    function onScanError(errorMessage) {
+      // Error handling is done silently - scanner will keep trying
+      // Only log to console for debugging
+      // console.log('Scan error:', errorMessage);
+    }
+    
+    async function processQRCode(qrCode = null) {
+      const qr = qrCode || document.getElementById('manualQRInput').value.trim();
+      if (!qr) {
+        AssetFlowUtils.showToast('Please enter or scan a QR code', 'error');
+        return;
+      }
+      
+      try {
+        const devices = await AssetFlowUtils.loadJSON('data/devices.json');
+        
+        // 1. Ưu tiên tìm trong children (component) trước
+        let foundDevice = null;
+        for (const dev of devices) {
+          if (dev.children && dev.children.length > 0) {
+            const child = dev.children.find(
+              c => c.qrCode === qr || c.id === qr
+            );
+            if (child) {
+              // Tạo object component với thông tin parent + holder/location kế thừa
+              foundDevice = {
+                ...child,
+                category: child.category || 'Component',
+                location: dev.location,
+                holder: dev.holder,
+                parentDevice: {
+                  id: dev.id,
+                  name: dev.name,
+                  serialNumber: dev.serialNumber,
+                  location: dev.location,
+                  holder: dev.holder
+                }
+              };
+              break;
+            }
+          }
+        }
+        
+        // 2. Nếu không phải component, tìm trong danh sách device chính
+        if (!foundDevice) {
+          foundDevice = devices.find(d => d.qrCode === qr || d.id === qr);
+        }
+        
+        if (!foundDevice) {
+          AssetFlowUtils.showToast('Device not found with QR code: ' + qr, 'error');
+          return;
+        }
+        
+        currentDevice = foundDevice;
+        displayDeviceResult(foundDevice);
+      } catch (error) {
+        console.error('Error processing QR code:', error);
+        AssetFlowUtils.showToast('Error loading device data', 'error');
+      }
+    }
+    
+    function displayDeviceResult(device) {
+      document.getElementById('resultIcon').textContent = AssetFlowUtils.getDeviceIcon(device.type);
+      document.getElementById('resultName').textContent = device.name;
+      document.getElementById('resultSerial').textContent = `Serial: ${device.serialNumber}`;
+      document.getElementById('resultStatus').textContent = AssetFlowUtils.getStatusDisplayName(device.status);
+      document.getElementById('resultStatus').className = `status-badge status-${device.status}`;
+      
+      const holderOptions = users
+        .filter(u => u.role === 'Employee')
+        .map(u => `
+          <option value="${u.id}" ${device.holder && device.holder.id === u.id ? 'selected' : ''}>
+            ${u.name} (${u.department || u.team || ''})
+          </option>
+        `).join('');
+      
+      const holderName = device.holder ? device.holder.name : 'Unassigned';
+      const holderTeam = device.holder ? (device.holder.team || device.location || 'N/A') : 'No owner';
+      const holderInitials = holderName
+        .split(' ')
+        .filter(Boolean)
+        .map(part => part.charAt(0))
+        .join('')
+        .toUpperCase()
+        .slice(0, 2);
+      
+      const details = document.getElementById('resultDetails');
+      details.innerHTML = `
+        <div class="result-grid">
+          <div>
+            <div class="field-label">Type</div>
+            <div class="field-value">${device.type}</div>
+          </div>
+          <div>
+            <div class="field-label">Category</div>
+            <div class="field-value">${device.category}</div>
+          </div>
+          <div>
+            <div class="field-label">Location</div>
+            <div class="field-value">${device.location}</div>
+          </div>
+        </div>
+        
+        <div class="holder-card">
+          <div class="holder-avatar">${holderInitials}</div>
+          <div class="holder-info">
+            <div class="holder-label">Current Holder</div>
+            <div class="holder-name" id="resultHolderName">${holderName}</div>
+            <div class="holder-meta">${holderTeam}</div>
+          </div>
+          <div class="holder-control">
+            <div class="holder-control-label">Change Holder</div>
+            <select class="holder-select" id="holderSelect">
+              <option value="">Unassigned</option>
+              ${holderOptions}
+            </select>
+          </div>
+        </div>
+        
+        <div class="status-card">
+          <div class="status-info">
+            <div class="status-label">Device Status</div>
+            <div class="status-current" id="resultStatusText">
+              <span class="status-badge status-${device.status}">
+                ${AssetFlowUtils.getStatusDisplayName(device.status)}
+              </span>
+            </div>
+          </div>
+          <div class="status-control">
+            <div class="status-control-label">Change Status</div>
+            <select class="status-select" id="statusSelect">
+              <option value="IN_STOCK" ${device.status === 'IN_STOCK' ? 'selected' : ''}>In Stock</option>
+              <option value="IN_USE" ${device.status === 'IN_USE' ? 'selected' : ''}>In Use</option>
+              <option value="MAINTENANCE" ${device.status === 'MAINTENANCE' ? 'selected' : ''}>Maintenance</option>
+              <option value="BROKEN" ${device.status === 'BROKEN' ? 'selected' : ''}>Broken</option>
+            </select>
+          </div>
+        </div>
+      `;
+      
+      const actions = document.getElementById('resultActions');
+      actions.innerHTML = `
+        <button class="btn btn-primary" onclick="window.location.href='device-detail.html?id=${device.id}'">View Details</button>
+        <button class="btn btn-secondary" onclick="resetScan()">Scan Another</button>
+      `;
+      
+      // Attach change handler for holder select
+      const holderSelect = document.getElementById('holderSelect');
+      if (holderSelect) {
+        holderSelect.addEventListener('change', () => updateHolder(device));
+      }
+      
+      // Attach change handler for status select
+      const statusSelect = document.getElementById('statusSelect');
+      if (statusSelect) {
+        statusSelect.addEventListener('change', () => updateStatus(device));
+      }
+      
+      document.getElementById('deviceResult').classList.add('show');
+      document.getElementById('deviceResult').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    
+    function resetScan() {
+      document.getElementById('deviceResult').classList.remove('show');
+      document.getElementById('manualQRInput').value = '';
+      currentDevice = null;
+      if (!isScanning) {
+        startCamera();
+      }
+    }
+    
+    function updateAssignmentPreview() {
+      const userId = document.getElementById('userSelect').value;
+      if (userId && currentDevice) {
+        const user = users.find(u => u.id === userId);
+        document.getElementById('previewEmployee').textContent = user ? user.name : '-';
+        document.getElementById('assignBtn').disabled = false;
+      } else {
+        document.getElementById('assignBtn').disabled = true;
+      }
+    }
+    
+    function assignDevice() {
+      const userId = document.getElementById('userSelect').value;
+      if (!userId || !currentDevice) {
+        AssetFlowUtils.showToast('Please select an employee', 'error');
+        return;
+      }
+      
+      const user = users.find(u => u.id === userId);
+      AssetFlowUtils.showToast(`Device assigned to ${user.name}. Status changed to Pending Handover.`, 'success');
+      
+      // Reset form
+      setTimeout(() => {
+        document.getElementById('deviceResult').classList.remove('show');
+        document.getElementById('assignSection').style.display = 'none';
+        document.getElementById('manualQRInput').value = '';
+        document.getElementById('userSelect').value = '';
+        document.getElementById('assignmentPreview').style.display = 'none';
+        document.getElementById('assignBtn').disabled = true;
+        if (!isScanning) {
+          startCamera();
+        }
+      }, 2000);
+    }
+    
+    document.getElementById('manualQRInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        processQRCode();
+      }
+    });
+    
+    // Clean up camera on page unload
+    window.addEventListener('beforeunload', () => {
+      stopCamera();
+    });
+    
+    // Close modal when clicking outside
+    document.getElementById('permissionModal').addEventListener('click', (e) => {
+      if (e.target.id === 'permissionModal') {
+        closePermissionModal();
+      }
+    });
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closePermissionModal();
+      }
+    });
+    
+    function updateHolder(device) {
+      const select = document.getElementById('holderSelect');
+      if (!select) return;
+      
+      const userId = select.value;
+      if (!userId) {
+        // Unassign holder
+        currentDevice.holder = null;
+        document.getElementById('resultHolderName').textContent = 'None';
+        AssetFlowUtils.showToast('Device holder cleared (mock only, not saved).', 'success');
+        return;
+      }
+      
+      const user = users.find(u => u.id === userId);
+      if (!user) {
+        AssetFlowUtils.showToast('Selected employee not found.', 'error');
+        return;
+      }
+      
+      currentDevice.holder = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        team: user.team || user.department
+      };
+      
+      document.getElementById('resultHolderName').textContent = currentDevice.holder.name;
+      AssetFlowUtils.showToast(`Device assigned to ${user.name} (mock only, not saved).`, 'success');
+    }
+    
+    function updateStatus(device) {
+      const select = document.getElementById('statusSelect');
+      if (!select) return;
+      
+      const newStatus = select.value;
+      if (!newStatus) return;
+      
+      currentDevice.status = newStatus;
+      device.status = newStatus;
+      
+      const displayName = AssetFlowUtils.getStatusDisplayName(newStatus);
+      
+      // Cập nhật badge header
+      const statusBadge = document.getElementById('resultStatus');
+      if (statusBadge) {
+        statusBadge.textContent = displayName;
+        statusBadge.className = `status-badge status-${newStatus}`;
+      }
+      
+      // Cập nhật text trong status card
+      const statusText = document.getElementById('resultStatusText');
+      if (statusText) {
+        statusText.textContent = displayName;
+      }
+      
+      AssetFlowUtils.showToast(`Device status changed to ${displayName} (mock only, not saved).`, 'success');
+    }
+    
+    loadUsers();
+  </script>
+</body>
+</html>

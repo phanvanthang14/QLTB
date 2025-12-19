@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Device Detail - AssetFlow IT</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/shared.css">
+  <link rel="stylesheet" href="css/device-detail.css">
+  <script src="js/qrcode.min.js"></script>
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <div class="header-left">
+        <button class="sidebar-toggle" title="Toggle Sidebar">☰</button>
+        <a href="index.html" class="logo">
+          <div class="logo-icon">💻</div>
+          <span>AssetFlow IT</span>
+        </a>
+      </div>
+      <div class="header-right">
+        <button class="mobile-menu-toggle">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="sidebar">
+    <div class="sidebar-content">
+      <div class="sidebar-section">
+        <div class="sidebar-section-header">Admin Desktop</div>
+        <a href="dashboard.html" class="sidebar-item" data-title="Dashboard">
+          <i class="fas fa-th-large sidebar-item-icon"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="device-list.html" class="sidebar-item" data-title="Device List">
+          <i class="fas fa-box sidebar-item-icon"></i>
+          <span>Device List</span>
+        </a>
+        <a href="import-device.html" class="sidebar-item" data-title="Import Device">
+          <i class="fas fa-file-import sidebar-item-icon"></i>
+          <span>Import Device</span>
+        </a>
+        <a href="user-list.html" class="sidebar-item" data-title="User List">
+          <i class="fas fa-users sidebar-item-icon"></i>
+          <span>User List</span>
+        </a>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-section-header">Mobile/Tablet UI</div>
+        <a href="qr-scan.html" class="sidebar-item" data-title="QR Scan">
+          <i class="fas fa-qrcode sidebar-item-icon"></i>
+          <span>QR Scan</span>
+        </a>
+      </div>
+    </div>
+    
+    <div class="sidebar-user-profile">
+      <div class="user-profile">
+        <div class="user-avatar">JD</div>
+        <div class="user-info">
+          <span class="user-name">John Doe</span>
+          <span class="user-email">johndoe@company.com</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="main-content">
+    <h1 class="page-title">Device Detail</h1>
+    <div class="detail-container">
+      <div class="detail-main">
+        <div class="detail-header">
+          <div class="detail-header-top">
+            <button class="back-btn" onclick="window.history.back()">←</button>
+            <h1 class="detail-title" id="detailTitle">Device</h1>
+            <div class="status-badge" id="headerStatusBadge" style="font-size: 0.875rem;"></div>
+          </div>
+          
+          <div class="device-name-large" id="deviceNameLarge">Loading...</div>
+          
+          <div class="device-image-container">
+            <div class="device-image-large" id="deviceImageLarge">📦</div>
+          </div>
+          
+          <div class="location-tag" id="locationTag">
+            <span id="locationText">Location</span>
+          </div>
+          
+          <div class="device-metrics" id="deviceMetrics"></div>
+          
+          <div class="control-modes" id="controlModes"></div>
+        </div>
+      </div>
+      
+      <div class="detail-content">
+        <div class="tabs" id="detailTabs">
+          <button class="tab active" data-tab="overview">Overview</button>
+          <button class="tab" data-tab="hierarchy" id="hierarchyTabBtn">Hierarchy</button>
+          <button class="tab" data-tab="history">History</button>
+          <button class="tab" data-tab="specs" id="specsTabBtn">Specifications</button>
+        </div>
+        
+        <div class="tab-content active" id="overviewTab">
+          <div class="content-card">
+            <h3 style="margin-bottom: 1rem;">Device Information</h3>
+            <div id="overviewContent"></div>
+          </div>
+        </div>
+        
+        <div class="tab-content" id="hierarchyTab">
+          <div class="content-card">
+            <h3 style="margin-bottom: 1rem;">Device Hierarchy</h3>
+            <div class="hierarchy-tree" id="hierarchyTree"></div>
+          </div>
+        </div>
+        
+        <div class="tab-content" id="historyTab">
+          <div class="content-card">
+            <h3 style="margin-bottom: 1rem;">Activity History</h3>
+            <div id="historyContent"></div>
+          </div>
+        </div>
+        
+        <div class="tab-content" id="specsTab">
+          <div class="content-card">
+            <h3 style="margin-bottom: 1rem;" id="specsTabTitle">Technical Specifications</h3>
+            <div class="specs-grid" id="specsGrid"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- QR Code Modal -->
+  <div id="qrModal" class="qr-modal">
+    <div class="qr-modal-content">
+      <div class="qr-modal-header">
+        <div>
+          <h2 id="qrModalTitle">QR Code</h2>
+          <p id="qrModalSubtitle"></p>
+        </div>
+        <button class="qr-modal-close" onclick="closeQRModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="qr-code-container" id="qrCodeContainer">
+        <canvas id="qr-canvas"></canvas>
+      </div>
+      <p class="qr-modal-hint">Quét QR code để xem thông tin tài sản</p>
+      <div class="qr-modal-actions">
+        <button class="qr-action-btn" onclick="downloadQRCodeModal()">
+          <i class="fas fa-download"></i>
+          <span>Tải xuống</span>
+        </button>
+        <button class="qr-action-btn" onclick="printQRCodeModal()">
+          <i class="fas fa-print"></i>
+          <span>In</span>
+        </button>
+        <button class="qr-action-btn" onclick="shareQRCodeModal()">
+          <i class="fas fa-share-alt"></i>
+          <span>Chia sẻ</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/shared.js"></script>
+  <script>
+    let currentDevice = null;
+    let allEmployees = [];
+    
+    async function loadDevice() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const deviceId = urlParams.get('id') || 'DEV001';
+      
+      // Load devices, software accounts và users song song
+      const [devices, softwareAccounts, users] = await Promise.all([
+        AssetFlowUtils.loadJSON('data/devices.json'),
+        AssetFlowUtils.loadJSON('data/software-accounts.json'),
+        AssetFlowUtils.loadJSON('data/users.json')
+      ]);
+      
+      allEmployees = Array.isArray(users) 
+        ? users.filter(u => u.role === 'Employee')
+        : [];
+      
+      // Tìm device trong danh sách parent
+      currentDevice = devices.find(d => d.id === deviceId);
+      
+      // Nếu không tìm thấy, tìm trong children của các devices
+      if (!currentDevice) {
+        for (let device of devices) {
+          if (device.children && device.children.length > 0) {
+            const child = device.children.find(c => c.id === deviceId);
+            if (child) {
+              currentDevice = {
+                ...child,
+                parentDevice: {
+                  id: device.id,
+                  name: device.name,
+                  serialNumber: device.serialNumber,
+                  location: device.location,
+                  holder: device.holder
+                },
+                // Inherit location & holder từ cha để hiển thị thống nhất
+                location: device.location,
+                holder: device.holder
+              };
+              break;
+            }
+          }
+        }
+      }
+      
+      // Nếu vẫn không tìm thấy, tìm trong software accounts
+      if (!currentDevice) {
+        const account = softwareAccounts.find(a => a.id === deviceId);
+        if (account) {
+          currentDevice = {
+            ...account,
+            category: 'Software Account',
+            isSoftwareAccount: true
+          };
+        }
+      }
+      
+      if (!currentDevice) {
+        document.getElementById('detailTitle').textContent = 'Device not found';
+        return;
+      }
+      
+      renderDevice();
+      
+      // Generate QR code if available
+      if (currentDevice && currentDevice.qrCode) {
+        generateQRCode();
+      }
+    }
+    
+    function generateQRCode() {
+      const canvas = document.getElementById('qr-canvas-detail');
+      if (!canvas || !currentDevice || !currentDevice.qrCode) return;
+      
+      QRCode.toCanvas(canvas, currentDevice.qrCode, {
+        width: 250,
+        color: {
+          dark: "#000000",
+          light: "#ffffff"
+        }
+      }, function (error) {
+        if (error) {
+          console.error('QR Code generation error:', error);
+        } else {
+          console.log('QR Code generated successfully!');
+        }
+      });
+    }
+    
+    function downloadQRCodeDetail() {
+      if (!currentDevice || !currentDevice.qrCode) {
+        AssetFlowUtils.showToast('QR code not available', 'error');
+        return;
+      }
+      
+      const canvas = document.getElementById('qr-canvas-detail');
+      if (!canvas) {
+        AssetFlowUtils.showToast('QR code not ready', 'error');
+        return;
+      }
+      
+      const link = document.createElement('a');
+      link.download = `QR-${currentDevice.id}-${currentDevice.qrCode}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      
+      AssetFlowUtils.showToast('QR code downloaded', 'success');
+    }
+    
+    // QR Code Modal functions (for metrics icon)
+    let currentQRModalData = null;
+    
+    function showQRCodeModal(qrCode, deviceName, deviceId) {
+      currentQRModalData = { qrCode, deviceName, deviceId };
+      
+      // Update modal content
+      document.getElementById('qrModalTitle').textContent = `QR Code - ${deviceId}`;
+      document.getElementById('qrModalSubtitle').textContent = deviceName;
+      
+      // Clear previous QR code
+      const container = document.getElementById('qrCodeContainer');
+      container.innerHTML = '<canvas id="qr-canvas"></canvas>';
+      
+      // Generate QR code
+      const canvas = document.getElementById('qr-canvas');
+      const text = qrCode;
+      
+      QRCode.toCanvas(canvas, text, {
+        width: 200,
+        color: {
+          dark: "#000000",
+          light: "#ffffff"
+        }
+      }, function (error) {
+        if (error) {
+          console.error('QR Code generation error:', error);
+          container.innerHTML = `<div style="padding: 2rem; color: var(--text-secondary);">QR Code: ${qrCode}</div>`;
+        } else {
+          console.log('QR Code generated successfully!');
+        }
+      });
+      
+      // Show modal
+      document.getElementById('qrModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closeQRModal() {
+      document.getElementById('qrModal').classList.remove('active');
+      document.body.style.overflow = '';
+      currentQRModalData = null;
+    }
+    
+    function downloadQRCodeModal() {
+      if (!currentQRModalData) return;
+      
+      const canvas = document.getElementById('qr-canvas');
+      if (!canvas) {
+        AssetFlowUtils.showToast('QR code not ready', 'error');
+        return;
+      }
+      
+      const link = document.createElement('a');
+      link.download = `QR-${currentQRModalData.deviceId}-${currentQRModalData.qrCode}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      
+      AssetFlowUtils.showToast('QR code downloaded', 'success');
+    }
+    
+    function printQRCodeModal() {
+      if (!currentQRModalData) return;
+      
+      const canvas = document.getElementById('qr-canvas');
+      if (!canvas) {
+        AssetFlowUtils.showToast('QR code not ready', 'error');
+        return;
+      }
+      
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>QR Code - ${currentQRModalData.deviceId}</title>
+            <style>
+              body {
+                margin: 0;
+                padding: 2rem;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                font-family: Arial, sans-serif;
+              }
+              h2 {
+                margin: 0 0 0.5rem 0;
+                font-size: 1.5rem;
+              }
+              p {
+                margin: 0.5rem 0 0 0;
+                color: #666;
+                font-size: 0.875rem;
+              }
+              img {
+                margin: 1rem 0;
+              }
+            </style>
+          </head>
+          <body>
+            <h2>QR Code - ${currentQRModalData.deviceId}</h2>
+            <p>${currentQRModalData.deviceName}</p>
+            <img src="${canvas.toDataURL('image/png')}" alt="QR Code">
+            <p>Quét QR code để xem thông tin tài sản</p>
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+      printWindow.focus();
+      setTimeout(() => {
+        printWindow.print();
+        printWindow.close();
+      }, 250);
+    }
+    
+    function shareQRCodeModal() {
+      if (!currentQRModalData) return;
+      
+      const canvas = document.getElementById('qr-canvas');
+      if (!canvas) {
+        AssetFlowUtils.showToast('QR code not ready', 'error');
+        return;
+      }
+      
+      canvas.toBlob((blob) => {
+        if (navigator.share && navigator.canShare) {
+          const file = new File([blob], `QR-${currentQRModalData.deviceId}.png`, { type: 'image/png' });
+          if (navigator.canShare({ files: [file] })) {
+            navigator.share({
+              title: `QR Code - ${currentQRModalData.deviceId}`,
+              text: `${currentQRModalData.deviceName}`,
+              files: [file]
+            }).catch(err => {
+              if (err.name !== 'AbortError') {
+                AssetFlowUtils.showToast('Share failed', 'error');
+              }
+            });
+          } else {
+            copyQRToClipboardModal(canvas);
+          }
+        } else {
+          copyQRToClipboardModal(canvas);
+        }
+      }, 'image/png');
+    }
+    
+    function copyQRToClipboardModal(canvas) {
+      canvas.toBlob((blob) => {
+        navigator.clipboard.write([
+          new ClipboardItem({ 'image/png': blob })
+        ]).then(() => {
+          AssetFlowUtils.showToast('QR code copied to clipboard', 'success');
+        }).catch(() => {
+          AssetFlowUtils.showToast('Copy failed', 'error');
+        });
+      });
+    }
+    
+    // Close modal when clicking outside
+    document.getElementById('qrModal')?.addEventListener('click', (e) => {
+      if (e.target.id === 'qrModal') {
+        closeQRModal();
+      }
+    });
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const modal = document.getElementById('qrModal');
+        if (modal && modal.classList.contains('active')) {
+          closeQRModal();
+        }
+      }
+    });
+    
+    function renderDevice() {
+      const isSoftwareAccount = currentDevice.isSoftwareAccount || currentDevice.category === 'Software Account';
+      
+      // Header
+      document.getElementById('detailTitle').textContent = isSoftwareAccount ? 'Software Account' : currentDevice.type;
+      document.getElementById('deviceNameLarge').textContent = currentDevice.name;
+      
+      // Icon
+      if (isSoftwareAccount) {
+        document.getElementById('deviceImageLarge').innerHTML = '<i class="fas fa-key" style="font-size: 4rem; color: var(--primary-color);"></i>';
+      } else {
+        document.getElementById('deviceImageLarge').textContent = AssetFlowUtils.getDeviceIcon(currentDevice.type);
+      }
+      
+      // Status badge in header
+      const headerStatusBadge = document.getElementById('headerStatusBadge');
+      headerStatusBadge.className = `status-badge status-${currentDevice.status}`;
+      headerStatusBadge.textContent = AssetFlowUtils.getStatusDisplayName(currentDevice.status);
+      
+      // Location tag - show QR code text
+      document.getElementById('locationText').textContent = 'QR Code';
+      
+      // QR Code display in device-metrics area
+      const metricsContainer = document.getElementById('deviceMetrics');
+      if (currentDevice.qrCode) {
+        metricsContainer.innerHTML = `
+          <div class="qr-code-metrics-container">
+            <div class="qr-code-metrics-display" onclick="showQRCodeModal('${currentDevice.qrCode}', '${currentDevice.name}', '${currentDevice.id}')" style="cursor: pointer;">
+              <canvas id="qr-canvas-metrics" style="background: white; padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); width: 100%; max-width: 200px; height: auto; margin: 0 auto; display: block;"></canvas>
+              <div style="margin-top: 1rem; text-align: center;">
+                <div style="font-family: monospace; font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.5rem;">${currentDevice.qrCode}</div>
+                <div style="font-size: 0.75rem; color: var(--text-secondary);">Click to view full size</div>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        // Generate QR code
+        setTimeout(() => {
+          const canvas = document.getElementById('qr-canvas-metrics');
+          if (canvas) {
+            QRCode.toCanvas(canvas, currentDevice.qrCode, {
+              width: 200,
+              color: {
+                dark: "#000000",
+                light: "#ffffff"
+              }
+            }, function (error) {
+              if (error) {
+                console.error('QR Code generation error:', error);
+              }
+            });
+          }
+        }, 100);
+      } else {
+        metricsContainer.innerHTML = '';
+        metricsContainer.style.display = 'none';
+      }
+      
+      // Control modes - empty (not used)
+      const controlModesContainer = document.getElementById('controlModes');
+      controlModesContainer.innerHTML = '';
+      controlModesContainer.style.display = 'none';
+      
+      // Overview (build từng phần để tránh lỗi template lồng nhau)
+      const statusOptions = isSoftwareAccount 
+        ? ['ACTIVE', 'EXPIRED']
+        : ['IN_STOCK','IN_USE','MAINTENANCE','BROKEN'];
+      const statusSelectOptions = statusOptions.map(s => `
+        <option value="${s}" ${currentDevice.status === s ? 'selected' : ''}>
+          ${AssetFlowUtils.getStatusDisplayName(s)}
+        </option>
+      `).join('');
+      
+      const holderOptions = allEmployees.map(u => `
+        <option value="${u.id}" ${currentDevice.holder && currentDevice.holder.id === u.id ? 'selected' : ''}>
+          ${u.name} (${u.department || u.team || ''})
+        </option>
+      `).join('');
+      
+      let parentInfoHtml = '';
+      if (currentDevice.category === 'Component' && currentDevice.parentDevice) {
+        parentInfoHtml = `
+          <div class="info-item">
+            <div class="info-label">Parent Device</div>
+            <div class="info-value">
+              <a href="device-detail.html?id=${currentDevice.parentDevice.id}" style="color: var(--primary-color); text-decoration: none;">
+                ${currentDevice.parentDevice.name}
+              </a>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Parent Serial</div>
+            <div class="info-value">${currentDevice.parentDevice.serialNumber}</div>
+          </div>
+        `;
+      }
+      
+      let holderInfoHtml = '';
+      if (currentDevice.holder) {
+        holderInfoHtml = `
+          <div class="info-item">
+            <div class="info-label">Assigned To</div>
+            <div class="info-value" id="overviewAssignedName">${currentDevice.holder.name}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Team</div>
+            <div class="info-value" id="overviewTeamName">${currentDevice.holder.team || 'N/A'}</div>
+          </div>
+        `;
+      }
+      
+      let purchaseHtml = '';
+      if (currentDevice.purchaseDate) {
+        purchaseHtml = `
+          <div class="info-item">
+            <div class="info-label">Purchase Date</div>
+            <div class="info-value">${AssetFlowUtils.formatDate(currentDevice.purchaseDate)}</div>
+          </div>
+        `;
+      }
+      
+      let warrantyHtml = '';
+      if (currentDevice.warrantyExpiry) {
+        warrantyHtml = `
+          <div class="info-item">
+            <div class="info-label">Warranty Expiry</div>
+            <div class="info-value">${AssetFlowUtils.formatDate(currentDevice.warrantyExpiry)}</div>
+          </div>
+        `;
+      }
+      
+      let priceHtml = '';
+      if (currentDevice.price) {
+        priceHtml = `
+          <div class="info-item">
+            <div class="info-label">Price</div>
+            <div class="info-value">${AssetFlowUtils.formatCurrency(currentDevice.price)}</div>
+          </div>
+        `;
+      }
+      
+      let assignedDateHtml = '';
+      if (currentDevice.assignedDate) {
+        assignedDateHtml = `
+          <div class="info-item">
+            <div class="info-label">Assigned Date</div>
+            <div class="info-value">${AssetFlowUtils.formatDate(currentDevice.assignedDate)}</div>
+          </div>
+        `;
+      }
+      
+      // Software account specific fields
+      let softwareAccountHtml = '';
+      if (isSoftwareAccount) {
+        softwareAccountHtml = `
+          ${currentDevice.provider ? `
+            <div class="info-item">
+              <div class="info-label">Provider</div>
+              <div class="info-value">${currentDevice.provider}</div>
+            </div>
+          ` : ''}
+          ${currentDevice.licenseType ? `
+            <div class="info-item">
+              <div class="info-label">License Type</div>
+              <div class="info-value">${currentDevice.licenseType}</div>
+            </div>
+          ` : ''}
+          ${currentDevice.totalLicenses !== undefined ? `
+            <div class="info-item">
+              <div class="info-label">Total Licenses</div>
+              <div class="info-value">${currentDevice.totalLicenses}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Used Licenses</div>
+              <div class="info-value">${currentDevice.usedLicenses || 0}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Available Licenses</div>
+              <div class="info-value">${(currentDevice.totalLicenses || 0) - (currentDevice.usedLicenses || 0)}</div>
+            </div>
+          ` : ''}
+          ${currentDevice.expiryDate ? `
+            <div class="info-item">
+              <div class="info-label">Expiry Date</div>
+              <div class="info-value">${AssetFlowUtils.formatDate(currentDevice.expiryDate)}</div>
+            </div>
+          ` : ''}
+          ${currentDevice.description ? `
+            <div class="info-item" style="grid-column: 1 / -1;">
+              <div class="info-label">Description</div>
+              <div class="info-value">${currentDevice.description}</div>
+            </div>
+          ` : ''}
+        `;
+      }
+      
+      let assignedCardHtml = '';
+      if (isSoftwareAccount && currentDevice.assignedUsers && currentDevice.assignedUsers.length > 0) {
+        // Show assigned users for software accounts
+        const usersList = currentDevice.assignedUsers.map(user => `
+          <div class="assigned-card-main" style="margin-bottom: 0.75rem;">
+            <div class="assigned-card-avatar">
+              ${user.name.charAt(0)}
+            </div>
+            <div class="assigned-card-info">
+              <div class="assigned-card-name">${user.name}</div>
+              <div class="assigned-card-email">${user.email}</div>
+              ${user.team ? `<div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem;">${user.team}</div>` : ''}
+              ${user.assignedDate ? `<div style="font-size: 0.75rem; color: var(--text-secondary);">Assigned: ${AssetFlowUtils.formatDate(user.assignedDate)}</div>` : ''}
+            </div>
+          </div>
+        `).join('');
+        
+        assignedCardHtml = `
+          <div class="assigned-card">
+            <div class="assigned-card-title">Assigned Users (${currentDevice.assignedUsers.length})</div>
+            ${usersList}
+          </div>
+        `;
+      } else if (!isSoftwareAccount && currentDevice.holder) {
+        const holderLocation = currentDevice.location || (currentDevice.holder.team || '');
+        assignedCardHtml = `
+          <div class="assigned-card">
+            <div class="assigned-card-title">Currently Assigned To</div>
+            <div class="assigned-card-main">
+              <div class="assigned-card-avatar">
+                ${currentDevice.holder.name.charAt(0)}
+              </div>
+              <div class="assigned-card-info">
+                <div class="assigned-card-name">${currentDevice.holder.name}</div>
+                <div class="assigned-card-email">${currentDevice.holder.email}</div>
+                ${holderLocation ? `<div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem;">📍 ${holderLocation}</div>` : ''}
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      
+      document.getElementById('overviewContent').innerHTML = `
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+          ${!isSoftwareAccount ? `
+            <div class="info-item">
+              <div class="info-label">Serial Number</div>
+              <div class="info-value">${currentDevice.serialNumber || 'N/A'}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">QR Code</div>
+              <div class="info-value" style="font-family: monospace; font-size: 0.875rem;">${currentDevice.qrCode || 'N/A'}</div>
+            </div>
+          ` : `
+            <div class="info-item">
+              <div class="info-label">Account ID</div>
+              <div class="info-value">${currentDevice.id}</div>
+            </div>
+            ${currentDevice.qrCode ? `
+              <div class="info-item">
+                <div class="info-label">QR Code</div>
+                <div class="info-value" style="font-family: monospace; font-size: 0.875rem;">${currentDevice.qrCode}</div>
+              </div>
+            ` : ''}
+          `}
+          <div class="info-item">
+            <div class="info-label">Type</div>
+            <div class="info-value">${currentDevice.type}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Category</div>
+            <div class="info-value">${currentDevice.category}</div>
+          </div>
+          ${parentInfoHtml}
+          <div class="info-item">
+            <div class="info-label">Status</div>
+            <div class="info-value">
+              <select id="detailStatusSelect" class="holder-select">
+                ${statusSelectOptions}
+              </select>
+            </div>
+          </div>
+          ${!isSoftwareAccount ? holderInfoHtml : ''}
+          ${!isSoftwareAccount ? purchaseHtml : ''}
+          ${!isSoftwareAccount ? warrantyHtml : ''}
+          ${priceHtml}
+          ${!isSoftwareAccount ? assignedDateHtml : ''}
+          ${softwareAccountHtml}
+          ${!isSoftwareAccount ? `
+            <div class="info-item">
+              <div class="info-label">Quick Holder Change</div>
+              <div class="info-value">
+                <select id="detailHolderSelect" class="holder-select">
+                  <option value="">Unassigned</option>
+                  ${holderOptions}
+                </select>
+              </div>
+            </div>
+          ` : ''}
+        </div>
+        ${assignedCardHtml}
+      `;
+      
+      // Gắn handler cho quick status & holder
+      const statusSelectEl = document.getElementById('detailStatusSelect');
+      if (statusSelectEl) {
+        statusSelectEl.addEventListener('change', () => {
+          const newStatus = statusSelectEl.value;
+          if (!newStatus) return;
+          currentDevice.status = newStatus;
+          
+          // Cập nhật header badge
+          headerStatusBadge.className = `status-badge status-${currentDevice.status}`;
+          headerStatusBadge.textContent = AssetFlowUtils.getStatusDisplayName(currentDevice.status);
+          
+          AssetFlowUtils.showToast(`Device status changed to ${AssetFlowUtils.getStatusDisplayName(newStatus)} (mock only, not saved).`, 'success');
+        });
+      }
+      
+      const holderSelectEl = document.getElementById('detailHolderSelect');
+      if (holderSelectEl) {
+        holderSelectEl.addEventListener('change', () => {
+          const holderId = holderSelectEl.value;
+          
+          if (!holderId) {
+            currentDevice.holder = null;
+            const assignedEl = document.getElementById('overviewAssignedName');
+            const teamEl = document.getElementById('overviewTeamName');
+            if (assignedEl) assignedEl.textContent = 'Unassigned';
+            if (teamEl) teamEl.textContent = 'N/A';
+            AssetFlowUtils.showToast('Device holder cleared (mock only, not saved).', 'success');
+            return;
+          }
+          
+          const user = allEmployees.find(u => u.id === holderId);
+          if (!user) {
+            AssetFlowUtils.showToast('Selected employee not found.', 'error');
+            return;
+          }
+          
+          currentDevice.holder = {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            team: user.team || user.department
+          };
+          
+          const assignedEl2 = document.getElementById('overviewAssignedName');
+          const teamEl2 = document.getElementById('overviewTeamName');
+          if (assignedEl2) assignedEl2.textContent = currentDevice.holder.name;
+          if (teamEl2) teamEl2.textContent = currentDevice.holder.team || 'N/A';
+          document.getElementById('locationText').textContent = currentDevice.holder.team || currentDevice.location;
+          
+          AssetFlowUtils.showToast(`Device assigned to ${user.name} (mock only, not saved).`, 'success');
+        });
+      }
+      
+      // Hide/show tabs based on device type
+      const hierarchyTabBtn = document.getElementById('hierarchyTabBtn');
+      const specsTabBtn = document.getElementById('specsTabBtn');
+      const specsTabTitle = document.getElementById('specsTabTitle');
+      if (isSoftwareAccount) {
+        if (hierarchyTabBtn) hierarchyTabBtn.style.display = 'none';
+        if (specsTabBtn) {
+          specsTabBtn.style.display = '';
+          specsTabBtn.textContent = 'Account Details';
+        }
+        if (specsTabTitle) specsTabTitle.textContent = 'Account Details';
+      } else {
+        if (hierarchyTabBtn) hierarchyTabBtn.style.display = '';
+        if (specsTabBtn) {
+          specsTabBtn.style.display = '';
+          specsTabBtn.textContent = 'Specifications';
+        }
+        if (specsTabTitle) specsTabTitle.textContent = 'Technical Specifications';
+      }
+      
+      // Hierarchy
+      if (!isSoftwareAccount) {
+        renderHierarchy();
+      }
+      
+      // History
+      renderHistory();
+      
+      // Specs
+      if (!isSoftwareAccount) {
+        renderSpecs();
+      } else {
+        renderSoftwareAccountDetails();
+      }
+    }
+    
+    function renderHierarchy() {
+      const tree = document.getElementById('hierarchyTree');
+      tree.innerHTML = '';
+      
+      // Nếu là component và có parentDevice -> hiển thị quan hệ Cha -> Con
+      if (currentDevice.category === 'Component' && currentDevice.parentDevice) {
+        const parent = currentDevice.parentDevice;
+        
+        const parentNode = document.createElement('div');
+        parentNode.className = 'tree-node parent';
+        parentNode.innerHTML = `
+          <div class="tree-node-header">
+            <div class="tree-node-title">
+              <span class="tree-node-icon">${AssetFlowUtils.getDeviceIcon(parent.type || 'Container')}</span>
+              <span>${parent.name}</span>
+            </div>
+            <a href="device-detail.html?id=${parent.id}" style="text-decoration: none; color: var(--primary-color); font-size: 0.875rem;">View Parent</a>
+          </div>
+          <div style="font-size: 0.875rem; color: var(--text-secondary);">SN: ${parent.serialNumber}</div>
+        `;
+        
+        const childrenContainer = document.createElement('div');
+        childrenContainer.className = 'tree-node-children';
+        
+        const childNode = document.createElement('div');
+        childNode.className = 'tree-node';
+        childNode.innerHTML = `
+          <div class="tree-node-header">
+            <div class="tree-node-title">
+              <span class="tree-node-icon">${AssetFlowUtils.getDeviceIcon(currentDevice.type)}</span>
+              <span>${currentDevice.name}</span>
+            </div>
+            <span class="status-badge status-${currentDevice.status}">${AssetFlowUtils.getStatusDisplayName(currentDevice.status)}</span>
+          </div>
+          <div style="font-size: 0.875rem; color: var(--text-secondary);">SN: ${currentDevice.serialNumber}</div>
+          <div style="font-size: 0.875rem; color: var(--text-secondary); margin-top: 0.5rem;">QR: ${currentDevice.qrCode}</div>
+        `;
+        
+        childrenContainer.appendChild(childNode);
+        parentNode.appendChild(childrenContainer);
+        tree.appendChild(parentNode);
+        return;
+      }
+      
+      // Mặc định: hiển thị device hiện tại (container hoặc thiết bị không có cha)
+      if (currentDevice.category === 'Container' && currentDevice.children && currentDevice.children.length > 0) {
+        const parentNode = document.createElement('div');
+        parentNode.className = 'tree-node parent';
+        parentNode.innerHTML = `
+          <div class="tree-node-header">
+            <div class="tree-node-title">
+              <span class="tree-node-icon">${AssetFlowUtils.getDeviceIcon(currentDevice.type)}</span>
+              <span>${currentDevice.name}</span>
+            </div>
+            <span class="status-badge status-${currentDevice.status}">${AssetFlowUtils.getStatusDisplayName(currentDevice.status)}</span>
+          </div>
+          <div style="font-size: 0.875rem; color: var(--text-secondary);">${currentDevice.serialNumber}</div>
+        `;
+        
+        const childrenContainer = document.createElement('div');
+        childrenContainer.className = 'tree-node-children';
+        
+        currentDevice.children.forEach(child => {
+          const childNode = document.createElement('div');
+          childNode.className = 'tree-node clickable';
+          childNode.innerHTML = `
+            <div class="tree-node-header">
+              <div class="tree-node-title">
+                <span class="tree-node-icon">${AssetFlowUtils.getDeviceIcon(child.type)}</span>
+                <span>${child.name}</span>
+              </div>
+              <span class="status-badge status-${child.status}">${AssetFlowUtils.getStatusDisplayName(child.status)}</span>
+            </div>
+            <div style="font-size: 0.875rem; color: var(--text-secondary);">SN: ${child.serialNumber}</div>
+            <div style="font-size: 0.875rem; color: var(--text-secondary); margin-top: 0.5rem;">QR: ${child.qrCode}</div>
+          `;
+          
+          // Click cả block để đi tới chi tiết component
+          childNode.addEventListener('click', () => {
+            window.location.href = `device-detail.html?id=${child.id}`;
+          });
+          
+          childrenContainer.appendChild(childNode);
+        });
+        
+        parentNode.appendChild(childrenContainer);
+        tree.appendChild(parentNode);
+      } else {
+        tree.innerHTML = `
+          <div class="tree-node">
+            <div class="tree-node-header">
+              <div class="tree-node-title">
+                <span class="tree-node-icon">${AssetFlowUtils.getDeviceIcon(currentDevice.type)}</span>
+                <span>${currentDevice.name}</span>
+              </div>
+              <span class="status-badge status-${currentDevice.status}">${AssetFlowUtils.getStatusDisplayName(currentDevice.status)}</span>
+            </div>
+            <div style="font-size: 0.875rem; color: var(--text-secondary);">${currentDevice.serialNumber}</div>
+            ${currentDevice.children && currentDevice.children.length === 0 ? '<div style="margin-top: 1rem; color: var(--text-secondary);">No child components</div>' : ''}
+          </div>
+        `;
+      }
+    }
+    
+    function renderHistory() {
+      const isSoftwareAccount = currentDevice.isSoftwareAccount || currentDevice.category === 'Software Account';
+      const history = [];
+      
+      if (isSoftwareAccount) {
+        // Software account history
+        if (currentDevice.purchaseDate) {
+          history.push({ 
+            icon: '📥', 
+            title: 'Account purchased', 
+            meta: AssetFlowUtils.formatDate(currentDevice.purchaseDate), 
+            type: 'purchase' 
+          });
+        }
+        
+        if (currentDevice.assignedUsers && currentDevice.assignedUsers.length > 0) {
+          currentDevice.assignedUsers.forEach(user => {
+            if (user.assignedDate) {
+              history.push({ 
+                icon: '👤', 
+                title: `Assigned to ${user.name}`, 
+                meta: AssetFlowUtils.formatDate(user.assignedDate), 
+                type: 'assignment' 
+              });
+            }
+          });
+        }
+        
+        if (currentDevice.qrCode) {
+          history.push({ 
+            icon: '🏷️', 
+            title: 'QR code generated', 
+            meta: 'System', 
+            type: 'qr' 
+          });
+        }
+      } else {
+        // Device history
+        const assignedName = currentDevice.holder && currentDevice.holder.name
+          ? currentDevice.holder.name
+          : 'employee';
+        
+        history.push(
+          { icon: '📦', title: 'Device assigned to ' + assignedName, meta: currentDevice.assignedDate ? AssetFlowUtils.formatDate(currentDevice.assignedDate) : 'N/A', type: 'assignment' },
+          { icon: '📥', title: 'Device imported to system', meta: currentDevice.purchaseDate ? AssetFlowUtils.formatDate(currentDevice.purchaseDate) : 'N/A', type: 'import' },
+          { icon: '🏷️', title: 'QR code generated', meta: 'System', type: 'qr' }
+        );
+        
+        if (currentDevice.status === 'MAINTENANCE') {
+          history.unshift({ icon: '🔧', title: 'Device sent for maintenance', meta: '2 days ago', type: 'maintenance' });
+        }
+      }
+      
+      const historyContent = document.getElementById('historyContent');
+      if (history.length > 0) {
+        historyContent.innerHTML = history.map(item => `
+          <div class="history-item">
+            <div class="history-icon">${item.icon}</div>
+            <div class="history-content">
+              <div class="history-title">${item.title}</div>
+              <div class="history-meta">${item.meta}</div>
+            </div>
+          </div>
+        `).join('');
+      } else {
+        historyContent.innerHTML = '<div style="color: var(--text-secondary);">No history available</div>';
+      }
+    }
+    
+    function renderSpecs() {
+      const specsGrid = document.getElementById('specsGrid');
+      const isSoftwareAccount = currentDevice.isSoftwareAccount || currentDevice.category === 'Software Account';
+      
+      if (isSoftwareAccount) {
+        renderSoftwareAccountDetails();
+        return;
+      }
+      
+      if (currentDevice.specs && Object.keys(currentDevice.specs).length > 0) {
+        specsGrid.innerHTML = Object.entries(currentDevice.specs).map(([key, value]) => `
+          <div class="spec-item">
+            <div class="spec-label">${key.charAt(0).toUpperCase() + key.slice(1)}</div>
+            <div class="spec-value">${value}</div>
+          </div>
+        `).join('');
+      } else {
+        specsGrid.innerHTML = '<div style="color: var(--text-secondary);">No specifications available</div>';
+      }
+      
+      // Add price info
+      if (currentDevice.price) {
+        const priceItem = document.createElement('div');
+        priceItem.className = 'spec-item';
+        priceItem.innerHTML = `
+          <div class="spec-label">Price</div>
+          <div class="spec-value">${AssetFlowUtils.formatCurrency(currentDevice.price)}</div>
+        `;
+        specsGrid.appendChild(priceItem);
+      }
+    }
+    
+    function renderSoftwareAccountDetails() {
+      const specsGrid = document.getElementById('specsGrid');
+      const isSoftwareAccount = currentDevice.isSoftwareAccount || currentDevice.category === 'Software Account';
+      
+      if (!isSoftwareAccount) return;
+      
+      const details = [];
+      
+      if (currentDevice.provider) {
+        details.push({ label: 'Provider', value: currentDevice.provider });
+      }
+      
+      if (currentDevice.licenseType) {
+        details.push({ label: 'License Type', value: currentDevice.licenseType });
+      }
+      
+      if (currentDevice.totalLicenses !== undefined) {
+        details.push({ label: 'Total Licenses', value: currentDevice.totalLicenses });
+        details.push({ label: 'Used Licenses', value: currentDevice.usedLicenses || 0 });
+        details.push({ label: 'Available Licenses', value: (currentDevice.totalLicenses || 0) - (currentDevice.usedLicenses || 0) });
+      }
+      
+      if (currentDevice.purchaseDate) {
+        details.push({ label: 'Purchase Date', value: AssetFlowUtils.formatDate(currentDevice.purchaseDate) });
+      }
+      
+      if (currentDevice.expiryDate) {
+        details.push({ label: 'Expiry Date', value: AssetFlowUtils.formatDate(currentDevice.expiryDate) });
+      }
+      
+      if (currentDevice.price) {
+        details.push({ label: 'Price', value: AssetFlowUtils.formatCurrency(currentDevice.price) });
+      }
+      
+      if (currentDevice.description) {
+        details.push({ label: 'Description', value: currentDevice.description, fullWidth: true });
+      }
+      
+      if (details.length > 0) {
+        specsGrid.innerHTML = details.map(detail => `
+          <div class="spec-item" ${detail.fullWidth ? 'style="grid-column: 1 / -1;"' : ''}>
+            <div class="spec-label">${detail.label}</div>
+            <div class="spec-value">${detail.value}</div>
+          </div>
+        `).join('');
+      } else {
+        specsGrid.innerHTML = '<div style="color: var(--text-secondary);">No account details available</div>';
+      }
+    }
+    
+    
+    
+    function printQR() {
+      AssetFlowUtils.showToast('QR code print dialog opened', 'success');
+      // In real implementation, this would open a print dialog with QR code
+    }
+    
+    // Tab switching
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const tabName = tab.dataset.tab;
+        
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        
+        tab.classList.add('active');
+        document.getElementById(tabName + 'Tab').classList.add('active');
+      });
+    });
+    
+    loadDevice();
+  </script>
+</body>
+</html>
+

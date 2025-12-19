@@ -1,0 +1,143 @@
+[
+  {
+    "id": "ACC001",
+    "qrCode": null,
+    "name": "Microsoft Office 365 Business",
+    "type": "Office Suite",
+    "provider": "Microsoft",
+    "licenseType": "Subscription",
+    "status": "ACTIVE",
+    "totalLicenses": 50,
+    "usedLicenses": 12,
+    "assignedUsers": [
+      {
+        "id": "EMP001",
+        "name": "Nguyen Van A",
+        "email": "nguyenvana@company.com",
+        "team": "Engineering",
+        "assignedDate": "2024-01-15",
+        "expiryDate": "2025-01-15"
+      },
+      {
+        "id": "EMP002",
+        "name": "Tran Thi B",
+        "email": "tranthib@company.com",
+        "team": "Marketing",
+        "assignedDate": "2024-02-01",
+        "expiryDate": "2025-02-01"
+      }
+    ],
+    "purchaseDate": "2024-01-01",
+    "expiryDate": "2025-01-01",
+    "price": 5000000,
+    "description": "Full Office 365 Business subscription with Word, Excel, PowerPoint, Outlook, Teams"
+  },
+  {
+    "id": "ACC002",
+    "qrCode": null,
+    "name": "Adobe Creative Cloud",
+    "type": "Creative Suite",
+    "provider": "Adobe",
+    "licenseType": "Subscription",
+    "status": "ACTIVE",
+    "totalLicenses": 10,
+    "usedLicenses": 8,
+    "assignedUsers": [
+      {
+        "id": "EMP003",
+        "name": "Le Van C",
+        "email": "levanc@company.com",
+        "team": "Design",
+        "assignedDate": "2024-01-10",
+        "expiryDate": "2025-01-10"
+      },
+      {
+        "id": "EMP004",
+        "name": "Pham Thi D",
+        "email": "phamthid@company.com",
+        "team": "Design",
+        "assignedDate": "2024-01-10",
+        "expiryDate": "2025-01-10"
+      }
+    ],
+    "purchaseDate": "2024-01-01",
+    "expiryDate": "2025-01-01",
+    "price": 12000000,
+    "description": "Adobe Creative Cloud with Photoshop, Illustrator, Premiere Pro, After Effects"
+  },
+  {
+    "id": "ACC003",
+    "qrCode": "QR-ACC003-SLACK",
+    "name": "Slack Workspace Pro",
+    "type": "Communication",
+    "provider": "Slack",
+    "licenseType": "Subscription",
+    "status": "ACTIVE",
+    "totalLicenses": 100,
+    "usedLicenses": 45,
+    "assignedUsers": [
+      {
+        "id": "EMP001",
+        "name": "Nguyen Van A",
+        "email": "nguyenvana@company.com",
+        "team": "Engineering",
+        "assignedDate": "2024-01-05",
+        "expiryDate": null
+      },
+      {
+        "id": "EMP002",
+        "name": "Tran Thi B",
+        "email": "tranthib@company.com",
+        "team": "Marketing",
+        "assignedDate": "2024-01-05",
+        "expiryDate": null
+      }
+    ],
+    "purchaseDate": "2024-01-01",
+    "expiryDate": "2025-01-01",
+    "price": 8000000,
+    "description": "Slack Pro workspace for team communication and collaboration"
+  },
+  {
+    "id": "ACC004",
+    "qrCode": null,
+    "name": "GitHub Enterprise",
+    "type": "Development",
+    "provider": "GitHub",
+    "licenseType": "Subscription",
+    "status": "ACTIVE",
+    "totalLicenses": 25,
+    "usedLicenses": 18,
+    "assignedUsers": [
+      {
+        "id": "EMP001",
+        "name": "Nguyen Van A",
+        "email": "nguyenvana@company.com",
+        "team": "Engineering",
+        "assignedDate": "2024-01-08",
+        "expiryDate": null
+      }
+    ],
+    "purchaseDate": "2024-01-01",
+    "expiryDate": "2025-01-01",
+    "price": 15000000,
+    "description": "GitHub Enterprise for code repository and version control"
+  },
+  {
+    "id": "ACC005",
+    "qrCode": null,
+    "name": "Zoom Business",
+    "type": "Video Conferencing",
+    "provider": "Zoom",
+    "licenseType": "Subscription",
+    "status": "ACTIVE",
+    "totalLicenses": 30,
+    "usedLicenses": 22,
+    "assignedUsers": [],
+    "purchaseDate": "2024-02-01",
+    "expiryDate": "2025-02-01",
+    "price": 6000000,
+    "description": "Zoom Business for video meetings and webinars"
+  }
+]
+

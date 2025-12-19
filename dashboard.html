@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - AssetFlow IT</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/shared.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <div class="header-left">
+        <button class="sidebar-toggle" title="Toggle Sidebar">☰</button>
+        <a href="index.html" class="logo">
+          <div class="logo-icon">💻</div>
+          <span>AssetFlow IT</span>
+        </a>
+      </div>
+      <div class="header-right">
+        <button class="search-icon-btn" id="searchIconBtn" title="Search">
+          <i class="fas fa-search"></i>
+        </button>
+        <button class="mobile-menu-toggle">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="sidebar">
+    <div class="sidebar-content">
+      <div class="sidebar-section">
+        <div class="sidebar-section-header">Admin Desktop</div>
+        <a href="dashboard.html" class="sidebar-item active" data-title="Dashboard">
+          <i class="fas fa-th-large sidebar-item-icon"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="device-list.html" class="sidebar-item" data-title="Device List">
+          <i class="fas fa-box sidebar-item-icon"></i>
+          <span>Device List</span>
+        </a>
+        <a href="import-device.html" class="sidebar-item" data-title="Import Device">
+          <i class="fas fa-file-import sidebar-item-icon"></i>
+          <span>Import Device</span>
+        </a>
+        <a href="user-list.html" class="sidebar-item" data-title="User List">
+          <i class="fas fa-users sidebar-item-icon"></i>
+          <span>User List</span>
+        </a>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-section-header">Mobile/Tablet UI</div>
+        <a href="qr-scan.html" class="sidebar-item" data-title="QR Scan">
+          <i class="fas fa-qrcode sidebar-item-icon"></i>
+          <span>QR Scan</span>
+        </a>
+      </div>
+    </div>
+    
+    <div class="sidebar-user-profile">
+      <div class="user-profile">
+        <div class="user-avatar">JD</div>
+        <div class="user-info">
+          <span class="user-name">John Doe</span>
+          <span class="user-email">johndoe@company.com</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="main-content">
+    <h1 class="page-title">Dashboard</h1>
+    <div class="search-bar hidden" id="searchBar">
+      <input type="text" class="search-input" id="searchInput" placeholder="Search devices...">
+      <button class="search-close-btn" id="searchCloseBtn">✕</button>
+    </div>
+    
+    <div class="stats-grid">
+      <div class="stat-card animate-fade-in">
+        <div class="stat-icon-large">📦</div>
+        <div class="stat-content">
+          <div class="stat-label">Total Devices</div>
+          <div class="stat-value" id="totalDevices">0</div>
+        </div>
+      </div>
+      
+      <div class="stat-card animate-fade-in" style="animation-delay: 0.1s">
+        <div class="stat-icon-large">✅</div>
+        <div class="stat-content">
+          <div class="stat-label">In Use</div>
+          <div class="stat-value" id="inUseDevices">0</div>
+        </div>
+      </div>
+      
+      <div class="stat-card animate-fade-in" style="animation-delay: 0.2s">
+        <div class="stat-icon-large">🔧</div>
+        <div class="stat-content">
+          <div class="stat-label">In Maintenance</div>
+          <div class="stat-value" id="maintenanceDevices">0</div>
+        </div>
+      </div>
+      
+      <div class="stat-card animate-fade-in" style="animation-delay: 0.3s">
+        <div class="stat-icon-large">⚠️</div>
+        <div class="stat-content">
+          <div class="stat-label">Broken</div>
+          <div class="stat-value" id="brokenDevices">0</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="charts-section animate-fade-in" style="animation-delay: 0.1s">
+      <div class="grid grid-2">
+        <div class="chart-container">
+          <div class="chart-title">
+            <div class="chart-title-icon">📊</div>
+            <span>Device Status Distribution</span>
+          </div>
+          <div class="chart-wrapper">
+            <div class="status-chart" id="statusChart"></div>
+          </div>
+        </div>
+        
+        <div class="chart-container">
+          <div class="chart-title">
+            <div class="chart-title-icon">📋</div>
+            <span>Recent Activities</span>
+          </div>
+          <div id="recentActivities"></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="charts-section animate-fade-in" style="animation-delay: 0.2s">
+      <div class="chart-container">
+        <div class="chart-title">
+          <div class="chart-title-icon">👥</div>
+          <span>Devices by Team</span>
+        </div>
+        <div class="team-chart" id="teamChart"></div>
+      </div>
+    </div>
+  </main>
+
+  <div class="tooltip" id="tooltip"></div>
+
+  <script src="js/shared.js"></script>
+  <script>
+    let devices = [];
+    let users = [];
+    let teamData = {};
+    
+    let filteredDevices = [];
+    
+    async function loadDashboard() {
+      devices = await AssetFlowUtils.loadJSON('data/devices.json');
+      users = await AssetFlowUtils.loadJSON('data/users.json');
+      filteredDevices = [...devices];
+      
+      // Calculate statistics
+      updateStatistics();
+      
+      // Enhanced Status Chart
+      renderStatusChart();
+      
+      // Team Chart
+      calculateTeamData();
+      renderTeamChart();
+      
+      // Recent activities
+      renderActivities();
+      
+      // Setup filter tabs
+      setupFilterTabs();
+      
+      // Setup search
+      setupSearch();
+    }
+    
+    function updateStatistics() {
+      const total = filteredDevices.length;
+      const inUse = filteredDevices.filter(d => d.status === 'IN_USE').length;
+      const maintenance = filteredDevices.filter(d => d.status === 'MAINTENANCE').length;
+      const broken = filteredDevices.filter(d => d.status === 'BROKEN').length;
+      
+      // Animate counters
+      animateCounter('totalDevices', total);
+      animateCounter('inUseDevices', inUse);
+      animateCounter('maintenanceDevices', maintenance);
+      animateCounter('brokenDevices', broken);
+    }
+    
+    function filterDevices() {
+      const searchTerm = document.getElementById('searchInput')?.value.toLowerCase() || '';
+      const activeTab = document.querySelector('.filter-tab.active');
+      const statusFilter = activeTab?.dataset.status || null;
+      
+      filteredDevices = devices.filter(device => {
+        const matchesSearch = !searchTerm || 
+          device.name.toLowerCase().includes(searchTerm) ||
+          device.serialNumber.toLowerCase().includes(searchTerm) ||
+          JSON.stringify(device.specs).toLowerCase().includes(searchTerm);
+        
+        const matchesStatus = !statusFilter || device.status === statusFilter;
+        
+        return matchesSearch && matchesStatus;
+      });
+      
+      updateStatistics();
+      renderStatusChart();
+      calculateTeamData();
+      renderTeamChart();
+    }
+    
+    function setupFilterTabs() {
+      document.querySelectorAll('.filter-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          filterDevices();
+        });
+      });
+    }
+    
+    function setupSearch() {
+      const searchIconBtn = document.getElementById('searchIconBtn');
+      const searchBar = document.getElementById('searchBar');
+      const searchCloseBtn = document.getElementById('searchCloseBtn');
+      const searchInput = document.getElementById('searchInput');
+      
+      if (searchIconBtn && searchBar) {
+        searchIconBtn.addEventListener('click', () => {
+          searchBar.classList.remove('hidden');
+          searchInput?.focus();
+        });
+      }
+      
+      if (searchCloseBtn && searchBar) {
+        searchCloseBtn.addEventListener('click', () => {
+          searchBar.classList.add('hidden');
+          if (searchInput) {
+            searchInput.value = '';
+            filterDevices();
+          }
+        });
+      }
+      
+      if (searchInput) {
+        searchInput.addEventListener('input', AssetFlowUtils.debounce(filterDevices, 300));
+      }
+    }
+    
+    function renderStatusChart() {
+      const statusCounts = {};
+      const statusDevices = {};
+      
+      filteredDevices.forEach(device => {
+        const status = device.status;
+        statusCounts[status] = (statusCounts[status] || 0) + 1;
+        if (!statusDevices[status]) {
+          statusDevices[status] = [];
+        }
+        statusDevices[status].push(device);
+      });
+      
+      const chartContainer = document.getElementById('statusChart');
+      chartContainer.innerHTML = '';
+      
+      if (Object.keys(statusCounts).length === 0) {
+        chartContainer.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-secondary);">No data available</div>';
+        return;
+      }
+      
+      const total = filteredDevices.length;
+      const statusEntries = Object.entries(statusCounts)
+        .map(([status, count]) => ({
+          status,
+          count,
+          percentage: ((count / total) * 100).toFixed(1),
+          color: getStatusColor(status),
+          devices: statusDevices[status]
+        }))
+        .sort((a, b) => b.count - a.count);
+      
+      // Create chart layout
+      const chartWrapper = document.createElement('div');
+      chartWrapper.className = 'status-chart-wrapper';
+      
+      // Donut chart
+      const donutChart = document.createElement('div');
+      donutChart.className = 'donut-chart';
+      donutChart.innerHTML = createDonutChart(statusEntries, total);
+      
+      // Status list
+      const statusList = document.createElement('div');
+      statusList.className = 'status-list';
+      statusEntries.forEach((item, index) => {
+        const listItem = document.createElement('div');
+        listItem.className = 'status-list-item';
+        listItem.dataset.status = item.status;
+        listItem.innerHTML = `
+          <div class="status-item-header">
+            <div class="status-item-info">
+              <div class="status-color-indicator" style="background: ${item.color}"></div>
+              <div class="status-item-content">
+                <div class="status-item-name">${AssetFlowUtils.getStatusDisplayName(item.status)}</div>
+                <div class="status-item-details">${item.count} devices • ${item.percentage}%</div>
+              </div>
+            </div>
+            <div class="status-item-actions">
+              <button class="status-view-btn" onclick="viewStatusDevices('${item.status}', ${item.count})" title="View devices">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="status-expand-btn" onclick="toggleStatusDetails(this, '${item.status}')" title="View details">
+                <span class="expand-icon">▼</span>
+              </button>
+            </div>
+          </div>
+          <div class="status-item-details-panel hidden" id="details-${item.status}">
+            <div class="status-devices-preview">
+              ${item.devices.slice(0, 5).map(device => `
+                <div class="device-preview-item" onclick="window.location.href='device-detail.html?id=${device.id}'">
+                  <span class="device-preview-icon">${AssetFlowUtils.getDeviceIcon(device.type)}</span>
+                  <span class="device-preview-name">${device.name}</span>
+                  <span class="device-preview-serial">${device.serialNumber}</span>
+                </div>
+              `).join('')}
+              ${item.devices.length > 5 ? `
+                <div class="device-preview-more" onclick="viewStatusDevices('${item.status}', ${item.count})">
+                  +${item.devices.length - 5} more devices
+                </div>
+              ` : ''}
+            </div>
+            <div class="status-item-breakdown">
+              <div class="breakdown-title">By Type:</div>
+              <div class="breakdown-items">
+                ${Object.entries(item.devices.reduce((acc, d) => {
+                  acc[d.type] = (acc[d.type] || 0) + 1;
+                  return acc;
+                }, {})).map(([type, count]) => `
+                  <div class="breakdown-item">
+                    <span>${AssetFlowUtils.getDeviceIcon(type)}</span>
+                    <span>${type}</span>
+                    <span class="breakdown-count">${count}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        `;
+        
+        listItem.addEventListener('mouseenter', () => highlightDonutSegment(item.status));
+        listItem.addEventListener('mouseleave', () => unhighlightDonutSegment());
+        
+        statusList.appendChild(listItem);
+      });
+      
+      chartWrapper.appendChild(donutChart);
+      chartWrapper.appendChild(statusList);
+      chartContainer.appendChild(chartWrapper);
+    }
+    
+    function createDonutChart(statusEntries, total) {
+      let currentAngle = 0;
+      const radius = 80;
+      const circumference = 2 * Math.PI * radius;
+      
+      const segments = statusEntries.map(item => {
+        const percentage = parseFloat(item.percentage);
+        const angle = (percentage / 100) * 360;
+        const strokeDasharray = `${(percentage / 100) * circumference} ${circumference}`;
+        const strokeDashoffset = -((currentAngle / 360) * circumference);
+        
+        const segment = {
+          ...item,
+          angle,
+          strokeDasharray,
+          strokeDashoffset,
+          startAngle: currentAngle,
+          endAngle: currentAngle + angle
+        };
+        
+        currentAngle += angle;
+        return segment;
+      });
+      
+      const centerX = 120;
+      const centerY = 120;
+      
+      return `
+        <div class="donut-chart-svg">
+          <svg width="240" height="240" viewBox="0 0 240 240">
+            <circle cx="${centerX}" cy="${centerY}" r="${radius}" fill="none" stroke="var(--bg-tertiary)" stroke-width="24"/>
+            ${segments.map((seg, index) => `
+              <circle 
+                cx="${centerX}" 
+                cy="${centerY}" 
+                r="${radius}" 
+                fill="none" 
+                stroke="${seg.color}" 
+                stroke-width="24"
+                stroke-dasharray="${seg.strokeDasharray}"
+                stroke-dashoffset="${seg.strokeDashoffset}"
+                stroke-linecap="round"
+                class="donut-segment"
+                data-status="${seg.status}"
+                transform="rotate(-90 ${centerX} ${centerY})"
+                style="transition: all 0.3s ease; cursor: pointer;"
+                onmouseenter="highlightDonutSegment('${seg.status}')"
+                onmouseleave="unhighlightDonutSegment()"
+                onclick="focusStatus('${seg.status}')"
+              />
+            `).join('')}
+          </svg>
+          <div class="donut-chart-center">
+            <div class="donut-total-value">${total}</div>
+            <div class="donut-total-label">Total Devices</div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function highlightDonutSegment(status) {
+      document.querySelectorAll('.donut-segment').forEach(seg => {
+        if (seg.dataset.status === status) {
+          seg.style.transform = 'rotate(-90 120 120) scale(1.05)';
+          seg.style.opacity = '1';
+          seg.style.filter = 'brightness(1.2)';
+        } else {
+          seg.style.opacity = '0.4';
+        }
+      });
+      
+      document.querySelectorAll('.status-list-item').forEach(item => {
+        if (item.dataset.status === status) {
+          item.classList.add('highlighted');
+        } else {
+          item.classList.remove('highlighted');
+        }
+      });
+      
+      document.querySelectorAll('.donut-legend-item').forEach(item => {
+        if (item.dataset.status === status) {
+          item.classList.add('highlighted');
+        } else {
+          item.classList.remove('highlighted');
+        }
+      });
+    }
+    
+    function unhighlightDonutSegment() {
+      document.querySelectorAll('.donut-segment').forEach(seg => {
+        seg.style.transform = 'rotate(-90 120 120)';
+        seg.style.opacity = '1';
+        seg.style.filter = 'none';
+      });
+      
+      document.querySelectorAll('.status-list-item, .donut-legend-item').forEach(item => {
+        item.classList.remove('highlighted');
+      });
+    }
+    
+    function focusStatus(status) {
+      const listItem = document.querySelector(`.status-list-item[data-status="${status}"]`);
+      if (listItem) {
+        listItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        listItem.classList.add('focused');
+        setTimeout(() => listItem.classList.remove('focused'), 2000);
+      }
+    }
+    
+    function toggleStatusDetails(button, status) {
+      const detailsPanel = document.getElementById(`details-${status}`);
+      const icon = button.querySelector('.expand-icon');
+      
+      if (detailsPanel.classList.contains('hidden')) {
+        detailsPanel.classList.remove('hidden');
+        icon.textContent = '▲';
+        detailsPanel.style.animation = 'slideDown 0.3s ease-out';
+      } else {
+        detailsPanel.classList.add('hidden');
+        icon.textContent = '▼';
+      }
+    }
+    
+    function viewStatusDevices(status, count) {
+      window.location.href = `device-list.html?status=${status}`;
+    }
+    
+    function calculateTeamData() {
+      teamData = {};
+      
+      filteredDevices.forEach(device => {
+        if (device.holder && device.holder.team) {
+          const team = device.holder.team;
+          if (!teamData[team]) {
+            teamData[team] = {
+              total: 0,
+              byType: {},
+              byStatus: {}
+            };
+          }
+          
+          teamData[team].total++;
+          teamData[team].byType[device.type] = (teamData[team].byType[device.type] || 0) + 1;
+          teamData[team].byStatus[device.status] = (teamData[team].byStatus[device.status] || 0) + 1;
+        }
+      });
+      
+      // Add teams with no devices (only if showing all)
+      const activeTab = document.querySelector('.filter-tab.active');
+      if (activeTab && !activeTab.dataset.status) {
+        users.forEach(user => {
+          if (user.team && !teamData[user.team]) {
+            teamData[user.team] = {
+              total: 0,
+              byType: {},
+              byStatus: {}
+            };
+          }
+        });
+      }
+    }
+    
+    function renderTeamChart() {
+      const teamChart = document.getElementById('teamChart');
+      teamChart.innerHTML = '';
+      
+      const teams = Object.keys(teamData).sort();
+      const teamColors = ['#2563eb', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
+      
+      teams.forEach((team, index) => {
+        const data = teamData[team];
+        const color = teamColors[index % teamColors.length];
+        
+        const card = document.createElement('div');
+        card.className = 'team-card';
+        card.dataset.team = team;
+        
+        const typeDetails = Object.entries(data.byType)
+          .map(([type, count]) => `<div class="team-detail-item">
+            <div class="team-detail-label">${AssetFlowUtils.getDeviceIcon(type)} ${type}</div>
+            <div class="team-detail-value">${count}</div>
+          </div>`)
+          .join('');
+        
+        card.innerHTML = `
+          <div class="team-header">
+            <div class="team-name">${team}</div>
+            <div class="team-count" style="color: ${color}">${data.total}</div>
+          </div>
+          <div class="team-details">
+            ${typeDetails || '<div style="color: var(--text-secondary); font-size: 0.875rem;">No devices assigned</div>'}
+          </div>
+        `;
+        
+        card.addEventListener('click', () => {
+          document.querySelectorAll('.team-card').forEach(c => c.classList.remove('active'));
+          card.classList.toggle('active');
+        });
+        
+        // Removed tooltip for team cards as requested
+        
+        teamChart.appendChild(card);
+      });
+    }
+    
+    function renderActivities() {
+      const activities = [
+        { icon: '📦', title: 'Device DEV001 assigned to Nguyen Van A', time: '2 hours ago' },
+        { icon: '🔧', title: 'Maintenance completed for DEV005', time: '5 hours ago' },
+        { icon: '📥', title: 'New devices imported from Excel', time: '1 day ago' },
+        { icon: '✅', title: 'Device DEV002 returned to stock', time: '2 days ago' }
+      ];
+      
+      const activitiesContainer = document.getElementById('recentActivities');
+      activities.forEach(activity => {
+        const item = document.createElement('div');
+        item.className = 'activity-item';
+        item.innerHTML = `
+          <div class="activity-icon">${activity.icon}</div>
+          <div class="activity-content">
+            <div class="activity-title">${activity.title}</div>
+            <div class="activity-time">${activity.time}</div>
+          </div>
+        `;
+        activitiesContainer.appendChild(item);
+      });
+    }
+    
+    function animateCounter(elementId, target) {
+      const element = document.getElementById(elementId);
+      let current = 0;
+      const increment = target / 30;
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+          element.textContent = target;
+          clearInterval(timer);
+        } else {
+          element.textContent = Math.floor(current);
+        }
+      }, 30);
+    }
+    
+    function getStatusColor(status) {
+      const colors = {
+        'IN_STOCK': '#3b82f6',
+        'IN_USE': '#10b981',
+        'BROKEN': '#ef4444',
+        'MAINTENANCE': '#f59e0b',
+        'PENDING_RECALL': '#ec4899',
+        'PENDING_HANDOVER': '#6366f1',
+        'LOST': '#ef4444',
+        'LIQUIDATED': '#6b7280'
+      };
+      return colors[status] || '#64748b';
+    }
+    
+    function darkenColor(color, percent) {
+      const num = parseInt(color.replace("#", ""), 16);
+      const amt = Math.round(2.55 * percent);
+      const R = (num >> 16) + amt;
+      const G = (num >> 8 & 0x00FF) + amt;
+      const B = (num & 0x0000FF) + amt;
+      return "#" + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
+        (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
+        (B < 255 ? B < 1 ? 0 : B : 255)).toString(16).slice(1);
+    }
+    
+    function showTooltip(event, text) {
+      const tooltip = document.getElementById('tooltip');
+      tooltip.textContent = text;
+      tooltip.classList.add('show');
+      
+      const rect = event.target.getBoundingClientRect();
+      tooltip.style.left = rect.left + (rect.width / 2) - (tooltip.offsetWidth / 2) + 'px';
+      tooltip.style.top = rect.top - tooltip.offsetHeight - 10 + 'px';
+    }
+    
+    function hideTooltip() {
+      const tooltip = document.getElementById('tooltip');
+      tooltip.classList.remove('show');
+    }
+    
+    loadDashboard();
+  </script>
+</body>
+</html>

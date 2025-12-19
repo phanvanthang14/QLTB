@@ -1,0 +1,41 @@
+[
+  {
+    "id": "TICK001",
+    "deviceId": "DEV005",
+    "deviceName": "Lenovo ThinkPad X1 Carbon",
+    "type": "MAINTENANCE",
+    "status": "IN_PROGRESS",
+    "reporter": {
+      "id": "EMP002",
+      "name": "Tran Thi B"
+    },
+    "assignedTo": {
+      "id": "TECH001",
+      "name": "Le Van C"
+    },
+    "description": "Screen flickering issue, needs replacement",
+    "createdDate": "2024-03-01",
+    "updatedDate": "2024-03-05",
+    "priority": "HIGH"
+  },
+  {
+    "id": "TICK002",
+    "deviceId": "DEV001",
+    "deviceName": "Dell Latitude 7420",
+    "type": "INCIDENT",
+    "status": "RESOLVED",
+    "reporter": {
+      "id": "EMP001",
+      "name": "Nguyen Van A"
+    },
+    "assignedTo": {
+      "id": "TECH001",
+      "name": "Le Van C"
+    },
+    "description": "Keyboard not responding properly",
+    "createdDate": "2024-02-20",
+    "updatedDate": "2024-02-22",
+    "priority": "MEDIUM"
+  }
+]
+

@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User List - AssetFlow IT</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/shared.css">
+  <link rel="stylesheet" href="css/user-list.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <div class="header-left">
+        <button class="sidebar-toggle" title="Toggle Sidebar">☰</button>
+        <a href="index.html" class="logo">
+          <div class="logo-icon">💻</div>
+          <span>AssetFlow IT</span>
+        </a>
+      </div>
+      <div class="header-right">
+        <button class="mobile-menu-toggle">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="sidebar">
+    <div class="sidebar-content">
+      <div class="sidebar-section">
+        <div class="sidebar-section-header">Admin Desktop</div>
+        <a href="dashboard.html" class="sidebar-item" data-title="Dashboard">
+          <i class="fas fa-th-large sidebar-item-icon"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="device-list.html" class="sidebar-item" data-title="Device List">
+          <i class="fas fa-box sidebar-item-icon"></i>
+          <span>Device List</span>
+        </a>
+        <a href="import-device.html" class="sidebar-item" data-title="Import Device">
+          <i class="fas fa-file-import sidebar-item-icon"></i>
+          <span>Import Device</span>
+        </a>
+        <a href="user-list.html" class="sidebar-item active" data-title="User List">
+          <i class="fas fa-users sidebar-item-icon"></i>
+          <span>User List</span>
+        </a>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-section-header">Mobile/Tablet UI</div>
+        <a href="qr-scan.html" class="sidebar-item" data-title="QR Scan">
+          <i class="fas fa-qrcode sidebar-item-icon"></i>
+          <span>QR Scan</span>
+        </a>
+      </div>
+    </div>
+    
+    <div class="sidebar-user-profile">
+      <div class="user-profile">
+        <div class="user-avatar">JD</div>
+        <div class="user-info">
+          <span class="user-name">John Doe</span>
+          <span class="user-email">johndoe@company.com</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="main-content">
+    <h1 class="page-title">User Management</h1>
+    <!-- Search and Filter Bar -->
+    <div class="search-filter-bar">
+      <div class="search-input-wrapper">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" class="search-input-main" id="searchInput" placeholder="Search by name, email, department...">
+      </div>
+      <select class="filter-dropdown" id="roleFilter">
+        <option value="">All roles</option>
+        <option value="Employee">Employee</option>
+        <option value="Technician">Technician</option>
+        <option value="Admin">Admin</option>
+      </select>
+      <select class="filter-dropdown" id="departmentFilter">
+        <option value="">All departments</option>
+      </select>
+      <select class="filter-dropdown" id="teamFilter">
+        <option value="">All teams</option>
+      </select>
+      <button class="clear-filters-btn" id="clearFiltersBtn">Clear All</button>
+    </div>
+    
+    <!-- Advanced Filters (Hidden by default, can be expanded) -->
+    <div class="advanced-filters-collapsed" id="advancedFilters">
+      <div class="advanced-filters-content">
+      </div>
+    </div>
+    
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <button class="btn btn-primary add-user-btn" onclick="openAddUserModal()">
+          <span class="add-icon">+</span>
+          <span>Add User</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="user-table-wrapper">
+      <div class="table-controls">
+        <div class="table-info">
+          <span id="tableInfo">Showing 0 users</span>
+        </div>
+        <div class="table-pagination-controls">
+          <select class="page-size-select" id="pageSizeSelect">
+            <option value="10">10 per page</option>
+            <option value="25" selected>25 per page</option>
+            <option value="50">50 per page</option>
+            <option value="100">100 per page</option>
+          </select>
+        </div>
+      </div>
+      <table class="user-table" id="userTable">
+        <thead>
+          <tr>
+            <th class="sortable" data-sort="name">
+              <div class="th-content">
+                <span>Name</span>
+                <span class="sort-indicator"></span>
+              </div>
+            </th>
+            <th class="sortable" data-sort="email">
+              <div class="th-content">
+                <span>Email</span>
+                <span class="sort-indicator"></span>
+              </div>
+            </th>
+            <th class="sortable" data-sort="department">
+              <div class="th-content">
+                <span>Department</span>
+                <span class="sort-indicator"></span>
+              </div>
+            </th>
+            <th class="sortable" data-sort="team">
+              <div class="th-content">
+                <span>Team</span>
+                <span class="sort-indicator"></span>
+              </div>
+            </th>
+            <th class="sortable" data-sort="position">
+              <div class="th-content">
+                <span>Position</span>
+                <span class="sort-indicator"></span>
+              </div>
+            </th>
+            <th class="sortable" data-sort="role">
+              <div class="th-content">
+                <span>Role</span>
+                <span class="sort-indicator"></span>
+              </div>
+            </th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="userTableBody"></tbody>
+      </table>
+      <div class="table-pagination" id="tablePagination"></div>
+    </div>
+  </main>
+
+  <!-- Add User Modal -->
+  <div class="modal-overlay" id="addUserModal">
+    <div class="modal-content add-user-modal">
+      <div class="modal-header">
+        <h2>Add New User</h2>
+        <button class="modal-close" onclick="closeAddUserModal()">×</button>
+      </div>
+      <form id="addUserForm" onsubmit="handleAddUser(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Name <span class="required">*</span></label>
+            <input type="text" id="userName" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label>Email <span class="required">*</span></label>
+            <input type="email" id="userEmail" class="form-input" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Department <span class="required">*</span></label>
+            <input type="text" id="userDepartment" class="form-input" required placeholder="e.g., Engineering">
+          </div>
+          <div class="form-group">
+            <label>Team <span class="required">*</span></label>
+            <input type="text" id="userTeam" class="form-input" required placeholder="e.g., Engineering">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Position <span class="required">*</span></label>
+            <input type="text" id="userPosition" class="form-input" required placeholder="e.g., Software Developer">
+          </div>
+          <div class="form-group">
+            <label>Role <span class="required">*</span></label>
+            <select id="userRole" class="form-input" required>
+              <option value="Employee">Employee</option>
+              <option value="Technician">Technician</option>
+              <option value="Admin">Admin</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeAddUserModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Add User</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/shared.js"></script>
+  <script>
+    let allUsers = [];
+    let filteredUsers = [];
+    let sortedUsers = [];
+    let paginatedUsers = [];
+    
+    let originalUsers = [];
+    
+    // Sorting and pagination state
+    let currentSort = { column: null, direction: 'asc' };
+    let currentPage = 1;
+    let pageSize = 25;
+    
+    // Store debounced functions to allow proper cleanup
+    let debouncedFilterUsers = null;
+    
+    async function loadUsers() {
+      originalUsers = await AssetFlowUtils.loadJSON('data/users.json');
+      allUsers = [...originalUsers];
+      filteredUsers = [...allUsers];
+      
+      populateFilters();
+      applySorting();
+      renderUsers();
+      
+      // Initialize event listeners after users are loaded
+      initializeEventListeners();
+      initializeSearchInput();
+    }
+    
+    // Initialize search input on page load
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeSearchInput);
+    } else {
+      initializeSearchInput();
+    }
+    
+    function populateFilters() {
+      const departments = [...new Set(allUsers.map(u => u.department).filter(Boolean))].sort();
+      const teams = [...new Set(allUsers.map(u => u.team).filter(Boolean))].sort();
+      
+      const deptSelect = document.getElementById('departmentFilter');
+      if (deptSelect) {
+        deptSelect.innerHTML = '<option value="">All departments</option>';
+        departments.forEach(dept => {
+          const option = document.createElement('option');
+          option.value = dept;
+          option.textContent = dept;
+          deptSelect.appendChild(option);
+        });
+      }
+      
+      const teamSelect = document.getElementById('teamFilter');
+      if (teamSelect) {
+        teamSelect.innerHTML = '<option value="">All teams</option>';
+        teams.forEach(team => {
+          const option = document.createElement('option');
+          option.value = team;
+          option.textContent = team;
+          teamSelect.appendChild(option);
+        });
+      }
+    }
+    
+    function filterUsers() {
+      const searchTerm = document.getElementById('searchInput')?.value.toLowerCase() || '';
+      const roleFilter = document.getElementById('roleFilter')?.value || '';
+      const departmentFilter = document.getElementById('departmentFilter')?.value || '';
+      const teamFilter = document.getElementById('teamFilter')?.value || '';
+      
+      filteredUsers = allUsers.filter(user => {
+        const matchesSearch = !searchTerm || 
+          user.name.toLowerCase().includes(searchTerm) ||
+          user.email.toLowerCase().includes(searchTerm) ||
+          (user.department && user.department.toLowerCase().includes(searchTerm)) ||
+          (user.team && user.team.toLowerCase().includes(searchTerm)) ||
+          (user.position && user.position.toLowerCase().includes(searchTerm));
+        
+        const matchesRole = !roleFilter || user.role === roleFilter;
+        const matchesDepartment = !departmentFilter || user.department === departmentFilter;
+        const matchesTeam = !teamFilter || user.team === teamFilter;
+        
+        return matchesSearch && matchesRole && matchesDepartment && matchesTeam;
+      });
+      
+      currentPage = 1;
+      applySorting();
+      renderUsers();
+    }
+    
+    function applySorting() {
+      sortedUsers = [...filteredUsers];
+      
+      if (currentSort.column) {
+        sortedUsers.sort((a, b) => {
+          let aValue = a[currentSort.column] || '';
+          let bValue = b[currentSort.column] || '';
+          
+          if (!aValue && !bValue) return 0;
+          if (!aValue) return 1;
+          if (!bValue) return -1;
+          
+          if (typeof aValue === 'string' && typeof bValue === 'string') {
+            const comparison = aValue.localeCompare(bValue, undefined, { numeric: true, sensitivity: 'base' });
+            return currentSort.direction === 'asc' ? comparison : -comparison;
+          }
+          
+          return currentSort.direction === 'asc' 
+            ? (aValue > bValue ? 1 : -1)
+            : (aValue < bValue ? 1 : -1);
+        });
+      }
+      
+      const startIndex = (currentPage - 1) * pageSize;
+      const endIndex = startIndex + pageSize;
+      paginatedUsers = sortedUsers.slice(startIndex, endIndex);
+    }
+    
+    function sortTable(column) {
+      if (currentSort.column === column) {
+        currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+      } else {
+        currentSort.column = column;
+        currentSort.direction = 'asc';
+      }
+      
+      document.querySelectorAll('.sortable').forEach(th => {
+        const indicator = th.querySelector('.sort-indicator');
+        if (th.dataset.sort === column) {
+          th.classList.add('sorted');
+          indicator.textContent = currentSort.direction === 'asc' ? '↑' : '↓';
+        } else {
+          th.classList.remove('sorted');
+          indicator.textContent = '';
+        }
+      });
+      
+      applySorting();
+      renderUsers();
+    }
+    
+    function changePage(page) {
+      currentPage = page;
+      applySorting();
+      renderUsers();
+    }
+    
+    function changePageSize(size) {
+      pageSize = parseInt(size);
+      currentPage = 1;
+      applySorting();
+      renderUsers();
+    }
+    
+    function renderPagination() {
+      const totalPages = Math.ceil(sortedUsers.length / pageSize);
+      const paginationContainer = document.getElementById('tablePagination');
+      
+      if (totalPages <= 1) {
+        paginationContainer.innerHTML = '';
+        return;
+      }
+      
+      let paginationHTML = '<div class="pagination-controls">';
+      
+      paginationHTML += `
+        <button class="pagination-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
+          ← Previous
+        </button>
+      `;
+      
+      const maxVisiblePages = 7;
+      let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+      let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+      
+      if (endPage - startPage < maxVisiblePages - 1) {
+        startPage = Math.max(1, endPage - maxVisiblePages + 1);
+      }
+      
+      if (startPage > 1) {
+        paginationHTML += `<button class="pagination-btn" onclick="changePage(1)">1</button>`;
+        if (startPage > 2) {
+          paginationHTML += `<span class="pagination-ellipsis">...</span>`;
+        }
+      }
+      
+      for (let i = startPage; i <= endPage; i++) {
+        paginationHTML += `
+          <button class="pagination-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">
+            ${i}
+          </button>
+        `;
+      }
+      
+      if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+          paginationHTML += `<span class="pagination-ellipsis">...</span>`;
+        }
+        paginationHTML += `<button class="pagination-btn" onclick="changePage(${totalPages})">${totalPages}</button>`;
+      }
+      
+      paginationHTML += `
+        <button class="pagination-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+          Next →
+        </button>
+      `;
+      
+      paginationHTML += '</div>';
+      paginationContainer.innerHTML = paginationHTML;
+    }
+    
+    function renderUsers() {
+      const tbody = document.getElementById('userTableBody');
+      tbody.innerHTML = '';
+      
+      const startIndex = (currentPage - 1) * pageSize + 1;
+      const endIndex = Math.min(currentPage * pageSize, sortedUsers.length);
+      const totalCount = sortedUsers.length;
+      
+      document.getElementById('tableInfo').textContent = 
+        totalCount === 0 
+          ? 'No users found'
+          : `Showing ${startIndex}-${endIndex} of ${totalCount} users`;
+      
+      if (paginatedUsers.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" class="table-empty">
+              <div class="table-empty-icon">👥</div>
+              <h3>No users found</h3>
+              <p>Try adjusting your search or filters</p>
+            </td>
+          </tr>
+        `;
+        renderPagination();
+        return;
+      }
+      
+      paginatedUsers.forEach((user, index) => {
+        const row = document.createElement('tr');
+        row.className = 'animate-fade-in';
+        row.style.animationDelay = `${index * 0.03}s`;
+        
+        const roleBadgeClass = user.role === 'Admin' ? 'role-admin' : 
+                               user.role === 'Technician' ? 'role-technician' : 'role-employee';
+        
+        row.innerHTML = `
+          <td>
+            <div class="user-name-cell">
+              <div class="user-avatar-small">${user.name.charAt(0).toUpperCase()}</div>
+              <span>${user.name}</span>
+            </div>
+          </td>
+          <td>
+            <div class="user-email" title="${user.email}">${user.email}</div>
+          </td>
+          <td>
+            <span>${user.department || '-'}</span>
+          </td>
+          <td>
+            <span>${user.team || '-'}</span>
+          </td>
+          <td>
+            <span>${user.position || '-'}</span>
+          </td>
+          <td>
+            <span class="role-badge ${roleBadgeClass}">${user.role}</span>
+          </td>
+          <td>
+            <div style="display: flex; gap: 0.5rem;">
+              <button class="btn btn-icon btn-secondary" onclick="editUser('${user.id}')" title="Edit">
+                ✏️
+              </button>
+              <button class="btn btn-icon btn-danger" onclick="deleteUser('${user.id}')" title="Delete">
+                🗑️
+              </button>
+            </div>
+          </td>
+        `;
+        
+        tbody.appendChild(row);
+      });
+      
+      renderPagination();
+    }
+    
+    function openAddUserModal() {
+      const modal = document.getElementById('addUserModal');
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      resetForm();
+    }
+    
+    function closeAddUserModal() {
+      const modal = document.getElementById('addUserModal');
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+      resetForm();
+    }
+    
+    function resetForm() {
+      document.getElementById('addUserForm').reset();
+    }
+    
+    async function handleAddUser(event) {
+      event.preventDefault();
+      
+      const formData = {
+        name: document.getElementById('userName').value.trim(),
+        email: document.getElementById('userEmail').value.trim(),
+        department: document.getElementById('userDepartment').value.trim(),
+        team: document.getElementById('userTeam').value.trim(),
+        position: document.getElementById('userPosition').value.trim(),
+        role: document.getElementById('userRole').value
+      };
+      
+      // Generate ID
+      const maxId = originalUsers.reduce((max, u) => {
+        const num = parseInt(u.id.replace(/\D/g, ''));
+        return num > max ? num : max;
+      }, 0);
+      
+      const prefix = formData.role === 'Admin' ? 'ADMIN' : 
+                     formData.role === 'Technician' ? 'TECH' : 'EMP';
+      formData.id = `${prefix}${String(maxId + 1).padStart(3, '0')}`;
+      
+      originalUsers.push(formData);
+      
+      // Save to JSON (in production, this would be an API call)
+      localStorage.setItem('users_backup', JSON.stringify(originalUsers, null, 2));
+      console.log('User data updated. In production, this should be saved to a backend API.');
+      
+      alert('User added successfully!');
+      closeAddUserModal();
+      loadUsers();
+    }
+    
+    function editUser(id) {
+      const user = originalUsers.find(u => u.id === id);
+      if (!user) return;
+      
+      // For now, just show an alert. In production, open edit modal
+      alert(`Edit user: ${user.name}\nThis feature will be implemented soon.`);
+    }
+    
+    function deleteUser(id) {
+      const user = originalUsers.find(u => u.id === id);
+      if (!user) return;
+      
+      if (confirm(`Are you sure you want to delete ${user.name}?`)) {
+        const index = originalUsers.findIndex(u => u.id === id);
+        if (index > -1) {
+          originalUsers.splice(index, 1);
+          localStorage.setItem('users_backup', JSON.stringify(originalUsers, null, 2));
+          loadUsers();
+        }
+      }
+    }
+    
+    // Initialize event listeners
+    function initializeEventListeners() {
+      // Advanced filter handlers
+      const roleFilter = document.getElementById('roleFilter');
+      const departmentFilter = document.getElementById('departmentFilter');
+      const teamFilter = document.getElementById('teamFilter');
+      const clearFiltersBtn = document.getElementById('clearFiltersBtn');
+      
+      // Create debounced function
+      debouncedFilterUsers = AssetFlowUtils.debounce(filterUsers, 300);
+      
+      if (roleFilter) {
+        roleFilter.onchange = filterUsers;
+      }
+      if (departmentFilter) {
+        departmentFilter.onchange = filterUsers;
+      }
+      if (teamFilter) {
+        teamFilter.onchange = filterUsers;
+      }
+      if (clearFiltersBtn) {
+        clearFiltersBtn.onclick = clearAllFilters;
+      }
+    }
+    
+    // Initialize search input listener
+    function initializeSearchInput() {
+      const searchInput = document.getElementById('searchInput');
+      if (searchInput) {
+        // Create debounced function if not exists
+        if (!debouncedFilterUsers) {
+          debouncedFilterUsers = AssetFlowUtils.debounce(filterUsers, 300);
+        }
+        searchInput.oninput = debouncedFilterUsers;
+      }
+    }
+    
+    function clearAllFilters() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('roleFilter').value = '';
+      document.getElementById('departmentFilter').value = '';
+      document.getElementById('teamFilter').value = '';
+      filterUsers();
+    }
+    
+    document.querySelectorAll('.sortable').forEach(th => {
+      th.addEventListener('click', () => {
+        const column = th.dataset.sort;
+        sortTable(column);
+      });
+    });
+    
+    document.getElementById('pageSizeSelect')?.addEventListener('change', (e) => {
+      changePageSize(e.target.value);
+    });
+    
+    document.getElementById('addUserModal')?.addEventListener('click', (e) => {
+      if (e.target.id === 'addUserModal') {
+        closeAddUserModal();
+      }
+    });
+    
+    loadUsers();
+  </script>
+</body>
+</html>
+

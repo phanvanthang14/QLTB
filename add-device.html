@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Device - AssetFlow IT</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/shared.css">
+  <link rel="stylesheet" href="css/add-device.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <div class="header-left">
+        <button class="sidebar-toggle" title="Toggle Sidebar">☰</button>
+        <a href="index.html" class="logo">
+          <div class="logo-icon">💻</div>
+          <span>AssetFlow IT</span>
+        </a>
+      </div>
+      <div class="header-right">
+        <button class="back-btn" onclick="window.history.back()">← Back</button>
+        <button class="mobile-menu-toggle">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="sidebar">
+    <div class="sidebar-content">
+      <div class="sidebar-section">
+        <div class="sidebar-section-header">Admin Desktop</div>
+        <a href="dashboard.html" class="sidebar-item" data-title="Dashboard">
+          <i class="fas fa-th-large sidebar-item-icon"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="device-list.html" class="sidebar-item" data-title="Device List">
+          <i class="fas fa-box sidebar-item-icon"></i>
+          <span>Device List</span>
+        </a>
+        <a href="import-device.html" class="sidebar-item" data-title="Import Device">
+          <i class="fas fa-file-import sidebar-item-icon"></i>
+          <span>Import Device</span>
+        </a>
+        <a href="user-list.html" class="sidebar-item" data-title="User List">
+          <i class="fas fa-users sidebar-item-icon"></i>
+          <span>User List</span>
+        </a>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-section-header">Mobile/Tablet UI</div>
+        <a href="qr-scan.html" class="sidebar-item" data-title="QR Scan">
+          <i class="fas fa-qrcode sidebar-item-icon"></i>
+          <span>QR Scan</span>
+        </a>
+      </div>
+    </div>
+    
+    <div class="sidebar-user-profile">
+      <div class="user-profile">
+        <div class="user-avatar">JD</div>
+        <div class="user-info">
+          <span class="user-name">John Doe</span>
+          <span class="user-email">johndoe@company.com</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="main-content">
+    <h1 class="page-title">Add New Device</h1>
+    <form id="addDeviceForm" onsubmit="handleAddDevice(event)">
+      <div class="form-layout">
+        <!-- Left Column -->
+        <div class="form-column">
+          <!-- Basic Information -->
+          <div class="form-section">
+            <div class="form-section-header">
+              <h2>Basic Information</h2>
+            </div>
+            <div class="form-section-content">
+              <div class="form-group">
+                <label>Device Type <span class="required">*</span></label>
+                <div class="device-type-toggle">
+                  <button type="button" class="type-toggle-btn active" data-type="Container" onclick="toggleDeviceType('Container')">
+                    Container
+                  </button>
+                  <button type="button" class="type-toggle-btn" data-type="Component" onclick="toggleDeviceType('Component')">
+                    Component
+                  </button>
+                </div>
+              </div>
+
+              <div class="form-group" id="parentDeviceGroup" style="display: none;">
+                <label>Parent Device (Optional)</label>
+                <select id="parentDeviceSelect" class="form-input">
+                  <option value="">Select parent device...</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Device Name <span class="required">*</span></label>
+                <input type="text" id="deviceName" class="form-input" required>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Serial Number <span class="required">*</span></label>
+                  <input type="text" id="serialNumber" class="form-input" required>
+                </div>
+                <div class="form-group">
+                  <label>QR Code</label>
+                  <input type="text" id="qrCode" class="form-input" placeholder="Auto-generate">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Type <span class="required">*</span></label>
+                <select id="deviceType" class="form-input" required>
+                  <option value="">Select type...</option>
+                  <option value="Laptop">Laptop</option>
+                  <option value="Desktop">Desktop</option>
+                  <option value="Monitor">Monitor</option>
+                  <option value="Keyboard">Keyboard</option>
+                  <option value="Mouse">Mouse</option>
+                  <option value="RAM">RAM</option>
+                  <option value="SSD">SSD</option>
+                  <option value="HDD">HDD</option>
+                  <option value="Printer">Printer</option>
+                  <option value="Scanner">Scanner</option>
+                  <option value="Router">Router</option>
+                  <option value="Switch">Switch</option>
+                  <option value="Server">Server</option>
+                  <option value="Tablet">Tablet</option>
+                  <option value="Phone">Phone</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Status & Location -->
+          <div class="form-section">
+            <div class="form-section-header">
+              <h2>Status & Location</h2>
+            </div>
+            <div class="form-section-content">
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Status <span class="required">*</span></label>
+                  <select id="deviceStatus" class="form-input" required>
+                    <option value="IN_STOCK">In Stock</option>
+                    <option value="IN_USE">In Use</option>
+                    <option value="MAINTENANCE">Maintenance</option>
+                    <option value="RETIRED">Retired</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Location</label>
+                  <input type="text" id="deviceLocation" class="form-input" placeholder="e.g., Office Floor 3">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="form-column">
+          <!-- Specifications (Container only) -->
+          <div class="form-section" id="specsGroup">
+            <div class="form-section-header">
+              <h2>Specifications</h2>
+            </div>
+            <div class="form-section-content">
+              <div id="specsContainer">
+                <div class="spec-row">
+                  <input type="text" class="spec-key" placeholder="Key">
+                  <input type="text" class="spec-value" placeholder="Value">
+                  <button type="button" class="btn-remove-spec" onclick="removeSpecRow(this)">×</button>
+                </div>
+              </div>
+              <button type="button" class="btn-add-spec" onclick="addSpecRow()">+ Add Spec</button>
+            </div>
+          </div>
+
+          <!-- Assignment (Container only) -->
+          <div class="form-section" id="holderGroup">
+            <div class="form-section-header">
+              <h2>Assignment</h2>
+            </div>
+            <div class="form-section-content">
+              <div class="form-group">
+                <label>Holder (Employee) <span class="required">*</span></label>
+                <select id="holderSelect" class="form-input">
+                  <option value="">Select employee...</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Assigned Date</label>
+                <input type="date" id="assignedDate" class="form-input">
+              </div>
+            </div>
+          </div>
+
+          <!-- Purchase Information (Container only) -->
+          <div class="form-section" id="purchaseGroup">
+            <div class="form-section-header">
+              <h2>Purchase Information</h2>
+            </div>
+            <div class="form-section-content">
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Purchase Date</label>
+                  <input type="date" id="purchaseDate" class="form-input">
+                </div>
+                <div class="form-group">
+                  <label>Warranty Expiry</label>
+                  <input type="date" id="warrantyExpiry" class="form-input">
+                </div>
+              </div>
+              <div class="form-group" id="priceGroup">
+                <label>Price (VND)</label>
+                <input type="number" id="devicePrice" class="form-input" placeholder="0" min="0">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Add Device</button>
+      </div>
+    </form>
+  </main>
+
+  <script src="js/shared.js"></script>
+  <script>
+    let currentDeviceCategory = 'Container';
+    let allUsers = [];
+    let originalDevices = [];
+    
+    async function loadUsers() {
+      allUsers = await AssetFlowUtils.loadJSON('data/users.json');
+      populateHolderSelect();
+    }
+    
+    async function loadDevices() {
+      originalDevices = await AssetFlowUtils.loadJSON('data/devices.json');
+      populateParentDevices();
+    }
+    
+    function populateHolderSelect() {
+      const select = document.getElementById('holderSelect');
+      if (!select) return;
+      select.innerHTML = '<option value="">Select employee...</option>';
+      
+      // Only show Employee role users
+      allUsers.filter(u => u.role === 'Employee').forEach(user => {
+        const option = document.createElement('option');
+        option.value = user.id;
+        option.textContent = `${user.name} (${user.department || user.team || ''})`;
+        option.dataset.userData = JSON.stringify(user);
+        select.appendChild(option);
+      });
+    }
+    
+    function toggleDeviceType(type) {
+      currentDeviceCategory = type;
+      document.querySelectorAll('.type-toggle-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      document.querySelector(`[data-type="${type}"]`).classList.add('active');
+      
+      const parentGroup = document.getElementById('parentDeviceGroup');
+      const holderGroup = document.getElementById('holderGroup');
+      const purchaseGroup = document.getElementById('purchaseGroup');
+      const priceGroup = document.getElementById('priceGroup');
+      const specsGroup = document.getElementById('specsGroup');
+      
+      if (type === 'Component') {
+        parentGroup.style.display = 'block';
+        holderGroup.style.display = 'none';
+        purchaseGroup.style.display = 'none';
+        priceGroup.style.display = 'none';
+        specsGroup.style.display = 'none';
+      } else {
+        parentGroup.style.display = 'none';
+        holderGroup.style.display = 'flex';
+        purchaseGroup.style.display = 'flex';
+        priceGroup.style.display = 'block';
+        specsGroup.style.display = 'block';
+      }
+    }
+    
+    function populateParentDevices() {
+      const select = document.getElementById('parentDeviceSelect');
+      if (!select) return;
+      select.innerHTML = '<option value="">Select parent device...</option>';
+      
+      // Only show Container devices as parent options
+      originalDevices.forEach(device => {
+        if (device.category === 'Container') {
+          const option = document.createElement('option');
+          option.value = device.id;
+          option.textContent = `${device.name} (${device.serialNumber})`;
+          select.appendChild(option);
+        }
+      });
+    }
+    
+    function addSpecRow() {
+      const container = document.getElementById('specsContainer');
+      const row = document.createElement('div');
+      row.className = 'spec-row';
+      row.innerHTML = `
+        <input type="text" class="spec-key" placeholder="Key (e.g., processor)">
+        <input type="text" class="spec-value" placeholder="Value (e.g., Intel Core i7)">
+        <button type="button" class="btn-remove-spec" onclick="removeSpecRow(this)">×</button>
+      `;
+      container.appendChild(row);
+    }
+    
+    function removeSpecRow(btn) {
+      btn.closest('.spec-row').remove();
+    }
+    
+    function resetForm() {
+      document.getElementById('addDeviceForm').reset();
+      currentDeviceCategory = 'Container';
+      toggleDeviceType('Container');
+      document.getElementById('specsContainer').innerHTML = `
+        <div class="spec-row">
+          <input type="text" class="spec-key" placeholder="Key (e.g., processor)">
+          <input type="text" class="spec-value" placeholder="Value (e.g., Intel Core i7)">
+          <button type="button" class="btn-remove-spec" onclick="removeSpecRow(this)">×</button>
+        </div>
+      `;
+    }
+    
+    async function handleAddDevice(event) {
+      event.preventDefault();
+      
+      const formData = {
+        name: document.getElementById('deviceName').value.trim(),
+        serialNumber: document.getElementById('serialNumber').value.trim(),
+        qrCode: document.getElementById('qrCode').value.trim(),
+        type: document.getElementById('deviceType').value,
+        category: currentDeviceCategory,
+        status: document.getElementById('deviceStatus').value,
+        location: document.getElementById('deviceLocation').value.trim(),
+      };
+      
+      // Generate QR code if empty
+      if (!formData.qrCode) {
+        const prefix = currentDeviceCategory === 'Component' ? 'QR-COMP' : 'QR-DEV';
+        const random = Math.random().toString(36).substring(2, 8).toUpperCase();
+        formData.qrCode = `${prefix}-${random}`;
+      }
+      
+      // Generate ID
+      const maxId = originalDevices.reduce((max, d) => {
+        const num = parseInt(d.id.replace(/\D/g, ''));
+        return num > max ? num : max;
+      }, 0);
+      formData.id = currentDeviceCategory === 'Component' 
+        ? `COMP${String(maxId + 1).padStart(3, '0')}`
+        : `DEV${String(maxId + 1).padStart(3, '0')}`;
+      
+      // Handle Component
+      if (currentDeviceCategory === 'Component') {
+        const parentId = document.getElementById('parentDeviceSelect').value;
+        
+        if (parentId) {
+          // Component has parent - add to parent's children array
+          const parentDevice = originalDevices.find(d => d.id === parentId);
+          if (!parentDevice) {
+            alert('Parent device not found');
+            return;
+          }
+          
+          // Add component to parent's children array
+          if (!parentDevice.children) {
+            parentDevice.children = [];
+          }
+          
+          parentDevice.children.push({
+            id: formData.id,
+            qrCode: formData.qrCode,
+            name: formData.name,
+            type: formData.type,
+            category: formData.category,
+            serialNumber: formData.serialNumber,
+            status: formData.status
+          });
+        } else {
+          // Component without parent - add as standalone device
+          formData.children = [];
+          originalDevices.push(formData);
+        }
+        
+        // Save to JSON file
+        await saveDevicesToJSON();
+        
+        AssetFlowUtils.showToast('Component added successfully!', 'success');
+        setTimeout(() => {
+          window.location.href = 'device-list.html';
+        }, 1500);
+        return;
+      }
+      
+      // Handle Container
+      const specs = {};
+      document.querySelectorAll('.spec-row').forEach(row => {
+        const key = row.querySelector('.spec-key').value.trim();
+        const value = row.querySelector('.spec-value').value.trim();
+        if (key && value) {
+          specs[key] = value;
+        }
+      });
+      if (Object.keys(specs).length > 0) {
+        formData.specs = specs;
+      }
+      
+      const holderId = document.getElementById('holderSelect').value;
+      if (holderId) {
+        const selectedUser = allUsers.find(u => u.id === holderId);
+        if (selectedUser) {
+          formData.holder = {
+            id: selectedUser.id,
+            name: selectedUser.name,
+            email: selectedUser.email,
+            team: selectedUser.team || selectedUser.department
+          };
+        }
+      }
+      
+      const assignedDate = document.getElementById('assignedDate').value;
+      if (assignedDate) formData.assignedDate = assignedDate;
+      
+      const purchaseDate = document.getElementById('purchaseDate').value;
+      if (purchaseDate) formData.purchaseDate = purchaseDate;
+      
+      const warrantyExpiry = document.getElementById('warrantyExpiry').value;
+      if (warrantyExpiry) formData.warrantyExpiry = warrantyExpiry;
+      
+      const price = document.getElementById('devicePrice').value;
+      if (price) formData.price = parseInt(price);
+      
+      formData.children = [];
+      
+      // Add to devices array
+      originalDevices.push(formData);
+      
+      // Save to JSON file
+      await saveDevicesToJSON();
+      
+      AssetFlowUtils.showToast('Device added successfully!', 'success');
+      setTimeout(() => {
+        window.location.href = 'device-list.html';
+      }, 1500);
+    }
+    
+    async function saveDevicesToJSON() {
+      try {
+        const jsonData = JSON.stringify(originalDevices, null, 2);
+        localStorage.setItem('devices_backup', jsonData);
+        console.log('Device data updated. In production, this should be saved to a backend API.');
+      } catch (error) {
+        console.error('Error saving devices:', error);
+        alert('Error saving device. Please check console for details.');
+      }
+    }
+    
+    // Initialize on page load
+    loadUsers();
+    loadDevices();
+  </script>
+</body>
+</html>
+

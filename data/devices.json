@@ -1,0 +1,596 @@
+[
+  {
+    "id": "DEV001",
+    "qrCode": "QR-DEV001-ABC123",
+    "name": "Dell Latitude 7420",
+    "type": "Laptop",
+    "category": "Container",
+    "serialNumber": "88273G1",
+    "status": "IN_USE",
+    "specs": {
+      "processor": "Intel Core i7-1185G7",
+      "ram": "16GB",
+      "storage": "512GB SSD",
+      "screen": "14 inch FHD"
+    },
+    "holder": {
+      "id": "EMP001",
+      "name": "Nguyen Van A",
+      "email": "nguyenvana@company.com",
+      "team": "Engineering"
+    },
+    "assignedDate": "2024-01-15",
+    "location": "Office Floor 3",
+    "children": [
+      {
+        "id": "COMP001",
+        "qrCode": "QR-COMP001-RAM16",
+        "name": "DDR4 16GB RAM",
+        "type": "RAM",
+        "category": "Component",
+        "serialNumber": "RAM-DELL-001",
+        "status": "IN_USE"
+      },
+      {
+        "id": "COMP002",
+        "qrCode": "QR-COMP002-SSD512",
+        "name": "Samsung SSD 512GB",
+        "type": "SSD",
+        "category": "Component",
+        "serialNumber": "SSD-SAM-512-001",
+        "status": "IN_USE"
+      }
+    ],
+    "purchaseDate": "2023-12-01",
+    "warrantyExpiry": "2026-12-01",
+    "price": 25000000
+  },
+  {
+    "id": "DEV002",
+    "qrCode": "QR-DEV002-HP24",
+    "name": "HP 24 inch Monitor",
+    "type": "Monitor",
+    "category": "Container",
+    "serialNumber": "HPMON24A001",
+    "status": "IN_USE",
+    "specs": {
+      "size": "24 inch",
+      "resolution": "1920x1080",
+      "panel": "IPS"
+    },
+    "holder": {
+      "id": "EMP001",
+      "name": "Nguyen Van A",
+      "email": "nguyenvana@company.com",
+      "team": "Engineering"
+    },
+    "assignedDate": "2024-01-15",
+    "location": "Office Floor 3",
+    "children": [],
+    "purchaseDate": "2023-11-20",
+    "warrantyExpiry": "2026-11-20",
+    "price": 5000000
+  },
+  {
+    "id": "DEV003",
+    "qrCode": "QR-DEV003-LOGI380",
+    "name": "Logitech K380 Wireless Keyboard",
+    "type": "Keyboard",
+    "category": "Component",
+    "serialNumber": "LKB380001",
+    "status": "IN_USE",
+    "specs": {
+      "connection": "Bluetooth",
+      "layout": "US QWERTY"
+    },
+    "holder": {
+      "id": "EMP001",
+      "name": "Nguyen Van A",
+      "email": "nguyenvana@company.com",
+      "team": "Engineering"
+    },
+    "assignedDate": "2024-01-15",
+    "location": "Office Floor 3",
+    "children": [],
+    "purchaseDate": "2023-10-15",
+    "warrantyExpiry": "2025-10-15",
+    "price": 1200000
+  },
+  {
+    "id": "DEV004",
+    "qrCode": "QR-DEV004-PC001",
+    "name": "Desktop PC Case",
+    "type": "PC Case",
+    "category": "Container",
+    "serialNumber": "PC-CASE-001",
+    "status": "IN_STOCK",
+    "specs": {
+      "formFactor": "ATX",
+      "brand": "Cooler Master"
+    },
+    "holder": null,
+    "assignedDate": null,
+    "location": "Warehouse A",
+    "children": [
+      {
+        "id": "COMP003",
+        "qrCode": "QR-COMP003-CPU",
+        "name": "Intel Core i5-12400",
+        "type": "CPU",
+        "category": "Component",
+        "serialNumber": "CPU-INTEL-12400-001",
+        "status": "IN_STOCK"
+      },
+      {
+        "id": "COMP004",
+        "qrCode": "QR-COMP004-RAM32",
+        "name": "DDR4 32GB RAM",
+        "type": "RAM",
+        "category": "Component",
+        "serialNumber": "RAM-CORSAIR-32-001",
+        "status": "IN_STOCK"
+      }
+    ],
+    "purchaseDate": "2024-01-10",
+    "warrantyExpiry": "2027-01-10",
+    "price": 15000000
+  },
+  {
+    "id": "DEV005",
+    "qrCode": "QR-DEV005-LENOVO",
+    "name": "Lenovo ThinkPad X1 Carbon",
+    "type": "Laptop",
+    "category": "Container",
+    "serialNumber": "TPX1C-2024-001",
+    "status": "MAINTENANCE",
+    "specs": {
+      "processor": "Intel Core i7-1260P",
+      "ram": "32GB",
+      "storage": "1TB SSD",
+      "screen": "14 inch 4K"
+    },
+    "holder": {
+      "id": "EMP002",
+      "name": "Tran Thi B",
+      "email": "tranthib@company.com",
+      "team": "Marketing"
+    },
+    "assignedDate": "2024-02-01",
+    "location": "IT Service Center",
+    "children": [],
+    "purchaseDate": "2024-01-05",
+    "warrantyExpiry": "2027-01-05",
+    "price": 35000000
+  },
+  {
+    "id": "DEV006",
+    "qrCode": "QR-DEV006-BROKEN",
+    "name": "Dell OptiPlex 7090",
+    "type": "PC Case",
+    "category": "Container",
+    "serialNumber": "OP7090-001",
+    "status": "BROKEN",
+    "specs": {
+      "formFactor": "SFF",
+      "brand": "Dell"
+    },
+    "holder": null,
+    "assignedDate": null,
+    "location": "IT Service Center",
+    "children": [],
+    "purchaseDate": "2022-06-15",
+    "warrantyExpiry": "2025-06-15",
+    "price": 18000000
+  },
+  {
+    "id": "DEV007",
+    "qrCode": "QR-DEV007-MACBOOK",
+    "name": "MacBook Pro 16 inch",
+    "type": "Laptop",
+    "category": "Container",
+    "serialNumber": "MBP16-2024-001",
+    "status": "IN_USE",
+    "specs": {
+      "processor": "Apple M2 Pro",
+      "ram": "32GB",
+      "storage": "1TB SSD",
+      "screen": "16 inch Retina"
+    },
+    "holder": {
+      "id": "EMP003",
+      "name": "Hoang Van E",
+      "email": "hoangvane@company.com",
+      "team": "Engineering"
+    },
+    "assignedDate": "2024-02-10",
+    "location": "Office Floor 3",
+    "children": [],
+    "purchaseDate": "2024-01-20",
+    "warrantyExpiry": "2027-01-20",
+    "price": 45000000
+  },
+  {
+    "id": "DEV008",
+    "qrCode": "QR-DEV008-DELL27",
+    "name": "Dell 27 inch Monitor",
+    "type": "Monitor",
+    "category": "Container",
+    "serialNumber": "DELL27-001",
+    "status": "IN_USE",
+    "specs": {
+      "size": "27 inch",
+      "resolution": "2560x1440",
+      "panel": "IPS"
+    },
+    "holder": {
+      "id": "EMP003",
+      "name": "Hoang Van E",
+      "email": "hoangvane@company.com",
+      "team": "Engineering"
+    },
+    "assignedDate": "2024-02-10",
+    "location": "Office Floor 3",
+    "children": [],
+    "purchaseDate": "2024-01-15",
+    "warrantyExpiry": "2027-01-15",
+    "price": 8000000
+  },
+  {
+    "id": "DEV009",
+    "qrCode": "QR-DEV009-SALES-LAPTOP",
+    "name": "HP EliteBook 850",
+    "type": "Laptop",
+    "category": "Container",
+    "serialNumber": "HP850-SALES-001",
+    "status": "IN_USE",
+    "specs": {
+      "processor": "Intel Core i7-1355U",
+      "ram": "16GB",
+      "storage": "512GB SSD",
+      "screen": "15.6 inch FHD"
+    },
+    "holder": {
+      "id": "EMP004",
+      "name": "Le Thi F",
+      "email": "lethif@company.com",
+      "team": "Sales"
+    },
+    "assignedDate": "2024-01-20",
+    "location": "Office Floor 2",
+    "children": [],
+    "purchaseDate": "2024-01-10",
+    "warrantyExpiry": "2027-01-10",
+    "price": 22000000
+  },
+  {
+    "id": "DEV010",
+    "qrCode": "QR-DEV010-MARKETING-MON",
+    "name": "LG 27 inch Monitor",
+    "type": "Monitor",
+    "category": "Container",
+    "serialNumber": "LG27-MKT-001",
+    "status": "IN_USE",
+    "specs": {
+      "size": "27 inch",
+      "resolution": "1920x1080",
+      "panel": "IPS"
+    },
+    "holder": {
+      "id": "EMP002",
+      "name": "Tran Thi B",
+      "email": "tranthib@company.com",
+      "team": "Marketing"
+    },
+    "assignedDate": "2024-02-01",
+    "location": "Office Floor 2",
+    "children": [],
+    "purchaseDate": "2024-01-25",
+    "warrantyExpiry": "2027-01-25",
+    "price": 6000000
+  },
+  {
+    "id": "DEV011",
+    "qrCode": "QR-DEV011-DESK001",
+    "name": "Office Desk 120cm",
+    "type": "Desk",
+    "category": "Container",
+    "serialNumber": "DESK-120-001",
+    "status": "IN_USE",
+    "specs": {
+      "size": "120x60cm",
+      "material": "Wood",
+      "color": "Brown"
+    },
+    "holder": {
+      "id": "EMP001",
+      "name": "Nguyen Van A",
+      "email": "nguyenvana@company.com",
+      "team": "Engineering"
+    },
+    "assignedDate": "2024-01-10",
+    "location": "Office Floor 3",
+    "children": [],
+    "purchaseDate": "2023-12-15",
+    "warrantyExpiry": null,
+    "price": 3500000
+  },
+  {
+    "id": "DEV012",
+    "qrCode": "QR-DEV012-CHAIR001",
+    "name": "Ergonomic Office Chair",
+    "type": "Chair",
+    "category": "Container",
+    "serialNumber": "CHAIR-ERG-001",
+    "status": "IN_USE",
+    "specs": {
+      "material": "Mesh",
+      "adjustable": "Yes",
+      "armrest": "Yes"
+    },
+    "holder": {
+      "id": "EMP001",
+      "name": "Nguyen Van A",
+      "email": "nguyenvana@company.com",
+      "team": "Engineering"
+    },
+    "assignedDate": "2024-01-10",
+    "location": "Office Floor 3",
+    "children": [],
+    "purchaseDate": "2023-12-15",
+    "warrantyExpiry": "2026-12-15",
+    "price": 4500000
+  },
+  {
+    "id": "DEV013",
+    "qrCode": "QR-DEV013-ROUTER001",
+    "name": "TP-Link Archer AX50 WiFi Router",
+    "type": "Router",
+    "category": "Container",
+    "serialNumber": "TPL-ROUTER-001",
+    "status": "IN_USE",
+    "specs": {
+      "wifi": "WiFi 6 (802.11ax)",
+      "speed": "3000 Mbps",
+      "ports": "4x Gigabit Ethernet",
+      "frequency": "Dual-band"
+    },
+    "holder": {
+      "id": "EMP005",
+      "name": "IT Admin",
+      "email": "itadmin@company.com",
+      "team": "IT"
+    },
+    "assignedDate": "2024-01-05",
+    "location": "Office Floor 3 - Server Room",
+    "children": [],
+    "purchaseDate": "2023-11-10",
+    "warrantyExpiry": "2026-11-10",
+    "price": 3500000
+  },
+  {
+    "id": "DEV014",
+    "qrCode": "QR-DEV014-FAN001",
+    "name": "Standing Fan 16 inch",
+    "type": "Fan",
+    "category": "Container",
+    "serialNumber": "FAN-16-001",
+    "status": "IN_USE",
+    "specs": {
+      "size": "16 inch",
+      "speed": "3 levels",
+      "oscillation": "Yes",
+      "remote": "Yes"
+    },
+    "holder": {
+      "id": "EMP002",
+      "name": "Tran Thi B",
+      "email": "tranthib@company.com",
+      "team": "Marketing"
+    },
+    "assignedDate": "2024-02-05",
+    "location": "Office Floor 2",
+    "children": [],
+    "purchaseDate": "2024-01-20",
+    "warrantyExpiry": "2027-01-20",
+    "price": 800000
+  },
+  {
+    "id": "DEV015",
+    "qrCode": "QR-DEV015-DESK002",
+    "name": "Standing Desk Adjustable",
+    "type": "Desk",
+    "category": "Container",
+    "serialNumber": "DESK-STD-002",
+    "status": "IN_USE",
+    "specs": {
+      "size": "140x70cm",
+      "material": "Steel + Wood",
+      "adjustable": "Electric",
+      "height": "70-120cm"
+    },
+    "holder": {
+      "id": "EMP003",
+      "name": "Le Van C",
+      "email": "levanc@company.com",
+      "team": "Design"
+    },
+    "assignedDate": "2024-01-20",
+    "location": "Office Floor 2",
+    "children": [],
+    "purchaseDate": "2024-01-10",
+    "warrantyExpiry": "2027-01-10",
+    "price": 8500000
+  },
+  {
+    "id": "DEV016",
+    "qrCode": "QR-DEV016-CHAIR002",
+    "name": "Gaming Chair Pro",
+    "type": "Chair",
+    "category": "Container",
+    "serialNumber": "CHAIR-GAM-002",
+    "status": "IN_USE",
+    "specs": {
+      "material": "Leather",
+      "adjustable": "Yes",
+      "lumbar": "Support",
+      "reclining": "180 degrees"
+    },
+    "holder": {
+      "id": "EMP003",
+      "name": "Le Van C",
+      "email": "levanc@company.com",
+      "team": "Design"
+    },
+    "assignedDate": "2024-01-20",
+    "location": "Office Floor 2",
+    "children": [],
+    "purchaseDate": "2024-01-10",
+    "warrantyExpiry": "2027-01-10",
+    "price": 5500000
+  },
+  {
+    "id": "DEV017",
+    "qrCode": "QR-DEV017-ROUTER002",
+    "name": "Cisco Business Router",
+    "type": "Router",
+    "category": "Container",
+    "serialNumber": "CISCO-RT-002",
+    "status": "IN_USE",
+    "specs": {
+      "wifi": "WiFi 6E",
+      "speed": "6000 Mbps",
+      "ports": "8x Gigabit + 2x 10G",
+      "frequency": "Tri-band"
+    },
+    "holder": {
+      "id": "EMP005",
+      "name": "IT Admin",
+      "email": "itadmin@company.com",
+      "team": "IT"
+    },
+    "assignedDate": "2024-01-08",
+    "location": "Office Floor 1 - Main Server Room",
+    "children": [],
+    "purchaseDate": "2023-12-01",
+    "warrantyExpiry": "2026-12-01",
+    "price": 12000000
+  },
+  {
+    "id": "DEV018",
+    "qrCode": "QR-DEV018-FAN002",
+    "name": "Ceiling Fan 56 inch",
+    "type": "Fan",
+    "category": "Container",
+    "serialNumber": "FAN-CEIL-002",
+    "status": "IN_USE",
+    "specs": {
+      "size": "56 inch",
+      "speed": "5 levels",
+      "remote": "Yes",
+      "light": "LED"
+    },
+    "holder": null,
+    "assignedDate": null,
+    "location": "Office Floor 1 - Meeting Room",
+    "children": [],
+    "purchaseDate": "2023-10-15",
+    "warrantyExpiry": "2026-10-15",
+    "price": 2500000
+  },
+  {
+    "id": "DEV019",
+    "qrCode": "QR-DEV019-DESK003",
+    "name": "Conference Table 3m",
+    "type": "Desk",
+    "category": "Container",
+    "serialNumber": "DESK-CONF-003",
+    "status": "IN_USE",
+    "specs": {
+      "size": "300x100cm",
+      "material": "Glass + Steel",
+      "capacity": "10-12 people"
+    },
+    "holder": null,
+    "assignedDate": null,
+    "location": "Office Floor 1 - Meeting Room",
+    "children": [],
+    "purchaseDate": "2023-09-20",
+    "warrantyExpiry": null,
+    "price": 15000000
+  },
+  {
+    "id": "DEV020",
+    "qrCode": "QR-DEV020-CHAIR003",
+    "name": "Conference Chair Set (10 units)",
+    "type": "Chair",
+    "category": "Container",
+    "serialNumber": "CHAIR-CONF-003",
+    "status": "IN_USE",
+    "specs": {
+      "quantity": "10 units",
+      "material": "Fabric",
+      "stackable": "Yes"
+    },
+    "holder": null,
+    "assignedDate": null,
+    "location": "Office Floor 1 - Meeting Room",
+    "children": [],
+    "purchaseDate": "2023-09-20",
+    "warrantyExpiry": "2026-09-20",
+    "price": 12000000
+  },
+  {
+    "id": "DEV021",
+    "qrCode": "QR-DEV021-ROUTER003",
+    "name": "Access Point WiFi 6",
+    "type": "Router",
+    "category": "Container",
+    "serialNumber": "AP-WIFI6-003",
+    "status": "IN_USE",
+    "specs": {
+      "wifi": "WiFi 6",
+      "speed": "1800 Mbps",
+      "poe": "Yes",
+      "coverage": "150m²"
+    },
+    "holder": {
+      "id": "EMP005",
+      "name": "IT Admin",
+      "email": "itadmin@company.com",
+      "team": "IT"
+    },
+    "assignedDate": "2024-01-12",
+    "location": "Office Floor 2",
+    "children": [],
+    "purchaseDate": "2024-01-05",
+    "warrantyExpiry": "2027-01-05",
+    "price": 2800000
+  },
+  {
+    "id": "DEV022",
+    "qrCode": "QR-DEV022-FAN003",
+    "name": "USB Desk Fan",
+    "type": "Fan",
+    "category": "Component",
+    "serialNumber": "FAN-USB-003",
+    "status": "IN_USE",
+    "specs": {
+      "size": "6 inch",
+      "power": "USB",
+      "speed": "3 levels",
+      "portable": "Yes"
+    },
+    "holder": {
+      "id": "EMP004",
+      "name": "Pham Thi D",
+      "email": "phamthid@company.com",
+      "team": "Design"
+    },
+    "assignedDate": "2024-02-10",
+    "location": "Office Floor 2",
+    "children": [],
+    "purchaseDate": "2024-01-30",
+    "warrantyExpiry": "2025-01-30",
+    "price": 250000
+  }
+]
