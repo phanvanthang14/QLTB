@@ -460,9 +460,42 @@
       document.getElementById('detailTitle').textContent = isSoftwareAccount ? 'Software Account' : currentDevice.type;
       document.getElementById('deviceNameLarge').textContent = currentDevice.name;
       
-      // Icon
+      // Icon with software account info
       if (isSoftwareAccount) {
-        document.getElementById('deviceImageLarge').innerHTML = '<i class="fas fa-key" style="font-size: 4rem; color: var(--primary-color);"></i>';
+        const used = currentDevice.usedLicenses || 0;
+        const total = currentDevice.totalLicenses || 0;
+        const expiryDate = currentDevice.expiryDate ? AssetFlowUtils.formatDate(currentDevice.expiryDate) : 'N/A';
+        const expiryDateObj = currentDevice.expiryDate ? new Date(currentDevice.expiryDate) : null;
+        const today = new Date();
+        const daysLeft = expiryDateObj ? Math.floor((expiryDateObj - today) / (1000 * 60 * 60 * 24)) : null;
+        const isExpired = daysLeft !== null && daysLeft < 0;
+        const expiryColor = isExpired ? '#ef4444' : (daysLeft !== null && daysLeft < 30 ? '#f59e0b' : '#10b981');
+        
+        document.getElementById('deviceImageLarge').innerHTML = `
+          <div class="software-image-content">
+            <i class="fas fa-key" style="font-size: 4rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+            <div class="software-info-stats-grid">
+              <div class="software-stat-item">
+                <i class="fas fa-calendar-times" style="font-size: 1.5rem; color: ${expiryColor}; margin-bottom: 0.5rem;"></i>
+                <div class="software-stat-label">Ngày hết hạn</div>
+                <div class="software-stat-value" style="color: ${expiryColor};">${expiryDate}</div>
+                ${daysLeft !== null ? `<div class="software-stat-subtext" style="color: ${expiryColor};">${isExpired ? 'Đã hết hạn' : `${daysLeft} ngày còn lại`}</div>` : ''}
+              </div>
+              <div class="software-stat-item">
+                <i class="fas fa-users" style="font-size: 1.5rem; color: var(--primary-color); margin-bottom: 0.5rem;"></i>
+                <div class="software-stat-label">Đang sử dụng</div>
+                <div class="software-stat-value">${used}</div>
+                <div class="software-stat-subtext">người</div>
+              </div>
+              <div class="software-stat-item">
+                <i class="fas fa-user-check" style="font-size: 1.5rem; color: var(--primary-color); margin-bottom: 0.5rem;"></i>
+                <div class="software-stat-label">Tổng số</div>
+                <div class="software-stat-value">${total}</div>
+                <div class="software-stat-subtext">người</div>
+              </div>
+            </div>
+          </div>
+        `;
       } else {
         document.getElementById('deviceImageLarge').textContent = AssetFlowUtils.getDeviceIcon(currentDevice.type);
       }
