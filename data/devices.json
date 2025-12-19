@@ -592,5 +592,343 @@
     "purchaseDate": "2024-01-30",
     "warrantyExpiry": "2025-01-30",
     "price": 250000
+  },
+  {
+    "id": "COMP005",
+    "qrCode": "QR-COMP005-RAM8",
+    "name": "DDR4 8GB RAM Module",
+    "type": "RAM",
+    "category": "Component",
+    "serialNumber": "RAM-KINGSTON-8-001",
+    "status": "IN_STOCK",
+    "specs": {
+      "capacity": "8GB",
+      "type": "DDR4",
+      "speed": "3200MHz"
+    },
+    "holder": null,
+    "assignedDate": null,
+    "location": "Warehouse A",
+    "children": [],
+    "purchaseDate": "2024-01-15",
+    "warrantyExpiry": "2027-01-15",
+    "price": 1500000
+  },
+  {
+    "id": "COMP006",
+    "qrCode": "QR-COMP006-SSD256",
+    "name": "Samsung SSD 256GB",
+    "type": "SSD",
+    "category": "Component",
+    "serialNumber": "SSD-SAM-256-002",
+    "status": "IN_STOCK",
+    "specs": {
+      "capacity": "256GB",
+      "interface": "NVMe M.2",
+      "speed": "3500 MB/s"
+    },
+    "holder": null,
+    "assignedDate": null,
+    "location": "Warehouse A",
+    "children": [],
+    "purchaseDate": "2024-01-20",
+    "warrantyExpiry": "2027-01-20",
+    "price": 2000000
+  },
+  {
+    "id": "COMP007",
+    "qrCode": "QR-COMP007-SSD1TB",
+    "name": "WD Black SSD 1TB",
+    "type": "SSD",
+    "category": "Component",
+    "serialNumber": "SSD-WD-1TB-001",
+    "status": "IN_STOCK",
+    "specs": {
+      "capacity": "1TB",
+      "interface": "NVMe M.2",
+      "speed": "3400 MB/s"
+    },
+    "holder": null,
+    "assignedDate": null,
+    "location": "Warehouse A",
+    "children": [],
+    "purchaseDate": "2024-02-01",
+    "warrantyExpiry": "2027-02-01",
+    "price": 4500000
+  },
+  {
+    "id": "COMP008",
+    "qrCode": "QR-COMP008-CPU",
+    "name": "AMD Ryzen 7 5800X",
+    "type": "CPU",
+    "category": "Component",
+    "serialNumber": "CPU-AMD-5800X-001",
+    "status": "IN_STOCK",
+    "specs": {
+      "cores": "8",
+      "threads": "16",
+      "baseClock": "3.8 GHz",
+      "boostClock": "4.7 GHz"
+    },
+    "holder": null,
+    "assignedDate": null,
+    "location": "Warehouse A",
+    "children": [],
+    "purchaseDate": "2024-01-25",
+    "warrantyExpiry": "2027-01-25",
+    "price": 8000000
+  },
+  {
+    "id": "COMP009",
+    "qrCode": "QR-COMP009-GPU",
+    "name": "NVIDIA RTX 3060",
+    "type": "GPU",
+    "category": "Component",
+    "serialNumber": "GPU-NV-3060-001",
+    "status": "IN_STOCK",
+    "specs": {
+      "memory": "12GB GDDR6",
+      "cuda": "3584 cores",
+      "boostClock": "1777 MHz"
+    },
+    "holder": null,
+    "assignedDate": null,
+    "location": "Warehouse A",
+    "children": [],
+    "purchaseDate": "2024-02-05",
+    "warrantyExpiry": "2027-02-05",
+    "price": 12000000
+  },
+  {
+    "id": "COMP010",
+    "qrCode": "QR-COMP010-MOUSE",
+    "name": "Logitech MX Master 3",
+    "type": "Mouse",
+    "category": "Component",
+    "serialNumber": "MS-LOGI-MX3-001",
+    "status": "IN_STOCK",
+    "specs": {
+      "connection": "Wireless",
+      "dpi": "4000",
+      "battery": "70 days"
+    },
+    "holder": null,
+    "assignedDate": null,
+    "location": "Warehouse A",
+    "children": [],
+    "purchaseDate": "2024-01-18",
+    "warrantyExpiry": "2027-01-18",
+    "price": 2500000
+  },
+  {
+    "id": "COMP011",
+    "qrCode": "QR-COMP011-KEYBOARD",
+    "name": "Mechanical Keyboard RGB",
+    "type": "Keyboard",
+    "category": "Component",
+    "serialNumber": "KB-MECH-RGB-001",
+    "status": "IN_STOCK",
+    "specs": {
+      "switch": "Cherry MX Blue",
+      "layout": "Full-size",
+      "backlight": "RGB"
+    },
+    "holder": null,
+    "assignedDate": null,
+    "location": "Warehouse A",
+    "children": [],
+    "purchaseDate": "2024-01-22",
+    "warrantyExpiry": "2027-01-22",
+    "price": 3000000
+  },
+  {
+    "id": "COMP012",
+    "qrCode": "QR-COMP012-WEBCAM",
+    "name": "Logitech C920 HD Webcam",
+    "type": "Webcam",
+    "category": "Component",
+    "serialNumber": "CAM-LOGI-C920-001",
+    "status": "IN_STOCK",
+    "specs": {
+      "resolution": "1080p",
+      "fps": "30",
+      "microphone": "Stereo"
+    },
+    "holder": null,
+    "assignedDate": null,
+    "location": "Warehouse A",
+    "children": [],
+    "purchaseDate": "2024-01-28",
+    "warrantyExpiry": "2027-01-28",
+    "price": 3500000
+  },
+  {
+    "id": "COMP013",
+    "qrCode": "QR-COMP013-SPEAKER",
+    "name": "Creative Pebble Speakers",
+    "type": "Speaker",
+    "category": "Component",
+    "serialNumber": "SPK-CRE-PEB-001",
+    "status": "IN_STOCK",
+    "specs": {
+      "power": "8W",
+      "connection": "USB + 3.5mm",
+      "design": "2.0"
+    },
+    "holder": null,
+    "assignedDate": null,
+    "location": "Warehouse A",
+    "children": [],
+    "purchaseDate": "2024-02-08",
+    "warrantyExpiry": "2027-02-08",
+    "price": 800000
+  },
+  {
+    "id": "COMP014",
+    "qrCode": "QR-COMP014-HEADSET",
+    "name": "HyperX Cloud II Headset",
+    "type": "Headset",
+    "category": "Component",
+    "serialNumber": "HS-HYPX-CL2-001",
+    "status": "IN_STOCK",
+    "specs": {
+      "connection": "USB + 3.5mm",
+      "microphone": "Detachable",
+      "surround": "7.1"
+    },
+    "holder": null,
+    "assignedDate": null,
+    "location": "Warehouse A",
+    "children": [],
+    "purchaseDate": "2024-02-12",
+    "warrantyExpiry": "2027-02-12",
+    "price": 4000000
+  },
+  {
+    "id": "COMP015",
+    "qrCode": "QR-COMP015-MOTHERBOARD",
+    "name": "ASUS B550 Motherboard",
+    "type": "Motherboard",
+    "category": "Component",
+    "serialNumber": "MB-ASUS-B550-001",
+    "status": "IN_STOCK",
+    "specs": {
+      "chipset": "AMD B550",
+      "socket": "AM4",
+      "ramSlots": "4",
+      "m2Slots": "2"
+    },
+    "holder": null,
+    "assignedDate": null,
+    "location": "Warehouse A",
+    "children": [],
+    "purchaseDate": "2024-01-30",
+    "warrantyExpiry": "2027-01-30",
+    "price": 5000000
+  },
+  {
+    "id": "COMP016",
+    "qrCode": "QR-COMP016-PSU",
+    "name": "Corsair RM750 Power Supply",
+    "type": "PSU",
+    "category": "Component",
+    "serialNumber": "PSU-COR-RM750-001",
+    "status": "IN_STOCK",
+    "specs": {
+      "wattage": "750W",
+      "efficiency": "80+ Gold",
+      "modular": "Fully Modular"
+    },
+    "holder": null,
+    "assignedDate": null,
+    "location": "Warehouse A",
+    "children": [],
+    "purchaseDate": "2024-02-03",
+    "warrantyExpiry": "2027-02-03",
+    "price": 3500000
+  },
+  {
+    "id": "COMP017",
+    "qrCode": "QR-COMP017-COOLER",
+    "name": "Noctua NH-D15 CPU Cooler",
+    "type": "Cooler",
+    "category": "Component",
+    "serialNumber": "COOL-NOC-D15-001",
+    "status": "IN_STOCK",
+    "specs": {
+      "type": "Air Cooler",
+      "fans": "2x 140mm",
+      "tdp": "220W"
+    },
+    "holder": null,
+    "assignedDate": null,
+    "location": "Warehouse A",
+    "children": [],
+    "purchaseDate": "2024-02-07",
+    "warrantyExpiry": "2027-02-07",
+    "price": 4500000
+  },
+  {
+    "id": "COMP018",
+    "qrCode": "QR-COMP018-DOCK",
+    "name": "USB-C Docking Station",
+    "type": "Dock",
+    "category": "Component",
+    "serialNumber": "DOCK-USB-C-001",
+    "status": "IN_STOCK",
+    "specs": {
+      "ports": "HDMI, USB-A x4, USB-C x2, Ethernet",
+      "power": "100W PD",
+      "display": "Dual 4K"
+    },
+    "holder": null,
+    "assignedDate": null,
+    "location": "Warehouse A",
+    "children": [],
+    "purchaseDate": "2024-02-10",
+    "warrantyExpiry": "2027-02-10",
+    "price": 5500000
+  },
+  {
+    "id": "COMP019",
+    "qrCode": "QR-COMP019-MIC",
+    "name": "Blue Yeti USB Microphone",
+    "type": "Microphone",
+    "category": "Component",
+    "serialNumber": "MIC-BLUE-YETI-001",
+    "status": "IN_STOCK",
+    "specs": {
+      "type": "Condenser",
+      "patterns": "4 patterns",
+      "connection": "USB"
+    },
+    "holder": null,
+    "assignedDate": null,
+    "location": "Warehouse A",
+    "children": [],
+    "purchaseDate": "2024-02-14",
+    "warrantyExpiry": "2027-02-14",
+    "price": 6000000
+  },
+  {
+    "id": "COMP020",
+    "qrCode": "QR-COMP020-HDD",
+    "name": "Seagate 2TB HDD",
+    "type": "HDD",
+    "category": "Component",
+    "serialNumber": "HDD-SEA-2TB-001",
+    "status": "IN_STOCK",
+    "specs": {
+      "capacity": "2TB",
+      "rpm": "7200",
+      "interface": "SATA 6Gb/s"
+    },
+    "holder": null,
+    "assignedDate": null,
+    "location": "Warehouse A",
+    "children": [],
+    "purchaseDate": "2024-01-25",
+    "warrantyExpiry": "2027-01-25",
+    "price": 2500000
   }
 ]

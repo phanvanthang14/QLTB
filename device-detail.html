@@ -111,15 +111,21 @@
         
         <div class="tab-content" id="hierarchyTab">
           <div class="content-card">
-            <h3 style="margin-bottom: 1rem;">Device Hierarchy</h3>
+            <div class="hierarchy-header">
+              <h3 style="margin-bottom: 1rem;">Device Hierarchy</h3>
+              <button class="btn btn-secondary add-component-btn" id="addComponentBtn" type="button">
+                <span class="add-icon">+</span>
+                <span>Add Component</span>
+              </button>
+            </div>
             <div class="hierarchy-tree" id="hierarchyTree"></div>
           </div>
         </div>
         
         <div class="tab-content" id="historyTab">
           <div class="content-card">
-            <h3 style="margin-bottom: 1rem;">Activity History</h3>
-            <div id="historyContent"></div>
+            <h3 style="margin-bottom: 1rem;">Lifecycle History</h3>
+            <div class="lifecycle-timeline" id="historyContent"></div>
           </div>
         </div>
         
@@ -165,11 +171,42 @@
       </div>
     </div>
   </div>
+  
+  <!-- Add Component Modal -->
+  <div class="component-modal-overlay" id="addComponentModal">
+    <div class="component-modal-content">
+      <div class="component-modal-header">
+        <h2>Add Component</h2>
+        <button class="component-modal-close" type="button" onclick="closeAddComponentModal()">×</button>
+      </div>
+      <div class="component-modal-body">
+        <p class="component-modal-description">
+          Select an existing component to attach to this device hierarchy. This action is mock-only and will not be saved to the backend.
+        </p>
+        <div class="component-select-wrapper" id="componentSelectWrapper">
+          <div class="component-select-display" id="componentSelectDisplay">
+            Select a component...
+          </div>
+          <div class="component-options" id="componentOptions"></div>
+          <!-- Hidden native select for accessibility / fallback -->
+          <select id="componentSelect" class="component-select-hidden"></select>
+        </div>
+        <div id="componentEmptyState" class="component-empty-state" style="display: none;">
+          No available components to add.
+        </div>
+      </div>
+      <div class="component-modal-actions">
+        <button class="btn btn-secondary" type="button" id="cancelAddComponentBtn">Cancel</button>
+        <button class="btn btn-primary" type="button" id="confirmAddComponentBtn">Add</button>
+      </div>
+    </div>
+  </div>
 
   <script src="js/shared.js"></script>
   <script>
     let currentDevice = null;
     let allEmployees = [];
+    let allDevices = [];
     
     async function loadDevice() {
       const urlParams = new URLSearchParams(window.location.search);
@@ -181,6 +218,8 @@
         AssetFlowUtils.loadJSON('data/software-accounts.json'),
         AssetFlowUtils.loadJSON('data/users.json')
       ]);
+      
+      allDevices = Array.isArray(devices) ? devices : [];
       
       allEmployees = Array.isArray(users) 
         ? users.filter(u => u.role === 'Employee')
@@ -851,6 +890,7 @@
       const hierarchyTabBtn = document.getElementById('hierarchyTabBtn');
       const specsTabBtn = document.getElementById('specsTabBtn');
       const specsTabTitle = document.getElementById('specsTabTitle');
+      const addComponentBtn = document.getElementById('addComponentBtn');
       if (isSoftwareAccount) {
         if (hierarchyTabBtn) hierarchyTabBtn.style.display = 'none';
         if (specsTabBtn) {
@@ -858,6 +898,7 @@
           specsTabBtn.textContent = 'Account Details';
         }
         if (specsTabTitle) specsTabTitle.textContent = 'Account Details';
+        if (addComponentBtn) addComponentBtn.style.display = 'none';
       } else {
         if (hierarchyTabBtn) hierarchyTabBtn.style.display = '';
         if (specsTabBtn) {
@@ -865,6 +906,10 @@
           specsTabBtn.textContent = 'Specifications';
         }
         if (specsTabTitle) specsTabTitle.textContent = 'Technical Specifications';
+        // Show Add Component button only for container devices
+        if (addComponentBtn) {
+          addComponentBtn.style.display = currentDevice.category === 'Container' ? 'inline-flex' : 'none';
+        }
       }
       
       // Hierarchy
@@ -987,72 +1032,266 @@
       }
     }
     
+    // ----- Add Component Flow -----
+    function openAddComponentModal() {
+      if (!currentDevice || currentDevice.category !== 'Container') return;
+      
+      const modal = document.getElementById('addComponentModal');
+      const wrapper = document.getElementById('componentSelectWrapper');
+      const display = document.getElementById('componentSelectDisplay');
+      const optionsContainer = document.getElementById('componentOptions');
+      const select = document.getElementById('componentSelect');
+      const emptyState = document.getElementById('componentEmptyState');
+      const confirmBtn = document.getElementById('confirmAddComponentBtn');
+      
+      if (!modal || !wrapper || !display || !optionsContainer || !select || !emptyState || !confirmBtn) return;
+      
+      // Build component options (all Component devices, excluding current and already-added children)
+      const existingIds = new Set(
+        (currentDevice.children || []).map(child => child.id)
+      );
+      
+      const availableComponents = allDevices
+        .filter(d => d.category === 'Component' && d.id !== currentDevice.id && !existingIds.has(d.id));
+      
+      // Reset UI
+      select.innerHTML = '';
+      optionsContainer.innerHTML = '';
+      display.textContent = 'Select a component...';
+      wrapper.classList.remove('open');
+      
+      if (availableComponents.length === 0) {
+        emptyState.style.display = 'block';
+        wrapper.style.display = 'none';
+        confirmBtn.disabled = true;
+      } else {
+        emptyState.style.display = 'none';
+        wrapper.style.display = 'block';
+        confirmBtn.disabled = false;
+        
+        // Build hidden select options
+        const placeholder = document.createElement('option');
+        placeholder.value = '';
+        placeholder.textContent = 'Select a component...';
+        select.appendChild(placeholder);
+        
+        availableComponents.forEach(component => {
+          const option = document.createElement('option');
+          option.value = component.id;
+          option.textContent = `${component.name} (${component.serialNumber || component.id})`;
+          select.appendChild(option);
+          
+          // Build visual option with icon
+          const optionDiv = document.createElement('div');
+          optionDiv.className = 'component-option';
+          optionDiv.dataset.id = component.id;
+          optionDiv.innerHTML = `
+            <div class="component-option-icon">
+              ${AssetFlowUtils.getDeviceIcon(component.type)}
+            </div>
+            <div class="component-option-text">
+              <div class="component-option-name">${component.name}</div>
+              <div class="component-option-meta">${component.serialNumber || component.id}</div>
+            </div>
+          `;
+          
+          optionDiv.addEventListener('click', () => {
+            // Mark selected visually
+            optionsContainer.querySelectorAll('.component-option').forEach(el => el.classList.remove('selected'));
+            optionDiv.classList.add('selected');
+            
+            // Update display text
+            display.textContent = `${component.name} (${component.serialNumber || component.id})`;
+            
+            // Sync hidden select
+            select.value = component.id;
+            
+            // Close dropdown
+            wrapper.classList.remove('open');
+          });
+          
+          optionsContainer.appendChild(optionDiv);
+        });
+      }
+      
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closeAddComponentModal() {
+      const modal = document.getElementById('addComponentModal');
+      if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+    
+    function handleConfirmAddComponent() {
+      const select = document.getElementById('componentSelect');
+      if (!select || !currentDevice) return;
+      
+      const selectedId = select.value;
+      if (!selectedId) {
+        AssetFlowUtils.showToast('Please select a component to add.', 'warning');
+        return;
+      }
+      
+      const component = allDevices.find(d => d.id === selectedId);
+      if (!component) {
+        AssetFlowUtils.showToast('Selected component not found.', 'error');
+        return;
+      }
+      
+      if (!Array.isArray(currentDevice.children)) {
+        currentDevice.children = [];
+      }
+      
+      if (currentDevice.children.some(child => child.id === component.id)) {
+        AssetFlowUtils.showToast('Component already added to this device.', 'info');
+        closeAddComponentModal();
+        return;
+      }
+      
+      // Add shallow copy of component as child (front-end only, not persisted)
+      currentDevice.children.push({
+        ...component
+      });
+      
+      AssetFlowUtils.showToast('Component added to hierarchy (mock only, not saved).', 'success');
+      closeAddComponentModal();
+      renderHierarchy();
+    }
+    
     function renderHistory() {
       const isSoftwareAccount = currentDevice.isSoftwareAccount || currentDevice.category === 'Software Account';
-      const history = [];
+      const lifecycleEvents = [];
       
       if (isSoftwareAccount) {
-        // Software account history
+        // Software account lifecycle
         if (currentDevice.purchaseDate) {
-          history.push({ 
-            icon: '📥', 
-            title: 'Account purchased', 
-            meta: AssetFlowUtils.formatDate(currentDevice.purchaseDate), 
-            type: 'purchase' 
+          lifecycleEvents.push({
+            date: currentDevice.purchaseDate,
+            event: 'Purchase',
+            details: [
+              currentDevice.provider ? `Account purchased from ${currentDevice.provider}` : 'Account purchased',
+              currentDevice.price ? `Value: ${AssetFlowUtils.formatCurrency(currentDevice.price)}` : null
+            ].filter(Boolean)
           });
         }
         
         if (currentDevice.assignedUsers && currentDevice.assignedUsers.length > 0) {
           currentDevice.assignedUsers.forEach(user => {
             if (user.assignedDate) {
-              history.push({ 
-                icon: '👤', 
-                title: `Assigned to ${user.name}`, 
-                meta: AssetFlowUtils.formatDate(user.assignedDate), 
-                type: 'assignment' 
+              lifecycleEvents.push({
+                date: user.assignedDate,
+                event: 'Assignment',
+                details: [
+                  `Assigned to ${user.name}`,
+                  user.team ? `Team: ${user.team}` : null
+                ].filter(Boolean)
               });
             }
           });
         }
         
-        if (currentDevice.qrCode) {
-          history.push({ 
-            icon: '🏷️', 
-            title: 'QR code generated', 
-            meta: 'System', 
-            type: 'qr' 
+        if (currentDevice.expiryDate) {
+          lifecycleEvents.push({
+            date: currentDevice.expiryDate,
+            event: 'Expiry',
+            details: [
+              'Subscription expired',
+              'License renewal required'
+            ]
           });
         }
       } else {
-        // Device history
+        // Device lifecycle - Build realistic timeline
+        const purchaseDate = currentDevice.purchaseDate || new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+        const assignedDate = currentDevice.assignedDate || new Date(Date.now() - 300 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
         const assignedName = currentDevice.holder && currentDevice.holder.name
           ? currentDevice.holder.name
-          : 'employee';
+          : 'Nguyen Van A';
+        const location = currentDevice.location || 'Floor 3 - IT Department';
         
-        history.push(
-          { icon: '📦', title: 'Device assigned to ' + assignedName, meta: currentDevice.assignedDate ? AssetFlowUtils.formatDate(currentDevice.assignedDate) : 'N/A', type: 'assignment' },
-          { icon: '📥', title: 'Device imported to system', meta: currentDevice.purchaseDate ? AssetFlowUtils.formatDate(currentDevice.purchaseDate) : 'N/A', type: 'import' },
-          { icon: '🏷️', title: 'QR code generated', meta: 'System', type: 'qr' }
-        );
+        // Purchase event
+        lifecycleEvents.push({
+          date: purchaseDate,
+          event: 'New Purchase',
+          details: [
+            currentDevice.price ? `Asset purchased from vendor` : 'Asset purchased',
+            currentDevice.price ? `Value: ${AssetFlowUtils.formatCurrency(currentDevice.price)}` : null
+          ].filter(Boolean)
+        });
         
+        // Deployment event
+        lifecycleEvents.push({
+          date: assignedDate,
+          event: 'Deployment',
+          details: [
+            `Assigned to ${assignedName} - ${currentDevice.holder?.department || 'IT Department'}`,
+            `Location: ${location}`
+          ]
+        });
+        
+        // Maintenance events if status is MAINTENANCE
         if (currentDevice.status === 'MAINTENANCE') {
-          history.unshift({ icon: '🔧', title: 'Device sent for maintenance', meta: '2 days ago', type: 'maintenance' });
+          const maintenanceDate = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+          const maintenanceCompleteDate = new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+          
+          lifecycleEvents.push({
+            date: maintenanceDate,
+            event: 'Maintenance',
+            details: [
+              'Keyboard replacement',
+              'Cost: 2,000,000 VND'
+            ]
+          });
+          
+          lifecycleEvents.push({
+            date: maintenanceCompleteDate,
+            event: 'Maintenance Completed',
+            details: [
+              'Returned to user'
+            ]
+          });
         }
       }
       
+      // Sort by date (newest first - latest events on top)
+      lifecycleEvents.sort((a, b) => new Date(b.date) - new Date(a.date));
+      
       const historyContent = document.getElementById('historyContent');
-      if (history.length > 0) {
-        historyContent.innerHTML = history.map(item => `
-          <div class="history-item">
-            <div class="history-icon">${item.icon}</div>
-            <div class="history-content">
-              <div class="history-title">${item.title}</div>
-              <div class="history-meta">${item.meta}</div>
+      if (lifecycleEvents.length > 0) {
+        historyContent.innerHTML = lifecycleEvents.map((event, index) => {
+          const eventDate = new Date(event.date);
+          const formattedDate = eventDate.toLocaleDateString('en-GB', { 
+            day: '2-digit', 
+            month: '2-digit', 
+            year: 'numeric' 
+          });
+          
+          const isLast = index === lifecycleEvents.length - 1;
+          
+          return `
+            <div class="lifecycle-event">
+              <div class="lifecycle-date">${formattedDate}</div>
+              <div class="lifecycle-line-container">
+                <div class="lifecycle-dot"></div>
+                ${!isLast ? '<div class="lifecycle-line"></div>' : ''}
+              </div>
+              <div class="lifecycle-content">
+                <div class="lifecycle-event-title">${event.event}</div>
+                ${event.details && event.details.length > 0 ? `
+                  <div class="lifecycle-details">
+                    ${event.details.map(detail => `<div class="lifecycle-detail-item">${detail}</div>`).join('')}
+                  </div>
+                ` : ''}
+              </div>
             </div>
-          </div>
-        `).join('');
+          `;
+        }).join('');
       } else {
-        historyContent.innerHTML = '<div style="color: var(--text-secondary);">No history available</div>';
+        historyContent.innerHTML = '<div style="color: var(--text-secondary); padding: 2rem; text-align: center;">No lifecycle history available</div>';
       }
     }
     
@@ -1157,6 +1396,34 @@
         document.getElementById(tabName + 'Tab').classList.add('active');
       });
     });
+    
+    // Add Component button handlers
+    document.getElementById('addComponentBtn')?.addEventListener('click', openAddComponentModal);
+    
+    // Toggle component dropdown
+    document.getElementById('componentSelectDisplay')?.addEventListener('click', () => {
+      const wrapper = document.getElementById('componentSelectWrapper');
+      if (!wrapper) return;
+      wrapper.classList.toggle('open');
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      const wrapper = document.getElementById('componentSelectWrapper');
+      if (!wrapper) return;
+      const isInside = wrapper.contains(e.target);
+      const isOpenClick = e.target.id === 'componentSelectDisplay';
+      if (!isInside && wrapper.classList.contains('open')) {
+        wrapper.classList.remove('open');
+      }
+    });
+    document.getElementById('addComponentModal')?.addEventListener('click', (e) => {
+      if (e.target.id === 'addComponentModal') {
+        closeAddComponentModal();
+      }
+    });
+    document.getElementById('cancelAddComponentBtn')?.addEventListener('click', closeAddComponentModal);
+    document.getElementById('confirmAddComponentBtn')?.addEventListener('click', handleConfirmAddComponent);
     
     loadDevice();
   </script>
