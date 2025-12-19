@@ -1397,39 +1397,48 @@
       changePageSize(e.target.value);
     });
     
+    function updateViewMode(isGridView) {
+      const gridViewBtn = document.getElementById('gridViewBtn');
+      const tableViewBtn = document.getElementById('tableViewBtn');
+      const deviceGrid = document.getElementById('deviceGrid');
+      const deviceTableWrapper = document.getElementById('deviceTableWrapper');
+      const tableControls = document.querySelector('.table-controls');
+      const tablePagination = document.getElementById('tablePagination');
+      
+      if (isGridView) {
+        gridViewBtn.classList.add('active');
+        tableViewBtn.classList.remove('active');
+        deviceGrid.classList.remove('hidden');
+        deviceTableWrapper.classList.add('hidden');
+        // Hide "Showing ... per page" + pagination in grid view
+        if (tableControls) tableControls.style.display = 'none';
+        if (tablePagination) tablePagination.style.display = 'none';
+        renderGridView();
+      } else {
+        tableViewBtn.classList.add('active');
+        gridViewBtn.classList.remove('active');
+        deviceGrid.classList.add('hidden');
+        deviceTableWrapper.classList.remove('hidden');
+        if (tableControls) tableControls.style.display = 'flex';
+        if (tablePagination) tablePagination.style.display = 'flex';
+        applySorting();
+        renderTableView();
+      }
+    }
+    
     document.getElementById('gridViewBtn').addEventListener('click', () => {
-      document.getElementById('gridViewBtn').classList.add('active');
-      document.getElementById('tableViewBtn').classList.remove('active');
-      document.getElementById('deviceGrid').classList.remove('hidden');
-      document.getElementById('deviceTableWrapper').classList.add('hidden');
-      renderGridView();
+      updateViewMode(true);
     });
     
     document.getElementById('tableViewBtn').addEventListener('click', () => {
-      document.getElementById('tableViewBtn').classList.add('active');
-      document.getElementById('gridViewBtn').classList.remove('active');
-      document.getElementById('deviceGrid').classList.add('hidden');
-      document.getElementById('deviceTableWrapper').classList.remove('hidden');
-      applySorting();
-      renderTableView();
+      updateViewMode(false);
     });
     
     // Initialize view on page load
     function initializeView() {
       const gridViewBtn = document.getElementById('gridViewBtn');
-      const tableViewBtn = document.getElementById('tableViewBtn');
-      const deviceGrid = document.getElementById('deviceGrid');
-      const deviceTableWrapper = document.getElementById('deviceTableWrapper');
-      
       const isGridView = gridViewBtn.classList.contains('active');
-      
-      if (isGridView) {
-        deviceGrid.classList.remove('hidden');
-        deviceTableWrapper.classList.add('hidden');
-      } else {
-        deviceGrid.classList.add('hidden');
-        deviceTableWrapper.classList.remove('hidden');
-      }
+      updateViewMode(isGridView);
     }
     
     // Initialize view immediately
