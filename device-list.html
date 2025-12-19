@@ -1123,19 +1123,11 @@
                   ${device.name}
                   ${isComponent ? '<span class="component-badge-inline">Component</span>' : ''}
                   ${isSoftwareAccount ? '<span class="component-badge-inline" style="background: var(--info-color);">Software</span>' : ''}
-                </div>
-                ${isSoftwareAccount && device.provider ? `
-                  <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem;">
-                    🏢 ${device.provider}
-                  </div>
-                ` : ''}
-                ${isComponent && parentInfo ? `
-                  <div style="font-size: 0.75rem; color: var(--primary-color); margin-top: 0.25rem;">
-                    🔗 Part of: ${parentInfo.name}
-                  </div>
-                ` : ''}
-                ${device.qrCode ? `<div class="table-device-qr" title="${device.qrCode}">${device.qrCode}</div>` : ''}
-                ${specsText ? `<div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem;">${specsText}</div>` : ''}
+                  ${isComponent && parentInfo ? `
+                    <div style="font-size: 0.75rem; color: var(--primary-color); margin-top: 0.25rem;">
+                      🔗 Part of: ${parentInfo.name}
+                    </div>
+                  ` : ''}
                 ${licenseInfo}
               </div>
             </div>
@@ -1155,7 +1147,6 @@
           <td>
             ${!isSoftwareAccount && device.holder ? `
               <div class="table-holder">
-                <span class="table-holder-icon">👤</span>
                 <span>${device.holder.name}</span>
               </div>
             ` : assignedUsersDisplay}
@@ -1163,7 +1154,6 @@
           <td>
             ${!isSoftwareAccount ? `
               <div class="table-location">
-                <span>📍</span>
                 <span>${device.location || 'N/A'}</span>
               </div>
             ` : `
