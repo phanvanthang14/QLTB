@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Add Device - AssetFlow IT</title>
+  <title>Add device - AssetFlow IT</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="css/shared.css">
   <link rel="stylesheet" href="css/add-device.css">
@@ -19,7 +19,6 @@
         </a>
       </div>
       <div class="header-right">
-        <button class="back-btn" onclick="window.history.back()">← Back</button>
         <button class="mobile-menu-toggle">☰</button>
       </div>
     </div>
@@ -68,48 +67,48 @@
   </div>
 
   <main class="main-content">
-    <h1 class="page-title">Add New Device</h1>
+    <div class="page-header">
+      <button class="back-btn" onclick="window.history.back()">← back</button>
+      <h1 class="page-title">Add new device</h1>
+    </div>
+
     <form id="addDeviceForm" onsubmit="handleAddDevice(event)">
       <div class="form-layout">
         <!-- Left Column -->
         <div class="form-column">
-          <!-- Basic Information -->
+          <!-- Basic information -->
           <div class="form-section">
             <div class="form-section-header">
-              <h2>Basic Information</h2>
+              <h2>Basic information</h2>
             </div>
             <div class="form-section-content">
               <div class="form-group">
-                <label>Device Type <span class="required">*</span></label>
-                <div class="device-type-toggle">
-                  <button type="button" class="type-toggle-btn active" data-type="Container" onclick="toggleDeviceType('Container')">
-                    Container
-                  </button>
-                  <button type="button" class="type-toggle-btn" data-type="Component" onclick="toggleDeviceType('Component')">
-                    Component
-                  </button>
-                </div>
+                <label>Device level <span class="required">*</span></label>
+                <select id="deviceCategorySelect" class="form-input" onchange="handleDeviceCategoryChange(this.value)">
+                  <option value="Container">Parent device</option>
+                  <option value="Component">Child component</option>
+                </select>
               </div>
 
               <div class="form-group" id="parentDeviceGroup" style="display: none;">
-                <label>Parent Device (Optional)</label>
+                <label>Parent Device</label>
                 <select id="parentDeviceSelect" class="form-input">
                   <option value="">Select parent device...</option>
                 </select>
               </div>
 
               <div class="form-group">
-                <label>Device Name <span class="required">*</span></label>
+                <label>Device name <span class="required">*</span></label>
                 <input type="text" id="deviceName" class="form-input" required>
               </div>
 
               <div class="form-row">
                 <div class="form-group">
-                  <label>Serial Number <span class="required">*</span></label>
+                  <label>Serial number <span class="required">*</span></label>
                   <input type="text" id="serialNumber" class="form-input" required>
                 </div>
                 <div class="form-group">
-                  <label>QR Code</label>
+                  <label>QR code</label>
                   <input type="text" id="qrCode" class="form-input" placeholder="Auto-generate">
                 </div>
               </div>
@@ -138,10 +137,10 @@
             </div>
           </div>
 
-          <!-- Status & Location -->
+          <!-- Status & location -->
           <div class="form-section">
             <div class="form-section-header">
-              <h2>Status & Location</h2>
+              <h2>Status & location</h2>
             </div>
             <div class="form-section-content">
               <div class="form-row">
@@ -151,6 +150,7 @@
                     <option value="IN_STOCK">In Stock</option>
                     <option value="IN_USE">In Use</option>
                     <option value="MAINTENANCE">Maintenance</option>
+                    <option value="BROKEN">Broken</option>
                     <option value="RETIRED">Retired</option>
                   </select>
                 </div>
@@ -165,7 +165,7 @@
 
         <!-- Right Column -->
         <div class="form-column">
-          <!-- Specifications (Container only) -->
+          <!-- Specifications (container only) -->
           <div class="form-section" id="specsGroup">
             <div class="form-section-header">
               <h2>Specifications</h2>
@@ -182,38 +182,38 @@
             </div>
           </div>
 
-          <!-- Assignment (Container only) -->
+          <!-- Assignment (container only) -->
           <div class="form-section" id="holderGroup">
             <div class="form-section-header">
               <h2>Assignment</h2>
             </div>
             <div class="form-section-content">
               <div class="form-group">
-                <label>Holder (Employee) <span class="required">*</span></label>
+                <label>Holder (employee) <span class="required">*</span></label>
                 <select id="holderSelect" class="form-input">
                   <option value="">Select employee...</option>
                 </select>
               </div>
               <div class="form-group">
-                <label>Assigned Date</label>
+                <label>Assigned date</label>
                 <input type="date" id="assignedDate" class="form-input">
               </div>
             </div>
           </div>
 
-          <!-- Purchase Information (Container only) -->
+          <!-- Purchase information (container only) -->
           <div class="form-section" id="purchaseGroup">
             <div class="form-section-header">
-              <h2>Purchase Information</h2>
+              <h2>Purchase information</h2>
             </div>
             <div class="form-section-content">
               <div class="form-row">
                 <div class="form-group">
-                  <label>Purchase Date</label>
+                  <label>Purchase date</label>
                   <input type="date" id="purchaseDate" class="form-input">
                 </div>
                 <div class="form-group">
-                  <label>Warranty Expiry</label>
+                  <label>Warranty expiry</label>
                   <input type="date" id="warrantyExpiry" class="form-input">
                 </div>
               </div>
@@ -223,13 +223,26 @@
               </div>
             </div>
           </div>
+
+          <!-- Notes -->
+          <div class="form-section">
+            <div class="form-section-header">
+              <h2>Notes</h2>
+            </div>
+            <div class="form-section-content">
+              <div class="form-group">
+                <label>Note</label>
+                <textarea id="deviceNote" class="form-input" rows="3" placeholder="Additional information, special instructions, etc."></textarea>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Form Actions -->
       <div class="form-actions">
         <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
-        <button type="submit" class="btn btn-primary">Add Device</button>
+        <button type="submit" class="btn btn-primary">Add device</button>
       </div>
     </form>
   </main>
@@ -267,16 +280,17 @@
     
     function toggleDeviceType(type) {
       currentDeviceCategory = type;
-      document.querySelectorAll('.type-toggle-btn').forEach(btn => {
-        btn.classList.remove('active');
-      });
-      document.querySelector(`[data-type="${type}"]`).classList.add('active');
-      
+
       const parentGroup = document.getElementById('parentDeviceGroup');
       const holderGroup = document.getElementById('holderGroup');
       const purchaseGroup = document.getElementById('purchaseGroup');
       const priceGroup = document.getElementById('priceGroup');
       const specsGroup = document.getElementById('specsGroup');
+      const categorySelect = document.getElementById('deviceCategorySelect');
+
+      if (categorySelect && categorySelect.value !== type) {
+        categorySelect.value = type;
+      }
       
       if (type === 'Component') {
         parentGroup.style.display = 'block';
@@ -286,11 +300,15 @@
         specsGroup.style.display = 'none';
       } else {
         parentGroup.style.display = 'none';
-        holderGroup.style.display = 'flex';
-        purchaseGroup.style.display = 'flex';
-        priceGroup.style.display = 'block';
-        specsGroup.style.display = 'block';
+        holderGroup.style.display = '';
+        purchaseGroup.style.display = '';
+        priceGroup.style.display = '';
+        specsGroup.style.display = '';
       }
+    }
+
+    function handleDeviceCategoryChange(type) {
+      toggleDeviceType(type);
     }
     
     function populateParentDevices() {
@@ -350,6 +368,11 @@
         status: document.getElementById('deviceStatus').value,
         location: document.getElementById('deviceLocation').value.trim(),
       };
+
+      const note = document.getElementById('deviceNote').value.trim();
+      if (note) {
+        formData.note = note;
+      }
       
       // Generate QR code if empty
       if (!formData.qrCode) {

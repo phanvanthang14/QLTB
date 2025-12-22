@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QR Scan - AssetFlow IT</title>
+  <title>QR scan - AssetFlow IT</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="css/shared.css">
   <link rel="stylesheet" href="css/qr-scan.css">
@@ -28,30 +28,30 @@
   <div class="sidebar">
     <div class="sidebar-content">
       <div class="sidebar-section">
-        <div class="sidebar-section-header">Admin Desktop</div>
+        <div class="sidebar-section-header">Admin desktop</div>
         <a href="dashboard.html" class="sidebar-item" data-title="Dashboard">
           <i class="fas fa-th-large sidebar-item-icon"></i>
           <span>Dashboard</span>
         </a>
-        <a href="device-list.html" class="sidebar-item" data-title="Device List">
+        <a href="device-list.html" class="sidebar-item" data-title="Device list">
           <i class="fas fa-box sidebar-item-icon"></i>
           <span>Device List</span>
         </a>
-        <a href="import-device.html" class="sidebar-item" data-title="Import Device">
+        <a href="import-device.html" class="sidebar-item" data-title="Import device">
           <i class="fas fa-file-import sidebar-item-icon"></i>
           <span>Import Device</span>
         </a>
-        <a href="user-list.html" class="sidebar-item" data-title="User List">
+        <a href="user-list.html" class="sidebar-item" data-title="User list">
           <i class="fas fa-users sidebar-item-icon"></i>
           <span>User List</span>
         </a>
       </div>
       
       <div class="sidebar-section">
-        <div class="sidebar-section-header">Mobile/Tablet UI</div>
-        <a href="qr-scan.html" class="sidebar-item active" data-title="QR Scan">
+        <div class="sidebar-section-header">Mobile/tablet UI</div>
+        <a href="qr-scan.html" class="sidebar-item active" data-title="QR scan">
           <i class="fas fa-qrcode sidebar-item-icon"></i>
-          <span>QR Scan</span>
+          <span>QR scan</span>
         </a>
       </div>
     </div>
@@ -68,19 +68,19 @@
   </div>
 
   <main class="main-content">
-    <h1 class="page-title">QR Scan</h1>
+    <h1 class="page-title">QR scan</h1>
     <div class="scan-container">
       <div class="scan-area">
         <div style="text-align: center; padding: 0rem 2rem;">
           <div style="font-size: 4rem; margin-bottom: 1rem;">📷</div>
-          <h2 style="margin-bottom: 0.5rem;">QR Code Scanner</h2>
+          <h2 style="margin-bottom: 0.5rem;">QR code scanner</h2>
           <p style="color: var(--text-secondary); margin-bottom: 2rem;">Click the button below to start scanning QR codes</p>
         </div>
         
         <div class="camera-controls">
           <button class="scan-button" id="startCameraBtn" onclick="startCamera()">
             <span>📷</span>
-            <span>Start Camera</span>
+            <span>Start camera</span>
           </button>
         </div>
         
@@ -88,7 +88,7 @@
           <div class="form-group">
             <label class="form-label">Or enter QR code manually:</label>
             <input type="text" class="form-input" id="manualQRInput" placeholder="Enter QR code">
-            <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" onclick="processQRCode()">Check Device</button>
+            <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" onclick="processQRCode()">Check device</button>
           </div>
         </div>
       </div>
@@ -115,7 +115,7 @@
   <!-- Fullscreen Camera Overlay -->
   <div class="camera-fullscreen" id="cameraFullscreen">
     <div class="camera-fullscreen-header">
-      <div class="camera-fullscreen-title">Scan QR Code</div>
+      <div class="camera-fullscreen-title">Scan QR code</div>
       <button class="camera-fullscreen-close" onclick="stopCamera()" title="Close Camera">✕</button>
     </div>
     <div class="camera-fullscreen-content">
@@ -133,10 +133,10 @@
     <div class="permission-modal-content">
       <div class="permission-modal-header">
         <div class="permission-modal-icon">📷</div>
-        <div class="permission-modal-title">Camera Permission Required</div>
+        <div class="permission-modal-title">Camera permission required</div>
       </div>
       <div class="permission-modal-body">
-        <p><strong>Camera permission was previously denied.</strong> To scan QR codes, we need access to your camera. The browser will automatically show a permission popup when you click "Start Camera" - just click "Allow" when it appears!</p>
+        <p><strong>Camera permission was previously denied.</strong> To scan QR codes, we need access to your camera. The browser will automatically show a permission popup when you click "Start camera" - just click "Allow" when it appears!</p>
         <p style="margin-top: 1rem; padding: 1rem; background: #dbeafe; border-radius: var(--radius-md); border-left: 4px solid var(--primary-color);">
           <strong>💡 Tip:</strong> If you've blocked camera access before, you need to reset it in browser settings first (see instructions below), then the browser will show the permission popup automatically when you try again.
         </p>
@@ -169,7 +169,7 @@
       </div>
       <div class="permission-modal-footer">
         <button class="btn btn-secondary" onclick="closePermissionModal()">Cancel</button>
-        <button class="btn btn-primary" onclick="retryCamera()">Try Again</button>
+        <button class="btn btn-primary" onclick="retryCamera()">Try again</button>
       </div>
     </div>
   </div>
