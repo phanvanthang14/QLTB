@@ -1236,7 +1236,6 @@
   font-weight: 500;
   color: var(--text-primary);
   cursor: pointer;
-  transition: var(--transition);
   min-width: 40px;
   display: flex;
   align-items: center;
@@ -1247,7 +1246,6 @@
   background: var(--primary-color);
   color: white;
   border-color: var(--primary-color);
-  transform: translateY(-2px);
   box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
 }
 
