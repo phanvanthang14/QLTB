@@ -91,6 +91,8 @@
           <div class="device-metrics" id="deviceMetrics"></div>
           
           <div class="control-modes" id="controlModes"></div>
+          
+          <div class="detail-note-section" id="detailNoteSection" style="display: none;"></div>
         </div>
       </div>
       
@@ -103,9 +105,12 @@
         </div>
         
         <div class="tab-content active" id="overviewTab">
-          <div class="content-card">
-            <h3 style="margin-bottom: 1rem;">Device Information</h3>
-            <div id="overviewContent"></div>
+          <div class="content-card" id="overviewContentCard" style="display: flex; gap: 2rem; align-items: flex-start;">
+            <div style="flex: 1;">
+              <h3 style="margin-bottom: 1rem;">Device Information</h3>
+              <div id="overviewContent"></div>
+            </div>
+            <div id="qrCodeSidebar" style="min-width: 250px; display: none;"></div>
           </div>
         </div>
         
@@ -210,7 +215,7 @@
     
     async function loadDevice() {
       const urlParams = new URLSearchParams(window.location.search);
-      const deviceId = urlParams.get('id') || 'DEV001';
+      const deviceId = 'DEV001';//urlParams.get('id') || 'DEV001';
       
       // Load devices, software accounts và users song song
       const [devices, softwareAccounts, users] = await Promise.all([
@@ -601,8 +606,6 @@
               <div class="qr-code-metrics-display" onclick="showQRCodeModal('${currentDevice.qrCode}', '${currentDevice.name}', '${currentDevice.id}')" style="cursor: pointer;">
                 <canvas id="qr-canvas-metrics" style="background: white; padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); width: 100%; max-width: 200px; height: auto; margin: 0 auto; display: block;"></canvas>
                 <div style="margin-top: 1rem; text-align: center;">
-                  <div style="font-family: monospace; font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.5rem;">${currentDevice.qrCode}</div>
-                  <div style="font-size: 0.75rem; color: var(--text-secondary);">Click to view full size</div>
                 </div>
               </div>
             </div>
@@ -636,6 +639,23 @@
       const controlModesContainer = document.getElementById('controlModes');
       controlModesContainer.innerHTML = '';
       controlModesContainer.style.display = 'none';
+      
+      // Note section in header - for both software accounts and regular devices
+      const noteSection = document.getElementById('detailNoteSection');
+      if (currentDevice.note) {
+        noteSection.innerHTML = `
+          <div class="detail-note-content">
+            <div class="detail-note-label" style="font-weight: 600; font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
+              Note
+            </div>
+            <div class="detail-note-text" style="background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1rem; color: var(--text-primary); font-size: 0.875rem; line-height: 1.6; white-space: pre-wrap;">${currentDevice.note}</div>
+          </div>
+        `;
+        noteSection.style.display = 'block';
+      } else {
+        noteSection.innerHTML = '';
+        noteSection.style.display = 'none';
+      }
       
       // Overview (build từng phần để tránh lỗi template lồng nhau)
       const statusOptions = isSoftwareAccount 
@@ -916,21 +936,11 @@
               <div class="info-label">Serial Number</div>
               <div class="info-value">${currentDevice.serialNumber || 'N/A'}</div>
             </div>
-            <div class="info-item">
-              <div class="info-label">QR Code</div>
-              <div class="info-value" style="font-family: monospace; font-size: 0.875rem;">${currentDevice.qrCode || 'N/A'}</div>
-            </div>
           ` : `
             <div class="info-item">
               <div class="info-label">Account ID</div>
               <div class="info-value">${currentDevice.id}</div>
             </div>
-            ${currentDevice.qrCode ? `
-              <div class="info-item">
-                <div class="info-label">QR Code</div>
-                <div class="info-value" style="font-family: monospace; font-size: 0.875rem;">${currentDevice.qrCode}</div>
-              </div>
-            ` : ''}
           `}
           <div class="info-item">
             <div class="info-label">Type</div>
@@ -1075,8 +1085,8 @@
       const tree = document.getElementById('hierarchyTree');
       tree.innerHTML = '';
       
-      // Nếu là component và có parentDevice -> hiển thị quan hệ Cha -> Con
-      if (currentDevice.category === 'Component' && currentDevice.parentDevice) {
+      // Nếu là component (hoặc bất kỳ thiết bị nào được load từ parentDevice) -> hiển thị quan hệ Cha -> Con
+      if (currentDevice.parentDevice) {
         const parent = currentDevice.parentDevice;
         
         const parentNode = document.createElement('div');
@@ -1115,8 +1125,8 @@
         return;
       }
       
-      // Mặc định: hiển thị device hiện tại (container hoặc thiết bị không có cha)
-      if (currentDevice.category === 'Container' && currentDevice.children && currentDevice.children.length > 0) {
+      // Mặc định: hiển thị device hiện tại (bất kỳ thiết bị nào có children, ví dụ container hoặc PC có component)
+      if (currentDevice.children && currentDevice.children.length > 0) {
         const parentNode = document.createElement('div');
         parentNode.className = 'tree-node parent';
         parentNode.innerHTML = `
@@ -1774,21 +1784,139 @@
         currentDevice.usedLicenses = currentDevice.assignedDevices.length;
       }
       
-      // Re-render device to update UI
-      renderDevice();
-      
-      // Refresh search results to show updated status (don't close dropdown)
-      const searchInput = document.getElementById('assignSearchInput');
-      const searchResults = document.getElementById('assignSearchResults');
-      if (searchInput && searchResults) {
-        // Force keep dropdown open
-        setTimeout(() => {
-          searchResults.style.display = 'block';
+      // Update only assigned tags container instead of full re-render
+      requestAnimationFrame(() => {
+        updateAssignedTagsContainer();
+        
+        // Refresh search results only if dropdown is already open
+        const searchInput = document.getElementById('assignSearchInput');
+        const searchResults = document.getElementById('assignSearchResults');
+        if (searchInput && searchResults && searchResults.style.display === 'block') {
+          // Only refresh if dropdown is already visible
           performSearch(searchInput.value.trim().toLowerCase(), searchResults);
-        }, 10);
-      }
+        }
+      });
       
       AssetFlowUtils.showToast(`${itemType === 'device' ? 'Device' : 'User'} added successfully`, 'success');
+    }
+    
+    function updateAssignedTagsContainer() {
+      const container = document.querySelector('.assigned-tags-container');
+      if (!container) return;
+      
+      const assignedDevices = currentDevice.assignedDevices || [];
+      const totalAssigned = assignedDevices.length;
+      
+      // Update title count
+      const titleElement = document.querySelector('.assigned-card-title');
+      if (titleElement) {
+        const countSpan = titleElement.querySelector('span');
+        if (countSpan) {
+          countSpan.textContent = `(total: ${totalAssigned})`;
+        } else {
+          titleElement.innerHTML = `
+            Assigned PC/Laptop
+            <span style="font-size: 0.875rem; font-weight: normal; color: var(--text-secondary); margin-left: 0.5rem;">
+              (total: ${totalAssigned})
+            </span>
+          `;
+        }
+      }
+      
+      // Update container content
+      const assignedList = assignedDevices.map((item, index) => {
+        if (item.type === 'device') {
+          let fullDevice = item.device;
+          if (item.device.id && (!item.device.name || !item.device.location)) {
+            const foundDevice = allDevices.find(d => d.id === item.device.id);
+            if (foundDevice) {
+              fullDevice = foundDevice;
+            }
+          }
+          
+          const displayName = fullDevice.name || fullDevice.id || 'Unknown Device';
+          const location = fullDevice.location || fullDevice.holder?.team || '';
+          const holderName = fullDevice.holder?.name || '';
+          
+          return `
+            <div class="assigned-tag-item" data-index="${index}">
+              <div class="assigned-tag-content">
+                <div class="assigned-tag-name" style="font-weight: 600; font-size: 0.875rem; color: var(--text-primary); margin-bottom: 0.375rem;">${displayName}</div>
+                ${location ? `
+                  <div class="assigned-tag-info" style="display: flex; align-items: center; margin-top: 0.2rem;">
+                    <i class="fas fa-map-marker-alt" style="color: #ec4899; margin-right: 0.25rem; font-size: 0.75rem;"></i>
+                    <span style="color: #60a5fa; font-size: 0.75rem;">${location}</span>
+                  </div>
+                ` : ''}
+                ${holderName ? `
+                  <div class="assigned-tag-info" style="display: flex; align-items: center; margin-top: 0.2rem;">
+                    <i class="fas fa-user" style="color: #a855f7; margin-right: 0.25rem; font-size: 0.75rem;"></i>
+                    <span style="color: #60a5fa; font-size: 0.75rem;">${holderName}</span>
+                  </div>
+                ` : ''}
+              </div>
+              <button class="assigned-tag-remove" onclick="removeAssignedItem(${index})" type="button" aria-label="Remove">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          `;
+        } else {
+          let fullUser = item.user;
+          if (item.user.id && (!item.user.team || !item.user.department)) {
+            const foundUser = allEmployees.find(u => u.id === item.user.id);
+            if (foundUser) {
+              fullUser = { ...item.user, ...foundUser };
+            }
+          }
+          
+          const displayName = fullUser.name || 'Unknown User';
+          const team = fullUser.team || fullUser.department || '';
+          
+          return `
+            <div class="assigned-tag-item" data-index="${index}">
+              <div class="assigned-tag-content">
+                <div class="assigned-tag-name" style="font-weight: 600; font-size: 0.875rem; color: var(--text-primary); margin-bottom: 0.375rem;">${displayName}</div>
+                ${team ? `
+                  <div class="assigned-tag-info" style="display: flex; align-items: center; margin-top: 0.2rem;">
+                    <i class="fas fa-map-marker-alt" style="color: #ec4899; margin-right: 0.25rem; font-size: 0.75rem;"></i>
+                    <span style="color: #60a5fa; font-size: 0.75rem;">${team}</span>
+                  </div>
+                ` : ''}
+              </div>
+              <button class="assigned-tag-remove" onclick="removeAssignedItem(${index})" type="button" aria-label="Remove">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          `;
+        }
+      }).join('');
+      
+      // Hide container during update to prevent layout shift
+      const originalDisplay = container.style.display;
+      container.style.visibility = 'hidden';
+      container.style.opacity = '0';
+      
+      // Use DocumentFragment to batch DOM updates
+      const fragment = document.createDocumentFragment();
+      const tempDiv = document.createElement('div');
+      
+      // Set content to temp div first
+      tempDiv.innerHTML = assignedList || '<span style="color: var(--text-secondary); font-size: 0.875rem; align-self: center;">No PC/Laptop assigned yet.</span>';
+      
+      // Move all children from temp div to fragment
+      while (tempDiv.firstChild) {
+        fragment.appendChild(tempDiv.firstChild);
+      }
+      
+      // Batch update: clear and append in one operation
+      container.textContent = '';
+      container.appendChild(fragment);
+      
+      // Restore visibility after a brief delay to ensure DOM is updated
+      requestAnimationFrame(() => {
+        container.style.visibility = '';
+        container.style.opacity = '';
+      });
     }
     
     function removeAssignedItem(index) {
@@ -1797,25 +1925,52 @@
       const item = currentDevice.assignedDevices[index];
       const itemName = item.type === 'device' ? item.device.name : item.user.name;
       
-      currentDevice.assignedDevices.splice(index, 1);
-      
-      // Update used licenses count
-      if (currentDevice.totalLicenses !== undefined) {
-        currentDevice.usedLicenses = currentDevice.assignedDevices.length;
-      }
-      
-      // Re-render device to update UI
-      renderDevice();
-      
-      // Refresh search results to show updated status (don't close dropdown)
-      const searchInput = document.getElementById('assignSearchInput');
-      const searchResults = document.getElementById('assignSearchResults');
-      if (searchInput && searchResults) {
-        // Force keep dropdown open
+      // Remove item from DOM first (smooth removal)
+      const container = document.querySelector('.assigned-tags-container');
+      const itemElement = container?.querySelector(`[data-index="${index}"]`);
+      if (itemElement) {
+        // Fade out animation
+        itemElement.style.transition = 'opacity 0.15s ease-out';
+        itemElement.style.opacity = '0';
+        
         setTimeout(() => {
-          searchResults.style.display = 'block';
+          // Remove from data
+          currentDevice.assignedDevices.splice(index, 1);
+          
+          // Update used licenses count
+          if (currentDevice.totalLicenses !== undefined) {
+            currentDevice.usedLicenses = currentDevice.assignedDevices.length;
+          }
+          
+          // Update container (will re-index all items)
+          updateAssignedTagsContainer();
+          
+          // Refresh search results only if dropdown is already open
+          const searchInput = document.getElementById('assignSearchInput');
+          const searchResults = document.getElementById('assignSearchResults');
+          if (searchInput && searchResults && searchResults.style.display === 'block') {
+            // Only refresh if dropdown is already visible
+            performSearch(searchInput.value.trim().toLowerCase(), searchResults);
+          }
+        }, 150);
+      } else {
+        // Fallback if element not found
+        currentDevice.assignedDevices.splice(index, 1);
+        
+        // Update used licenses count
+        if (currentDevice.totalLicenses !== undefined) {
+          currentDevice.usedLicenses = currentDevice.assignedDevices.length;
+        }
+        
+        updateAssignedTagsContainer();
+        
+        // Refresh search results only if dropdown is already open
+        const searchInput = document.getElementById('assignSearchInput');
+        const searchResults = document.getElementById('assignSearchResults');
+        if (searchInput && searchResults && searchResults.style.display === 'block') {
+          // Only refresh if dropdown is already visible
           performSearch(searchInput.value.trim().toLowerCase(), searchResults);
-        }, 10);
+        }
       }
       
       AssetFlowUtils.showToast(`${item.type === 'device' ? 'Device' : 'User'} removed: ${itemName}`, 'success');

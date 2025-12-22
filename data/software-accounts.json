@@ -54,7 +54,8 @@
     "purchaseDate": "2024-01-01",
     "expiryDate": "2025-01-01",
     "price": 5000000,
-    "description": "Full Office 365 Business subscription with Word, Excel, PowerPoint, Outlook, Teams"
+    "description": "Full Office 365 Business subscription with Word, Excel, PowerPoint, Outlook, Teams",
+    "note": "Standard business license for all employees. Includes Teams for collaboration. All users must use company email for activation."
   },
   {
     "id": "ACC002",
@@ -135,7 +136,8 @@
     "purchaseDate": "2024-01-01",
     "expiryDate": "2025-01-01",
     "price": 12000000,
-    "description": "Adobe Creative Cloud with Photoshop, Illustrator, Premiere Pro, After Effects"
+    "description": "Adobe Creative Cloud with Photoshop, Illustrator, Premiere Pro, After Effects",
+    "note": "This license is shared across the design and engineering teams. Please ensure all users have completed the required training before assignment."
   },
   {
     "id": "ACC003",
@@ -232,7 +234,8 @@
     "purchaseDate": "2024-01-01",
     "expiryDate": "2025-01-01",
     "price": 8000000,
-    "description": "Slack Pro workspace for team communication and collaboration"
+    "description": "Slack Pro workspace for team communication and collaboration",
+    "note": "Company-wide communication platform. All employees are automatically added to the workspace. Please follow company communication guidelines when using Slack channels."
   },
   {
     "id": "ACC004",
@@ -289,7 +292,8 @@
     "purchaseDate": "2024-01-01",
     "expiryDate": "2025-01-01",
     "price": 15000000,
-    "description": "GitHub Enterprise for code repository and version control"
+    "description": "GitHub Enterprise for code repository and version control",
+    "note": "Enterprise license for development team only. Access requires approval from IT department. All code must follow company security policies and be reviewed before merging to main branch."
   },
   {
     "id": "ACC005",
@@ -354,7 +358,8 @@
     "purchaseDate": "2024-02-01",
     "expiryDate": "2025-02-01",
     "price": 6000000,
-    "description": "Zoom Business for video meetings and webinars"
+    "description": "Zoom Business for video meetings and webinars",
+    "note": "Business license for video conferencing. Supports up to 300 participants per meeting. Use for client meetings, team standups, and company-wide announcements. Recording feature available for important sessions."
   }
 ]
 

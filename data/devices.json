@@ -43,7 +43,8 @@
     ],
     "purchaseDate": "2023-12-01",
     "warrantyExpiry": "2026-12-01",
-    "price": 25000000
+    "price": 25000000,
+    "note": "Primary development laptop assigned to Engineering team. Includes upgraded RAM and SSD. Please handle with care and report any hardware issues immediately."
   },
   {
     "id": "DEV002",
@@ -207,7 +208,8 @@
     "children": [],
     "purchaseDate": "2024-01-20",
     "warrantyExpiry": "2027-01-20",
-    "price": 45000000
+    "price": 45000000,
+    "note": "High-performance MacBook Pro for senior developer. Apple Care warranty included. Please use protective case when traveling. All software installations require IT approval."
   },
   {
     "id": "DEV008",
@@ -260,7 +262,8 @@
     "children": [],
     "purchaseDate": "2024-01-10",
     "warrantyExpiry": "2027-01-10",
-    "price": 22000000
+    "price": 22000000,
+    "note": "Sales team laptop for client presentations and remote work. Includes docking station for office use. Please ensure VPN is connected when accessing company resources remotely."
   },
   {
     "id": "DEV011",
@@ -314,7 +317,8 @@
     "children": [],
     "purchaseDate": "2024-02-10",
     "warrantyExpiry": "2027-02-10",
-    "price": 32000000
+    "price": 32000000,
+    "note": "Design team MacBook Air for UI/UX work. Lightweight and portable for design meetings. Please use color-calibrated external monitor for final design reviews."
   },
   {
     "id": "DEV013",
@@ -342,7 +346,8 @@
     "children": [],
     "purchaseDate": "2024-02-20",
     "warrantyExpiry": "2027-02-20",
-    "price": 20000000
+    "price": 20000000,
+    "note": "Desktop PC for backend development. High-performance CPU and RAM for running multiple services and databases. Located in Engineering office. Do not move without IT approval."
   },
   {
     "id": "DEV014",
@@ -369,7 +374,8 @@
     "children": [],
     "purchaseDate": "2024-02-25",
     "warrantyExpiry": "2027-02-25",
-    "price": 15000000
+    "price": 15000000,
+    "note": "Marketing team laptop for content creation and social media management. Includes video editing software. Please backup all work files to cloud storage regularly."
   },
   {
     "id": "DEV015",
@@ -396,7 +402,8 @@
     "children": [],
     "purchaseDate": "2024-03-01",
     "warrantyExpiry": "2027-03-01",
-    "price": 25000000
+    "price": 25000000,
+    "note": "Sales representative laptop for field work and client meetings. Includes mobile hotspot capability. Please ensure device is fully charged before client visits."
   },
   {
     "id": "DEV016",
@@ -423,7 +430,8 @@
     "children": [],
     "purchaseDate": "2024-03-05",
     "warrantyExpiry": "2027-03-05",
-    "price": 24000000
+    "price": 24000000,
+    "note": "DevOps engineer laptop with enhanced security features. Used for server management and CI/CD pipeline configuration. Requires VPN access for production environments."
   },
   {
     "id": "DEV010",
