@@ -263,6 +263,169 @@
     "price": 22000000
   },
   {
+    "id": "DEV011",
+    "qrCode": "QR-DEV011-ASUS",
+    "name": "ASUS ZenBook 14",
+    "type": "Laptop",
+    "category": "IT Equipment",
+    "serialNumber": "ASUS-ZB14-2024-001",
+    "status": "IN_USE",
+    "specs": {
+      "processor": "AMD Ryzen 7 5800H",
+      "ram": "16GB",
+      "storage": "512GB SSD",
+      "screen": "14 inch OLED"
+    },
+    "holder": {
+      "id": "EMP005",
+      "name": "Tran Van G",
+      "email": "tranvang@company.com",
+      "team": "Engineering"
+    },
+    "assignedDate": "2024-02-15",
+    "location": "Office Floor 3",
+    "children": [],
+    "purchaseDate": "2024-02-01",
+    "warrantyExpiry": "2027-02-01",
+    "price": 18000000
+  },
+  {
+    "id": "DEV012",
+    "qrCode": "QR-DEV012-MACBOOK-AIR",
+    "name": "MacBook Air M2",
+    "type": "Laptop",
+    "category": "IT Equipment",
+    "serialNumber": "MBA-M2-2024-001",
+    "status": "IN_USE",
+    "specs": {
+      "processor": "Apple M2",
+      "ram": "16GB",
+      "storage": "512GB SSD",
+      "screen": "13.6 inch Retina"
+    },
+    "holder": {
+      "id": "EMP006",
+      "name": "Nguyen Thi H",
+      "email": "nguyenthih@company.com",
+      "team": "Design"
+    },
+    "assignedDate": "2024-02-20",
+    "location": "Office Floor 2",
+    "children": [],
+    "purchaseDate": "2024-02-10",
+    "warrantyExpiry": "2027-02-10",
+    "price": 32000000
+  },
+  {
+    "id": "DEV013",
+    "qrCode": "QR-DEV013-DELL-PC",
+    "name": "Dell OptiPlex 7010",
+    "type": "PC Case",
+    "category": "IT Equipment",
+    "serialNumber": "OP7010-2024-001",
+    "status": "IN_USE",
+    "specs": {
+      "formFactor": "SFF",
+      "brand": "Dell",
+      "processor": "Intel Core i7-13700",
+      "ram": "32GB",
+      "storage": "1TB SSD"
+    },
+    "holder": {
+      "id": "EMP007",
+      "name": "Le Van I",
+      "email": "levani@company.com",
+      "team": "Engineering"
+    },
+    "assignedDate": "2024-03-01",
+    "location": "Office Floor 3",
+    "children": [],
+    "purchaseDate": "2024-02-20",
+    "warrantyExpiry": "2027-02-20",
+    "price": 20000000
+  },
+  {
+    "id": "DEV014",
+    "qrCode": "QR-DEV014-HP-PAVILION",
+    "name": "HP Pavilion 15",
+    "type": "Laptop",
+    "category": "IT Equipment",
+    "serialNumber": "HP-PAV15-2024-001",
+    "status": "IN_USE",
+    "specs": {
+      "processor": "Intel Core i5-1340P",
+      "ram": "16GB",
+      "storage": "512GB SSD",
+      "screen": "15.6 inch FHD"
+    },
+    "holder": {
+      "id": "EMP008",
+      "name": "Pham Thi J",
+      "email": "phamthij@company.com",
+      "team": "Marketing"
+    },
+    "assignedDate": "2024-03-05",
+    "location": "Office Floor 2",
+    "children": [],
+    "purchaseDate": "2024-02-25",
+    "warrantyExpiry": "2027-02-25",
+    "price": 15000000
+  },
+  {
+    "id": "DEV015",
+    "qrCode": "QR-DEV015-LENOVO-THINKPAD",
+    "name": "Lenovo ThinkPad T14",
+    "type": "Laptop",
+    "category": "IT Equipment",
+    "serialNumber": "TP-T14-2024-001",
+    "status": "IN_USE",
+    "specs": {
+      "processor": "Intel Core i7-1355U",
+      "ram": "32GB",
+      "storage": "1TB SSD",
+      "screen": "14 inch FHD"
+    },
+    "holder": {
+      "id": "EMP009",
+      "name": "Hoang Van K",
+      "email": "hoangvank@company.com",
+      "team": "Sales"
+    },
+    "assignedDate": "2024-03-10",
+    "location": "Office Floor 2",
+    "children": [],
+    "purchaseDate": "2024-03-01",
+    "warrantyExpiry": "2027-03-01",
+    "price": 25000000
+  },
+  {
+    "id": "DEV016",
+    "qrCode": "QR-DEV016-DELL-LATITUDE",
+    "name": "Dell Latitude 5430",
+    "type": "Laptop",
+    "category": "IT Equipment",
+    "serialNumber": "DL5430-2024-001",
+    "status": "IN_USE",
+    "specs": {
+      "processor": "Intel Core i7-1265U",
+      "ram": "32GB",
+      "storage": "1TB SSD",
+      "screen": "14 inch FHD"
+    },
+    "holder": {
+      "id": "EMP010",
+      "name": "Tran Thi L",
+      "email": "tranthil@company.com",
+      "team": "Engineering"
+    },
+    "assignedDate": "2024-03-15",
+    "location": "Office Floor 3",
+    "children": [],
+    "purchaseDate": "2024-03-05",
+    "warrantyExpiry": "2027-03-05",
+    "price": 24000000
+  },
+  {
     "id": "DEV010",
     "qrCode": "QR-DEV010-MARKETING-MON",
     "name": "LG 27 inch Monitor",

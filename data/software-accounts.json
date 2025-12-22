@@ -8,7 +8,7 @@
     "licenseType": "Subscription",
     "status": "ACTIVE",
     "totalLicenses": 50,
-    "usedLicenses": 12,
+    "usedLicenses": 5,
     "assignedUsers": [
       {
         "id": "EMP001",
@@ -25,6 +25,30 @@
         "team": "Marketing",
         "assignedDate": "2024-02-01",
         "expiryDate": "2025-02-01"
+      },
+      {
+        "id": "EMP005",
+        "name": "Tran Van G",
+        "email": "tranvang@company.com",
+        "team": "Engineering",
+        "assignedDate": "2024-02-15",
+        "expiryDate": "2025-02-15"
+      },
+      {
+        "id": "EMP007",
+        "name": "Le Van I",
+        "email": "levani@company.com",
+        "team": "Engineering",
+        "assignedDate": "2024-03-01",
+        "expiryDate": "2025-03-01"
+      },
+      {
+        "id": "EMP010",
+        "name": "Tran Thi L",
+        "email": "tranthil@company.com",
+        "team": "Engineering",
+        "assignedDate": "2024-03-15",
+        "expiryDate": "2025-03-15"
       }
     ],
     "purchaseDate": "2024-01-01",
@@ -45,19 +69,67 @@
     "assignedUsers": [
       {
         "id": "EMP003",
-        "name": "Le Van C",
-        "email": "levanc@company.com",
-        "team": "Design",
+        "name": "Hoang Van E",
+        "email": "hoangvane@company.com",
+        "team": "Engineering",
         "assignedDate": "2024-01-10",
         "expiryDate": "2025-01-10"
       },
       {
         "id": "EMP004",
-        "name": "Pham Thi D",
-        "email": "phamthid@company.com",
+        "name": "Le Thi F",
+        "email": "lethif@company.com",
+        "team": "Sales",
+        "assignedDate": "2024-01-15",
+        "expiryDate": "2025-01-15"
+      },
+      {
+        "id": "EMP001",
+        "name": "Nguyen Van A",
+        "email": "nguyenvana@company.com",
+        "team": "Engineering",
+        "assignedDate": "2024-02-01",
+        "expiryDate": "2025-02-01"
+      },
+      {
+        "id": "EMP006",
+        "name": "Nguyen Thi H",
+        "email": "nguyenthih@company.com",
         "team": "Design",
-        "assignedDate": "2024-01-10",
-        "expiryDate": "2025-01-10"
+        "assignedDate": "2024-02-20",
+        "expiryDate": "2025-02-20"
+      },
+      {
+        "id": "EMP005",
+        "name": "Tran Van G",
+        "email": "tranvang@company.com",
+        "team": "Engineering",
+        "assignedDate": "2024-02-25",
+        "expiryDate": "2025-02-25"
+      },
+      {
+        "id": "EMP007",
+        "name": "Le Van I",
+        "email": "levani@company.com",
+        "team": "Engineering",
+        "assignedDate": "2024-03-01",
+        "expiryDate": "2025-03-01"
+      },
+      {
+        "id": "EMP008",
+        "name": "Pham Thi J",
+        "email": "phamthij@company.com",
+        "team": "Marketing",
+        "assignedDate": "2024-03-05",
+        "expiryDate": "2025-03-05"
+      },
+      {
+        "id": "EMP010",
+        "name": "Tran Thi L",
+        "email": "tranthil@company.com",
+        "team": "Engineering",
+        "assignedDate": "2024-03-15",
+        "expiryDate": "2025-03-15"
       }
     ],
     "purchaseDate": "2024-01-01",
@@ -74,7 +146,7 @@
     "licenseType": "Subscription",
     "status": "ACTIVE",
     "totalLicenses": 100,
-    "usedLicenses": 45,
+    "usedLicenses": 10,
     "assignedUsers": [
       {
         "id": "EMP001",
@@ -90,6 +162,70 @@
         "email": "tranthib@company.com",
         "team": "Marketing",
         "assignedDate": "2024-01-05",
+        "expiryDate": null
+      },
+      {
+        "id": "EMP003",
+        "name": "Hoang Van E",
+        "email": "hoangvane@company.com",
+        "team": "Engineering",
+        "assignedDate": "2024-01-10",
+        "expiryDate": null
+      },
+      {
+        "id": "EMP004",
+        "name": "Le Thi F",
+        "email": "lethif@company.com",
+        "team": "Sales",
+        "assignedDate": "2024-01-15",
+        "expiryDate": null
+      },
+      {
+        "id": "EMP005",
+        "name": "Tran Van G",
+        "email": "tranvang@company.com",
+        "team": "Engineering",
+        "assignedDate": "2024-02-15",
+        "expiryDate": null
+      },
+      {
+        "id": "EMP006",
+        "name": "Nguyen Thi H",
+        "email": "nguyenthih@company.com",
+        "team": "Design",
+        "assignedDate": "2024-02-20",
+        "expiryDate": null
+      },
+      {
+        "id": "EMP007",
+        "name": "Le Van I",
+        "email": "levani@company.com",
+        "team": "Engineering",
+        "assignedDate": "2024-03-01",
+        "expiryDate": null
+      },
+      {
+        "id": "EMP008",
+        "name": "Pham Thi J",
+        "email": "phamthij@company.com",
+        "team": "Marketing",
+        "assignedDate": "2024-03-05",
+        "expiryDate": null
+      },
+      {
+        "id": "EMP009",
+        "name": "Hoang Van K",
+        "email": "hoangvank@company.com",
+        "team": "Sales",
+        "assignedDate": "2024-03-10",
+        "expiryDate": null
+      },
+      {
+        "id": "EMP010",
+        "name": "Tran Thi L",
+        "email": "tranthil@company.com",
+        "team": "Engineering",
+        "assignedDate": "2024-03-15",
         "expiryDate": null
       }
     ],
@@ -107,7 +243,7 @@
     "licenseType": "Subscription",
     "status": "ACTIVE",
     "totalLicenses": 25,
-    "usedLicenses": 18,
+    "usedLicenses": 5,
     "assignedUsers": [
       {
         "id": "EMP001",
@@ -115,6 +251,38 @@
         "email": "nguyenvana@company.com",
         "team": "Engineering",
         "assignedDate": "2024-01-08",
+        "expiryDate": null
+      },
+      {
+        "id": "EMP003",
+        "name": "Hoang Van E",
+        "email": "hoangvane@company.com",
+        "team": "Engineering",
+        "assignedDate": "2024-01-10",
+        "expiryDate": null
+      },
+      {
+        "id": "EMP005",
+        "name": "Tran Van G",
+        "email": "tranvang@company.com",
+        "team": "Engineering",
+        "assignedDate": "2024-02-15",
+        "expiryDate": null
+      },
+      {
+        "id": "EMP007",
+        "name": "Le Van I",
+        "email": "levani@company.com",
+        "team": "Engineering",
+        "assignedDate": "2024-03-01",
+        "expiryDate": null
+      },
+      {
+        "id": "EMP010",
+        "name": "Tran Thi L",
+        "email": "tranthil@company.com",
+        "team": "Engineering",
+        "assignedDate": "2024-03-15",
         "expiryDate": null
       }
     ],
@@ -132,8 +300,57 @@
     "licenseType": "Subscription",
     "status": "ACTIVE",
     "totalLicenses": 30,
-    "usedLicenses": 22,
-    "assignedUsers": [],
+    "usedLicenses": 6,
+    "assignedUsers": [
+      {
+        "id": "EMP002",
+        "name": "Tran Thi B",
+        "email": "tranthib@company.com",
+        "team": "Marketing",
+        "assignedDate": "2024-02-01",
+        "expiryDate": null
+      },
+      {
+        "id": "EMP004",
+        "name": "Le Thi F",
+        "email": "lethif@company.com",
+        "team": "Sales",
+        "assignedDate": "2024-02-05",
+        "expiryDate": null
+      },
+      {
+        "id": "EMP006",
+        "name": "Nguyen Thi H",
+        "email": "nguyenthih@company.com",
+        "team": "Design",
+        "assignedDate": "2024-02-20",
+        "expiryDate": null
+      },
+      {
+        "id": "EMP008",
+        "name": "Pham Thi J",
+        "email": "phamthij@company.com",
+        "team": "Marketing",
+        "assignedDate": "2024-03-05",
+        "expiryDate": null
+      },
+      {
+        "id": "EMP009",
+        "name": "Hoang Van K",
+        "email": "hoangvank@company.com",
+        "team": "Sales",
+        "assignedDate": "2024-03-10",
+        "expiryDate": null
+      },
+      {
+        "id": "EMP010",
+        "name": "Tran Thi L",
+        "email": "tranthil@company.com",
+        "team": "Engineering",
+        "assignedDate": "2024-03-15",
+        "expiryDate": null
+      }
+    ],
     "purchaseDate": "2024-02-01",
     "expiryDate": "2025-02-01",
     "price": 6000000,

@@ -262,6 +262,47 @@
             category: 'Software Account',
             isSoftwareAccount: true
           };
+          
+          // Migrate assignedUsers to assignedDevices for Software accounts
+          if (currentDevice.isSoftwareAccount && currentDevice.assignedUsers && currentDevice.assignedUsers.length > 0) {
+            if (!currentDevice.assignedDevices) {
+              // Tìm PC/Laptop của từng user và convert sang device
+              currentDevice.assignedDevices = currentDevice.assignedUsers.map(user => {
+                // Tìm PC/Laptop mà user này đang sở hữu
+                const userPC = allDevices.find(d => {
+                  const isPCorLaptop = d.type === 'Laptop' || d.type === 'PC Case' || d.type === 'Desktop';
+                  return isPCorLaptop && d.holder && d.holder.id === user.id;
+                });
+                
+                if (userPC) {
+                  // Nếu tìm thấy PC/Laptop, sử dụng device đó
+                  return {
+                    type: 'device',
+                    device: {
+                      ...userPC,
+                      name: userPC.name || userPC.id,
+                      location: userPC.location,
+                      holder: userPC.holder
+                    },
+                    assignedDate: user.assignedDate || new Date().toISOString().split('T')[0]
+                  };
+                } else {
+                  // Nếu không tìm thấy PC/Laptop, giữ nguyên user (fallback)
+                  const fullUser = allEmployees.find(u => u.id === user.id) || user;
+                  return {
+                    type: 'user',
+                    user: {
+                      ...user,
+                      ...fullUser,
+                      team: fullUser.team || fullUser.department || user.team,
+                      department: fullUser.department || fullUser.team || user.team
+                    },
+                    assignedDate: user.assignedDate || new Date().toISOString().split('T')[0]
+                  };
+                }
+              });
+            }
+          }
         }
       }
       
@@ -730,26 +771,123 @@
       }
       
       let assignedCardHtml = '';
-      if (isSoftwareAccount && currentDevice.assignedUsers && currentDevice.assignedUsers.length > 0) {
-        // Show assigned users for software accounts
-        const usersList = currentDevice.assignedUsers.map(user => `
-          <div class="assigned-card-main" style="margin-bottom: 0.75rem;">
-            <div class="assigned-card-avatar">
-              ${user.name.charAt(0)}
-            </div>
-            <div class="assigned-card-info">
-              <div class="assigned-card-name">${user.name}</div>
-              <div class="assigned-card-email">${user.email}</div>
-              ${user.team ? `<div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem;">${user.team}</div>` : ''}
-              ${user.assignedDate ? `<div style="font-size: 0.75rem; color: var(--text-secondary);">Assigned: ${AssetFlowUtils.formatDate(user.assignedDate)}</div>` : ''}
-            </div>
-          </div>
-        `).join('');
+      if (isSoftwareAccount) {
+        // Migrate assignedUsers to assignedDevices if needed (for backward compatibility)
+        if (!currentDevice.assignedDevices && currentDevice.assignedUsers && currentDevice.assignedUsers.length > 0) {
+          // Load đầy đủ thông tin user từ allEmployees khi migrate
+          currentDevice.assignedDevices = currentDevice.assignedUsers.map(user => {
+            const fullUser = allEmployees.find(u => u.id === user.id) || user;
+            return {
+              type: 'user',
+              user: {
+                ...user,
+                ...fullUser,
+                // Đảm bảo có đầy đủ thông tin
+                team: fullUser.team || fullUser.department || user.team,
+                department: fullUser.department || fullUser.team || user.team
+              },
+              assignedDate: user.assignedDate || new Date().toISOString().split('T')[0]
+            };
+          });
+        }
+        
+        // For Software & Licenses: show assigned devices instead of users
+        const assignedDevices = currentDevice.assignedDevices || [];
+        const totalAssigned = assignedDevices.length;
+        const deviceCount = assignedDevices.filter(item => item.type === 'device').length;
+        const userCount = assignedDevices.filter(item => item.type === 'user').length;
+        
+        const assignedList = assignedDevices.map((item, index) => {
+          if (item.type === 'device') {
+            // Load đầy đủ thông tin device từ allDevices nếu cần
+            let fullDevice = item.device;
+            if (item.device.id && (!item.device.name || !item.device.location)) {
+              // Tìm device đầy đủ từ allDevices
+              const foundDevice = allDevices.find(d => d.id === item.device.id);
+              if (foundDevice) {
+                fullDevice = foundDevice;
+              }
+            }
+            
+            // Tên máy PC/Laptop
+            const displayName = fullDevice.name || fullDevice.id || 'Unknown Device';
+            // Location/Team
+            const location = fullDevice.location || fullDevice.holder?.team || '';
+            // Tên người đang sử dụng máy (holder)
+            const holderName = fullDevice.holder?.name || '';
+            
+            return `
+              <div class="assigned-tag-item" data-index="${index}">
+                <div class="assigned-tag-content">
+                  <div class="assigned-tag-name" style="font-weight: 600; font-size: 0.875rem; color: var(--text-primary); margin-bottom: 0.375rem;">${displayName}</div>
+                  ${location ? `
+                    <div class="assigned-tag-info" style="display: flex; align-items: center; margin-top: 0.2rem;">
+                      <i class="fas fa-map-marker-alt" style="color: #ec4899; margin-right: 0.25rem; font-size: 0.75rem;"></i>
+                      <span style="color: #60a5fa; font-size: 0.75rem;">${location}</span>
+                    </div>
+                  ` : ''}
+                  ${holderName ? `
+                    <div class="assigned-tag-info" style="display: flex; align-items: center; margin-top: 0.2rem;">
+                      <i class="fas fa-user" style="color: #a855f7; margin-right: 0.25rem; font-size: 0.75rem;"></i>
+                      <span style="color: #60a5fa; font-size: 0.75rem;">${holderName}</span>
+                    </div>
+                  ` : ''}
+                </div>
+                <button class="assigned-tag-remove" onclick="removeAssignedItem(${index})" type="button" aria-label="Remove">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            `;
+          } else {
+            // Nếu có user (từ dữ liệu cũ), load đầy đủ thông tin từ allEmployees
+            let fullUser = item.user;
+            if (item.user.id && (!item.user.team || !item.user.department)) {
+              // Tìm user đầy đủ từ allEmployees
+              const foundUser = allEmployees.find(u => u.id === item.user.id);
+              if (foundUser) {
+                fullUser = { ...item.user, ...foundUser };
+              }
+            }
+            
+            const displayName = fullUser.name || 'Unknown User';
+            const team = fullUser.team || fullUser.department || '';
+            
+            return `
+              <div class="assigned-tag-item" data-index="${index}">
+                <div class="assigned-tag-content">
+                  <div class="assigned-tag-name" style="font-weight: 600; font-size: 0.875rem; color: var(--text-primary); margin-bottom: 0.375rem;">${displayName}</div>
+                  ${team ? `
+                    <div class="assigned-tag-info" style="display: flex; align-items: center; margin-top: 0.2rem;">
+                      <i class="fas fa-map-marker-alt" style="color: #ec4899; margin-right: 0.25rem; font-size: 0.75rem;"></i>
+                      <span style="color: #60a5fa; font-size: 0.75rem;">${team}</span>
+                    </div>
+                  ` : ''}
+                </div>
+                <button class="assigned-tag-remove" onclick="removeAssignedItem(${index})" type="button" aria-label="Remove">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            `;
+          }
+        }).join('');
         
         assignedCardHtml = `
           <div class="assigned-card">
-            <div class="assigned-card-title">Assigned Users (${currentDevice.assignedUsers.length})</div>
-            ${usersList}
+            <div class="assigned-card-title">
+              Assigned PC/Laptop
+              <span style="font-size: 0.875rem; font-weight: normal; color: var(--text-secondary); margin-left: 0.5rem;">
+                (total: ${totalAssigned})
+              </span>
+            </div>
+            <div style="margin-bottom: 1rem;">
+              <div style="position: relative;">
+                <input type="text" id="assignSearchInput" class="search-input" placeholder="Search PC/Laptop by name, serial, or owner..." style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-size: 14px;">
+                <div id="assignSearchResults" class="search-results-dropdown" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid var(--border-color); border-radius: var(--radius-md); margin-top: 0.25rem; max-height: 300px; overflow-y: auto; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"></div>
+              </div>
+            </div>
+            <div class="assigned-tags-container">
+              ${assignedList || '<span style="color: var(--text-secondary); font-size: 0.875rem; align-self: center;">No PC/Laptop assigned yet.</span>'}
+            </div>
           </div>
         `;
       } else if (!isSoftwareAccount && currentDevice.holder) {
@@ -884,6 +1022,11 @@
           
           AssetFlowUtils.showToast(`Device assigned to ${user.name} (mock only, not saved).`, 'success');
         });
+      }
+      
+      // Initialize assigned devices search for Software & Licenses
+      if (isSoftwareAccount) {
+        initializeAssignedDevicesSearch();
       }
       
       // Hide/show tabs based on device type
@@ -1378,6 +1521,305 @@
     }
     
     
+    
+    // Initialize assigned devices search for Software & Licenses
+    function initializeAssignedDevicesSearch() {
+      const searchInput = document.getElementById('assignSearchInput');
+      const searchResults = document.getElementById('assignSearchResults');
+      
+      if (!searchInput || !searchResults) return;
+      
+      // Initialize assignedDevices if not exists
+      if (!currentDevice.assignedDevices) {
+        // Migrate from assignedUsers if exists
+        if (currentDevice.assignedUsers && currentDevice.assignedUsers.length > 0) {
+          // Tìm PC/Laptop của từng user và convert sang device
+          currentDevice.assignedDevices = currentDevice.assignedUsers.map(user => {
+            // Tìm PC/Laptop mà user này đang sở hữu
+            const userPC = allDevices.find(d => {
+              const isPCorLaptop = d.type === 'Laptop' || d.type === 'PC Case' || d.type === 'Desktop';
+              return isPCorLaptop && d.holder && d.holder.id === user.id;
+            });
+            
+            if (userPC) {
+              // Nếu tìm thấy PC/Laptop, sử dụng device đó
+              return {
+                type: 'device',
+                device: {
+                  ...userPC,
+                  name: userPC.name || userPC.id,
+                  location: userPC.location,
+                  holder: userPC.holder
+                },
+                assignedDate: user.assignedDate || new Date().toISOString().split('T')[0]
+              };
+            } else {
+              // Nếu không tìm thấy PC/Laptop, giữ nguyên user (fallback)
+              const fullUser = allEmployees.find(u => u.id === user.id) || user;
+              return {
+                type: 'user',
+                user: {
+                  ...user,
+                  ...fullUser,
+                  team: fullUser.team || fullUser.department || user.team,
+                  department: fullUser.department || fullUser.team || user.team
+                },
+                assignedDate: user.assignedDate || new Date().toISOString().split('T')[0]
+              };
+            }
+          });
+        } else {
+          currentDevice.assignedDevices = [];
+        }
+      }
+      
+      let searchTimeout = null;
+      
+      // Show all items when clicking on input
+      searchInput.addEventListener('click', () => {
+        performSearch('', searchResults);
+      });
+      
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.trim().toLowerCase();
+        
+        clearTimeout(searchTimeout);
+        
+        searchTimeout = setTimeout(() => {
+          performSearch(query, searchResults);
+        }, 300);
+      });
+      
+      // Close dropdown when clicking outside (but not when clicking on items inside)
+      let closeTimeout = null;
+      document.addEventListener('click', (e) => {
+        // Check if click is inside search results container or on result item
+        const clickedInsideResults = searchResults.contains(e.target);
+        const clickedOnResultItem = e.target.closest('.search-result-item');
+        const clickedInsideInput = searchInput.contains(e.target);
+        
+        // If clicking on result item or inside results, don't close
+        if (clickedInsideResults || clickedOnResultItem || clickedInsideInput) {
+          // Clear any pending close timeout
+          if (closeTimeout) {
+            clearTimeout(closeTimeout);
+            closeTimeout = null;
+          }
+          return;
+        }
+        
+        // Only close if clicking completely outside
+        // Use a small delay to allow onclick handlers to run first
+        closeTimeout = setTimeout(() => {
+          searchResults.style.display = 'none';
+        }, 100);
+      });
+      
+      searchInput.addEventListener('focus', () => {
+        performSearch(searchInput.value.trim().toLowerCase(), searchResults);
+      });
+    }
+    
+    function performSearch(query, resultsContainer) {
+      const results = [];
+      
+      // Chỉ search trong devices (PC/Laptop), không search users
+      // Có thể search theo tên máy, serial, type, hoặc tên người sở hữu
+      allDevices.forEach(device => {
+        // Chỉ hiển thị PC/Laptop (Laptop, PC Case, Desktop)
+        const isPCorLaptop = device.type === 'Laptop' || device.type === 'PC Case' || device.type === 'Desktop';
+        
+        if (!isPCorLaptop) return;
+        
+        // Nếu có query, filter theo query
+        if (query) {
+          const nameMatch = device.name.toLowerCase().includes(query);
+          const serialMatch = device.serialNumber && device.serialNumber.toLowerCase().includes(query);
+          const typeMatch = device.type && device.type.toLowerCase().includes(query);
+          
+          // Search theo tên người sở hữu (holder)
+          const holderNameMatch = device.holder && device.holder.name && device.holder.name.toLowerCase().includes(query);
+          const holderEmailMatch = device.holder && device.holder.email && device.holder.email.toLowerCase().includes(query);
+          
+          if (!(nameMatch || serialMatch || typeMatch || holderNameMatch || holderEmailMatch)) {
+            return; // Skip if doesn't match query
+          }
+        }
+        
+        // Check if already assigned
+        const isAssigned = currentDevice.assignedDevices && currentDevice.assignedDevices.some(item => 
+          item.type === 'device' && item.device.id === device.id
+        );
+        
+        // Hiển thị tất cả (cả đã chọn và chưa chọn)
+        results.push({
+          type: 'device',
+          device: device,
+          displayName: device.name,
+          subtitle: `${device.type} • ${device.serialNumber || device.id}`,
+          isAssigned: isAssigned
+        });
+      });
+      
+      if (results.length === 0) {
+        resultsContainer.innerHTML = '<div style="padding: 1rem; color: var(--text-secondary); text-align: center;">No results found</div>';
+      } else {
+        // Giữ nguyên thứ tự danh sách, không sort
+        
+        resultsContainer.innerHTML = results.map((result, index) => {
+          let locationInfo = '';
+          let holderInfo = '';
+          
+          if (result.type === 'device') {
+            // Hiển thị location/team nếu có
+            const location = result.device.location || result.device.holder?.team || '';
+            if (location) {
+              locationInfo = `
+                <div style="display: flex; align-items: center; margin-top: 0.25rem;">
+                  <i class="fas fa-map-marker-alt" style="color: #ec4899; margin-right: 0.25rem; font-size: 0.75rem;"></i>
+                  <span style="color: #60a5fa; font-size: 0.875rem;">${location}</span>
+                </div>
+              `;
+            }
+            // Luôn hiển thị holder name nếu có (người đang sử dụng máy)
+            const holderName = result.device.holder?.name || '';
+            if (holderName) {
+              holderInfo = `
+                <div style="display: flex; align-items: center; margin-top: 0.25rem;">
+                  <i class="fas fa-user" style="color: #a855f7; margin-right: 0.25rem; font-size: 0.75rem;"></i>
+                  <span style="color: #60a5fa; font-size: 0.875rem;">${holderName}</span>
+                </div>
+              `;
+            }
+          }
+          
+          // Style cho item đã chọn
+          const itemStyle = result.isAssigned 
+            ? 'padding: 1rem; cursor: pointer; border-bottom: 1px solid var(--border-color); transition: background 0.2s; background: #e0f2fe; border-left: 3px solid #0ea5e9;'
+            : 'padding: 1rem; cursor: pointer; border-bottom: 1px solid var(--border-color); transition: background 0.2s;';
+          
+          const hoverStyle = result.isAssigned
+            ? "this.style.background='#bae6fd'"
+            : "this.style.background='var(--bg-tertiary)'";
+          
+          const outStyle = result.isAssigned
+            ? "this.style.background='#e0f2fe'"
+            : "this.style.background='white'";
+          
+          const icon = result.isAssigned 
+            ? '<i class="fas fa-check-circle" style="color: #0ea5e9; font-size: 1.25rem; margin-left: 1rem;"></i>'
+            : '<i class="fas fa-plus" style="color: var(--primary-color); font-size: 1.25rem; margin-left: 1rem;"></i>';
+          
+          return `
+            <div class="search-result-item" onclick="event.stopPropagation(); event.preventDefault(); addAssignedItem(${index}, '${result.type}'); return false;" style="${itemStyle}" onmouseover="${hoverStyle}" onmouseout="${outStyle}">
+              <div style="flex: 1;">
+                <div style="font-weight: 600; font-size: 1rem; color: var(--text-primary); margin-bottom: 0.5rem;">${result.displayName}</div>
+                ${locationInfo}
+                ${holderInfo}
+              </div>
+              ${icon}
+            </div>
+          `;
+        }).join('');
+      }
+      
+      // Store results for add function
+      window.currentSearchResults = results;
+      resultsContainer.style.display = 'block';
+    }
+    
+    function addAssignedItem(index, itemType) {
+      if (!window.currentSearchResults || !window.currentSearchResults[index]) return;
+      
+      const result = window.currentSearchResults[index];
+      
+      // Nếu item đã được chọn, remove nó
+      if (result.isAssigned) {
+        const assignedIndex = currentDevice.assignedDevices.findIndex(item => 
+          item.type === 'device' && item.device.id === result.device.id
+        );
+        if (assignedIndex !== -1) {
+          removeAssignedItem(assignedIndex);
+          return;
+        }
+      }
+      
+      // Nếu chưa chọn, add vào
+      const assignedItem = {
+        type: itemType,
+        assignedDate: new Date().toISOString().split('T')[0]
+      };
+      
+      if (itemType === 'device') {
+        // Lưu toàn bộ thông tin device, đảm bảo có đầy đủ thông tin từ allDevices
+        const fullDevice = allDevices.find(d => d.id === result.device.id) || result.device;
+        assignedItem.device = {
+          ...fullDevice,
+          name: fullDevice.name || result.displayName || fullDevice.id,
+          location: fullDevice.location,
+          holder: fullDevice.holder
+        };
+      } else {
+        assignedItem.user = result.user;
+      }
+      
+      if (!currentDevice.assignedDevices) {
+        currentDevice.assignedDevices = [];
+      }
+      
+      currentDevice.assignedDevices.push(assignedItem);
+      
+      // Update used licenses count
+      if (currentDevice.totalLicenses !== undefined) {
+        currentDevice.usedLicenses = currentDevice.assignedDevices.length;
+      }
+      
+      // Re-render device to update UI
+      renderDevice();
+      
+      // Refresh search results to show updated status (don't close dropdown)
+      const searchInput = document.getElementById('assignSearchInput');
+      const searchResults = document.getElementById('assignSearchResults');
+      if (searchInput && searchResults) {
+        // Force keep dropdown open
+        setTimeout(() => {
+          searchResults.style.display = 'block';
+          performSearch(searchInput.value.trim().toLowerCase(), searchResults);
+        }, 10);
+      }
+      
+      AssetFlowUtils.showToast(`${itemType === 'device' ? 'Device' : 'User'} added successfully`, 'success');
+    }
+    
+    function removeAssignedItem(index) {
+      if (!currentDevice.assignedDevices || index >= currentDevice.assignedDevices.length) return;
+      
+      const item = currentDevice.assignedDevices[index];
+      const itemName = item.type === 'device' ? item.device.name : item.user.name;
+      
+      currentDevice.assignedDevices.splice(index, 1);
+      
+      // Update used licenses count
+      if (currentDevice.totalLicenses !== undefined) {
+        currentDevice.usedLicenses = currentDevice.assignedDevices.length;
+      }
+      
+      // Re-render device to update UI
+      renderDevice();
+      
+      // Refresh search results to show updated status (don't close dropdown)
+      const searchInput = document.getElementById('assignSearchInput');
+      const searchResults = document.getElementById('assignSearchResults');
+      if (searchInput && searchResults) {
+        // Force keep dropdown open
+        setTimeout(() => {
+          searchResults.style.display = 'block';
+          performSearch(searchInput.value.trim().toLowerCase(), searchResults);
+        }, 10);
+      }
+      
+      AssetFlowUtils.showToast(`${item.type === 'device' ? 'Device' : 'User'} removed: ${itemName}`, 'success');
+    }
     
     function printQR() {
       AssetFlowUtils.showToast('QR code print dialog opened', 'success');

@@ -52,6 +52,60 @@
     "team": "IT",
     "position": "IT Manager",
     "role": "Admin"
+  },
+  {
+    "id": "EMP005",
+    "name": "Tran Van G",
+    "email": "tranvang@company.com",
+    "department": "Engineering",
+    "team": "Engineering",
+    "position": "Frontend Developer",
+    "role": "Employee"
+  },
+  {
+    "id": "EMP006",
+    "name": "Nguyen Thi H",
+    "email": "nguyenthih@company.com",
+    "department": "Design",
+    "team": "Design",
+    "position": "UI/UX Designer",
+    "role": "Employee"
+  },
+  {
+    "id": "EMP007",
+    "name": "Le Van I",
+    "email": "levani@company.com",
+    "department": "Engineering",
+    "team": "Engineering",
+    "position": "Backend Developer",
+    "role": "Employee"
+  },
+  {
+    "id": "EMP008",
+    "name": "Pham Thi J",
+    "email": "phamthij@company.com",
+    "department": "Marketing",
+    "team": "Marketing",
+    "position": "Content Creator",
+    "role": "Employee"
+  },
+  {
+    "id": "EMP009",
+    "name": "Hoang Van K",
+    "email": "hoangvank@company.com",
+    "department": "Sales",
+    "team": "Sales",
+    "position": "Sales Representative",
+    "role": "Employee"
+  },
+  {
+    "id": "EMP010",
+    "name": "Tran Thi L",
+    "email": "tranthil@company.com",
+    "department": "Engineering",
+    "team": "Engineering",
+    "position": "DevOps Engineer",
+    "role": "Employee"
   }
 ]
 
