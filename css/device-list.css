@@ -239,6 +239,34 @@
   display: none !important;
 }
 
+.btn-import {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.btn-import i {
+  font-size: 14px;
+}
+
+.btn-import:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
 .btn-export {
   display: flex;
   align-items: center;
@@ -425,6 +453,7 @@
     order: 2;
   }
   
+  .btn-import,
   .btn-export {
     width: 100%;
     justify-content: center;
@@ -934,7 +963,7 @@
 }
 
 .device-table th {
-  padding: 1rem 1.25rem;
+  padding: 0.75rem 1rem;
   text-align: left;
   font-weight: 600;
   font-size: 13px;
@@ -978,15 +1007,15 @@
 }
 
 .device-table th:first-child {
-  padding-left: 1.5rem;
+  padding-left: 1.25rem;
 }
 
 .device-table th:last-child {
-  padding-right: 1.5rem;
+  padding-right: 1.25rem;
 }
 
 .device-table td {
-  padding: 1.25rem;
+  padding: 0.75rem 1rem;
   border-bottom: 1px solid var(--border-color);
   vertical-align: middle;
   font-size: 14px;
@@ -994,11 +1023,11 @@
 }
 
 .device-table td:first-child {
-  padding-left: 1.5rem;
+  padding-left: 1.25rem;
 }
 
 .device-table td:last-child {
-  padding-right: 1.5rem;
+  padding-right: 1.25rem;
 }
 
 .device-table tbody tr {

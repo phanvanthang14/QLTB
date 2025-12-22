@@ -77,14 +77,22 @@
       </div>
       <div class="custom-dropdown" id="typeCategoryDropdown">
         <button class="custom-dropdown-button" type="button">
-          <span class="custom-dropdown-text">All types & categories</span>
+          <span class="custom-dropdown-text">All categories</span>
           <i class="fas fa-chevron-down custom-dropdown-icon"></i>
         </button>
         <div class="custom-dropdown-menu">
-          <div class="custom-dropdown-option" data-value="">All types & categories</div>
+          <div class="custom-dropdown-option" data-value="">All categories</div>
+          <div class="custom-dropdown-option" data-value="IT Equipment">IT Equipment</div>
+          <div class="custom-dropdown-option" data-value="Software & Licenses">Software & Licenses</div>
+          <div class="custom-dropdown-option" data-value="Vehicles">Vehicles</div>
+          <div class="custom-dropdown-option" data-value="Office Equipment & Furniture">Office Equipment & Furniture</div>
         </div>
         <select class="filter-dropdown hidden" id="typeCategoryFilter">
-          <option value="">All types & categories</option>
+          <option value="">All categories</option>
+          <option value="IT Equipment">IT Equipment</option>
+          <option value="Software & Licenses">Software & Licenses</option>
+          <option value="Vehicles">Vehicles</option>
+          <option value="Office Equipment & Furniture">Office Equipment & Furniture</option>
         </select>
       </div>
       <div class="custom-dropdown" id="statusDropdown">
@@ -111,6 +119,10 @@
           <option value="EXPIRED">Expired</option>
         </select>
       </div>
+      <a href="import-device.html" class="btn-import">
+        <i class="fas fa-upload"></i>
+        <span>Import</span>
+      </a>
       <button class="btn-export" onclick="downloadCSV()">
         <i class="fas fa-download"></i>
         <span>Export</span>
@@ -293,35 +305,37 @@
       const allItems = [];
       const typeSet = new Set();
       originalDevices.forEach(device => {
-        if (device.category === 'Container') {
+        // Check if device has children (it's a container/parent device)
+        const hasChildren = device.children && device.children.length > 0;
+        
+        if (hasChildren) {
           // Add main container device
           allItems.push({ ...device, isComponent: false });
           if (device.type) typeSet.add(device.type);
           
           // Add children components as separate items
-          if (device.children && device.children.length > 0) {
-            device.children.forEach(child => {
-              allItems.push({
-                ...child,
-                isComponent: true,
-                // Inherit location and holder from parent device
+          device.children.forEach(child => {
+            allItems.push({
+              ...child,
+              isComponent: true,
+              // Inherit location and holder from parent device
+              location: device.location,
+              holder: device.holder,
+              parentDevice: {
+                id: device.id,
+                name: device.name,
+                serialNumber: device.serialNumber,
                 location: device.location,
-                holder: device.holder,
-                parentDevice: {
-                  id: device.id,
-                  name: device.name,
-                  serialNumber: device.serialNumber,
-                  location: device.location,
-                  holder: device.holder
-                }
-              });
-              if (child.type) typeSet.add(child.type);
+                holder: device.holder
+              }
             });
-          }
-        } else if (device.category === 'Component') {
-          // Standalone component (not a child of any device)
+            if (child.type) typeSet.add(child.type);
+          });
+        } else {
+          // Standalone device (not a parent with children)
+          // Only add if it's not a child component of another device
           if (!componentIdsInChildren.has(device.id)) {
-            allItems.push({ ...device, isComponent: true });
+            allItems.push({ ...device, isComponent: false });
             if (device.type) typeSet.add(device.type);
           }
         }
@@ -331,79 +345,14 @@
       originalSoftwareAccounts.forEach(account => {
         allItems.push({
           ...account,
-          category: 'Software Account',
+          category: 'Software & Licenses',
           isSoftwareAccount: true
         });
         if (account.type) typeSet.add(account.type);
       });
       
-      // Populate combined type & category filter dropdown
-      const typeCategoryFilter = document.getElementById('typeCategoryFilter');
-      const typeCategoryDropdown = document.getElementById('typeCategoryDropdown');
-      const typeCategoryMenu = typeCategoryDropdown?.querySelector('.custom-dropdown-menu');
-      
-      if (typeCategoryFilter && typeCategoryMenu) {
-        // Clear existing options except "All"
-        typeCategoryMenu.innerHTML = '<div class="custom-dropdown-option" data-value="">All types & categories</div>';
-        
-        // Group by category first
-        const categoryGroups = {
-          'Container': [],
-          'Component': [],
-          'Software Account': []
-        };
-        
-        // Collect all items with their categories
-        allItems.forEach(item => {
-          const category = item.category || 'Component';
-          const type = item.type || '';
-          if (type && categoryGroups[category]) {
-            if (!categoryGroups[category].includes(type)) {
-              categoryGroups[category].push(type);
-            }
-          }
-        });
-        
-        // Build options grouped by category
-        Object.keys(categoryGroups).forEach(category => {
-          const types = categoryGroups[category].sort();
-          if (types.length > 0) {
-            // Add category header (disabled option)
-            const categoryDiv = document.createElement('div');
-            categoryDiv.className = 'custom-dropdown-option disabled';
-            categoryDiv.textContent = `── ${category} ──`;
-            typeCategoryMenu.appendChild(categoryDiv);
-            
-            // Add types under this category
-            types.forEach(type => {
-              const optionDiv = document.createElement('div');
-              optionDiv.className = 'custom-dropdown-option';
-              optionDiv.dataset.value = `${type}|${category}`;
-              optionDiv.textContent = `${type} (${category})`;
-              typeCategoryMenu.appendChild(optionDiv);
-            });
-          }
-        });
-        
-        // Also populate hidden select for compatibility
-        typeCategoryFilter.innerHTML = '<option value="">All types & categories</option>';
-        Object.keys(categoryGroups).forEach(category => {
-          const types = categoryGroups[category].sort();
-          if (types.length > 0) {
-            const categoryOption = document.createElement('option');
-            categoryOption.disabled = true;
-            categoryOption.textContent = `── ${category} ──`;
-            typeCategoryFilter.appendChild(categoryOption);
-            
-            types.forEach(type => {
-              const option = document.createElement('option');
-              option.value = `${type}|${category}`;
-              option.textContent = `${type} (${category})`;
-              typeCategoryFilter.appendChild(option);
-            });
-          }
-        });
-      }
+      // Category filter dropdown is already populated in HTML with the 4 allowed categories
+      // No need to dynamically populate it
       
       allDevices = allItems;
       filteredDevices = [...allDevices];
@@ -573,21 +522,27 @@
       const searchTerm = document.getElementById('searchInput')?.value.toLowerCase() || '';
       
       // Advanced filters
-      const typeCategoryFilterValue = document.getElementById('typeCategoryFilter')?.value || '';
+      // Get category filter from hidden select or from selected option in custom dropdown
+      const typeCategoryDropdown = document.getElementById('typeCategoryDropdown');
+      const categoryFilterSelect = document.getElementById('typeCategoryFilter');
+      let categoryFilter = '';
+      
+      // Try to get from hidden select first
+      if (categoryFilterSelect) {
+        categoryFilter = categoryFilterSelect.value || '';
+      }
+      
+      // If empty, try to get from selected option in custom dropdown
+      if (!categoryFilter && typeCategoryDropdown) {
+        const selectedOption = typeCategoryDropdown.querySelector('.custom-dropdown-option.selected');
+        if (selectedOption && selectedOption.dataset.value) {
+          categoryFilter = selectedOption.dataset.value;
+        }
+      }
+      
       const statusFilter = document.getElementById('statusFilter')?.value || '';
       const warrantyFilter = document.getElementById('warrantyFilter')?.value || '';
       const specsFilter = document.getElementById('specsFilter')?.value.toLowerCase() || '';
-      
-      // Parse type and category from combined filter
-      let typeFilter = '';
-      let categoryFilter = '';
-      if (typeCategoryFilterValue) {
-        const parts = typeCategoryFilterValue.split('|');
-        if (parts.length === 2) {
-          typeFilter = parts[0];
-          categoryFilter = parts[1];
-        }
-      }
       
       // Check URL params for status filter
       const urlParams = new URLSearchParams(window.location.search);
@@ -595,7 +550,7 @@
       const finalStatusFilter = urlStatusFilter || statusFilter;
       
       filteredDevices = allDevices.filter(device => {
-        const isSoftwareAccount = device.isSoftwareAccount || device.category === 'Software Account';
+        const isSoftwareAccount = device.isSoftwareAccount || device.category === 'Software & Licenses';
         
         // Basic search - search in name, serial, QR code
         let matchesSearch = !searchTerm;
@@ -641,11 +596,11 @@
           }
         }
         
-        // Type filter
-        const matchesType = !typeFilter || device.type === typeFilter;
-        
-        // Category filter
-        const matchesCategory = !categoryFilter || device.category === categoryFilter;
+        // Category filter - only filter by category (not type)
+        // Trim both values to handle any whitespace issues
+        const deviceCategory = (device.category || '').trim();
+        const filterCategory = categoryFilter.trim();
+        const matchesCategory = !filterCategory || deviceCategory === filterCategory;
         
         // Status filter
         const matchesStatus = !finalStatusFilter || device.status === finalStatusFilter;
@@ -675,7 +630,7 @@
           matchesSpecs = specsString.includes(specsFilter);
         }
         
-        return matchesSearch && matchesType && matchesCategory && matchesStatus && matchesWarranty && matchesSpecs;
+        return matchesSearch && matchesCategory && matchesStatus && matchesWarranty && matchesSpecs;
       });
       
       // Reset to first page when filtering
@@ -900,7 +855,7 @@
         const button = typeCategoryDropdown.querySelector('.custom-dropdown-button');
         const menu = typeCategoryDropdown.querySelector('.custom-dropdown-menu');
         const options = menu.querySelectorAll('.custom-dropdown-option');
-        button.querySelector('.custom-dropdown-text').textContent = 'All types & categories';
+        button.querySelector('.custom-dropdown-text').textContent = 'All categories';
         options.forEach(opt => opt.classList.remove('selected'));
         const firstOption = menu.querySelector('.custom-dropdown-option[data-value=""]');
         if (firstOption) firstOption.classList.add('selected');
@@ -955,7 +910,7 @@
         card.className = 'device-card animate-fade-in';
         card.style.animationDelay = `${index * 0.05}s`;
         
-        const isSoftwareAccount = device.isSoftwareAccount || device.category === 'Software Account';
+        const isSoftwareAccount = device.isSoftwareAccount || device.category === 'Software & Licenses';
         const location = device.holder ? (device.holder.team || device.location) : device.location;
         const holderName = device.holder ? device.holder.name : null;
         const isComponent = device.isComponent || false;
@@ -1028,7 +983,7 @@
                     <i class="fas fa-qrcode"></i>
                   </button>
                 ` : ''}
-                <button class="btn btn-icon btn-secondary" onclick="event.stopPropagation(); viewDevice('${isComponent && parentInfo ? parentInfo.id : device.id}')" style="padding: 0.5rem;"><i class="fas fa-eye"></i></button>
+                <button class="btn btn-icon btn-secondary" onclick="event.stopPropagation(); viewDevice('${device.id}')" style="padding: 0.5rem;"><i class="fas fa-eye"></i></button>
               </div>
             </div>
           </div>
@@ -1079,10 +1034,10 @@
         const row = document.createElement('tr');
         row.className = 'animate-fade-in';
         row.style.animationDelay = `${index * 0.03}s`;
-        const isSoftwareAccount = device.isSoftwareAccount || device.category === 'Software Account';
+        const isSoftwareAccount = device.isSoftwareAccount || device.category === 'Software & Licenses';
         const isComponent = device.isComponent || false;
         const parentInfo = device.parentDevice;
-        const targetId = isComponent && parentInfo ? parentInfo.id : device.id;
+        const targetId = device.id;
         
         row.onclick = (e) => {
           // Don't navigate if clicking on action buttons
@@ -1475,7 +1430,7 @@
       
       // Convert devices to CSV rows
       const rows = filteredDevices.map(device => {
-        const isSoftwareAccount = device.isSoftwareAccount || device.category === 'Software Account';
+        const isSoftwareAccount = device.isSoftwareAccount || device.category === 'Software & Licenses';
         const specs = device.specs ? Object.entries(device.specs).map(([k, v]) => `${k}: ${v}`).join('; ') : '';
         const assignedUsers = isSoftwareAccount && device.assignedUsers 
           ? device.assignedUsers.map(u => u.name).join('; ') 
