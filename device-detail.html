@@ -215,7 +215,7 @@
     
     async function loadDevice() {
       const urlParams = new URLSearchParams(window.location.search);
-      const deviceId = 'DEV001';//urlParams.get('id') || 'DEV001';
+      const deviceId = urlParams.get('id') || 'DEV001';
       
       // Load devices, software accounts và users song song
       const [devices, softwareAccounts, users] = await Promise.all([
