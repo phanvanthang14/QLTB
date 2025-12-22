@@ -952,6 +952,7 @@
   width: 100%;
   border-collapse: collapse;
   min-width: 800px;
+  table-layout: fixed;
 }
 
 .device-table thead {
@@ -973,6 +974,8 @@
   letter-spacing: 0.5px;
   white-space: nowrap;
   user-select: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .device-table th.sortable {
@@ -1013,12 +1016,53 @@
   padding-right: 1.25rem;
 }
 
+/* Desktop: percent-based widths for stability */
+.device-table th:nth-child(1),
+.device-table td:nth-child(1) { width: 21%; }
+.device-table th:nth-child(2),
+.device-table td:nth-child(2) { width: 12%; }
+.device-table th:nth-child(3),
+.device-table td:nth-child(3) { width: 10%; }
+.device-table th:nth-child(4),
+.device-table td:nth-child(4) { width: 12%; }
+.device-table th:nth-child(5),
+.device-table td:nth-child(5) { width: 10%; }
+.device-table th:nth-child(6),
+.device-table td:nth-child(6) { width: 13%; }
+.device-table th:nth-child(7),
+.device-table td:nth-child(7) { width: 14%; }
+.device-table th:nth-child(8),
+.device-table td:nth-child(8) { width: 8%; }
+
+@media (max-width: 768px) {
+  /* Mobile: use fixed pixel widths for all columns to preserve readability */
+  .device-table th:nth-child(1),
+  .device-table td:nth-child(1) { width: 220px !important; }
+  .device-table th:nth-child(2),
+  .device-table td:nth-child(2) { width: 140px !important; }
+  .device-table th:nth-child(3),
+  .device-table td:nth-child(3) { width: 120px !important; }
+  .device-table th:nth-child(4),
+  .device-table td:nth-child(4) { width: 150px !important; }
+  .device-table th:nth-child(5),
+  .device-table td:nth-child(5) { width: 130px !important; }
+  .device-table th:nth-child(6),
+  .device-table td:nth-child(6) { width: 170px !important; }
+  .device-table th:nth-child(7),
+  .device-table td:nth-child(7) { width: 180px !important; }
+  .device-table th:nth-child(8),
+  .device-table td:nth-child(8) { width: 120px !important; }
+}
+
 .device-table td {
   padding: 0.5rem 1rem;
   border-bottom: 1px solid var(--border-color);
   vertical-align: middle;
   font-size: 14px;
   line-height: 1.5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .device-table td:first-child {
@@ -1087,21 +1131,36 @@
   font-family: monospace;
   font-size: 0.875rem;
   color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .table-type {
   font-weight: 500;
   color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .table-holder {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .table-holder-icon {
   font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.table-holder-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .table-location {
@@ -1109,6 +1168,14 @@
   align-items: center;
   gap: 0.5rem;
   color: var(--text-secondary);
+  min-width: 0;
+  overflow: hidden;
+}
+
+.table-location-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .table-empty {

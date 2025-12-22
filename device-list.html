@@ -154,8 +154,8 @@
         </a>
       </div>
       <div class="view-toggle">
-        <button class="view-btn active" data-view="grid" id="gridViewBtn">Grid</button>
-        <button class="view-btn" data-view="table" id="tableViewBtn">Table</button>
+        <button class="view-btn" data-view="grid" id="gridViewBtn">Grid</button>
+        <button class="view-btn active" data-view="table" id="tableViewBtn">Table</button>
       </div>
     </div>
     
@@ -554,9 +554,7 @@
           matchesSearch = 
             device.name.toLowerCase().includes(searchTerm) ||
             (device.serialNumber && device.serialNumber.toLowerCase().includes(searchTerm)) ||
-            (device.qrCode && device.qrCode.toLowerCase().includes(searchTerm)) ||
-            (device.holder && device.holder.name.toLowerCase().includes(searchTerm)) ||
-            (device.holder && device.holder.email.toLowerCase().includes(searchTerm));
+            (device.holder && device.holder.name.toLowerCase().includes(searchTerm));
           
           // Search in assigned users for software accounts
           if (isSoftwareAccount && device.assignedUsers) {
@@ -569,15 +567,15 @@
           }
           
           // Search in specs
-          if (device.specs) {
-            const specsString = JSON.stringify(device.specs).toLowerCase();
-            matchesSearch = matchesSearch || specsString.includes(searchTerm);
-          }
+          // if (device.specs) {
+          //   const specsString = JSON.stringify(device.specs).toLowerCase();
+          //   matchesSearch = matchesSearch || specsString.includes(searchTerm);
+          // }
           
           // Search in description for software accounts
-          if (isSoftwareAccount && device.description) {
-            matchesSearch = matchesSearch || device.description.toLowerCase().includes(searchTerm);
-          }
+          // if (isSoftwareAccount && device.description) {
+          //   matchesSearch = matchesSearch || device.description.toLowerCase().includes(searchTerm);
+          // }
           
           // Search in provider for software accounts
           if (isSoftwareAccount && device.provider) {
@@ -585,11 +583,11 @@
           }
           
           // Search in parent device info (for components)
-          if (device.parentDevice) {
-            matchesSearch = matchesSearch || 
-              device.parentDevice.name.toLowerCase().includes(searchTerm) ||
-              device.parentDevice.serialNumber.toLowerCase().includes(searchTerm);
-          }
+          // if (device.parentDevice) {
+          //   matchesSearch = matchesSearch || 
+          //     device.parentDevice.name.toLowerCase().includes(searchTerm) ||
+          //     device.parentDevice.serialNumber.toLowerCase().includes(searchTerm);
+          // }
         }
         
         // Category filter - only filter by category (not type)
@@ -1058,7 +1056,7 @@
           // For components, show parent device name
           holderUsersHTML = `
             <div class="table-holder">
-              <span>${parentInfo.name}</span>
+              <span class="table-holder-text">${parentInfo.name}</span>
             </div>
           `;
         } else if (isSoftwareAccount) {
@@ -1069,20 +1067,20 @@
           if (count === 1) {
             holderUsersHTML = `
               <div class="table-holder">
-                <span>${assigned[0].name}</span>
+                <span class="table-holder-text">${assigned[0].name}</span>
               </div>
             `;
           } else if (total > 0) {
             holderUsersHTML = `
               <div class="table-holder">
-                <span>${used}/${total}</span>
+                <span class="table-holder-text">${used}/${total}</span>
               </div>
             `;
           }
         } else if (device.holder && device.holder.name) {
           holderUsersHTML = `
             <div class="table-holder">
-              <span>${device.holder.name}</span>
+              <span class="table-holder-text">${device.holder.name}</span>
             </div>
           `;
         }
@@ -1103,7 +1101,7 @@
             <div class="table-serial" title="${device.serialNumber || device.id}">${device.serialNumber || device.id}</div>
           </td>
           <td>
-            <div>${device.type}</div>
+            <div class="table-type">${device.type}</div>
           </td>
           <td>
             <span">${device.category}</span>
@@ -1116,8 +1114,8 @@
           </td>
           <td>
             ${!isSoftwareAccount ? `
-              <div>
-                <span>${device.location || 'N/A'}</span>
+              <div class="table-location-text">
+                ${device.location || 'N/A'}
               </div>
             ` : `
               <div>
