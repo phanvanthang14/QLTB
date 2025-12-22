@@ -440,7 +440,7 @@
     "note": "DevOps engineer laptop with enhanced security features. Used for server management and CI/CD pipeline configuration. Requires VPN access for production environments."
   },
   {
-    "id": "DEV010",
+    "id": "DEV023",
     "qrCode": "QR-DEV010-MARKETING-MON",
     "name": "LG 27 inch Monitor",
     "type": "Monitor",
@@ -466,7 +466,7 @@
     "price": 6000000
   },
   {
-    "id": "DEV011",
+    "id": "DEV024",
     "qrCode": "QR-DEV011-DESK001",
     "name": "Office Desk 120cm",
     "type": "Desk",
@@ -492,7 +492,7 @@
     "price": 3500000
   },
   {
-    "id": "DEV012",
+    "id": "DEV025",
     "qrCode": "QR-DEV012-CHAIR001",
     "name": "Ergonomic Office Chair",
     "type": "Chair",
@@ -518,7 +518,7 @@
     "price": 4500000
   },
   {
-    "id": "DEV013",
+    "id": "DEV026",
     "qrCode": "QR-DEV013-ROUTER001",
     "name": "TP-Link Archer AX50 WiFi Router",
     "type": "Router",
@@ -545,7 +545,7 @@
     "price": 3500000
   },
   {
-    "id": "DEV014",
+    "id": "DEV027",
     "qrCode": "QR-DEV014-FAN001",
     "name": "Standing Fan 16 inch",
     "type": "Fan",
@@ -572,7 +572,7 @@
     "price": 800000
   },
   {
-    "id": "DEV015",
+    "id": "DEV028",
     "qrCode": "QR-DEV015-DESK002",
     "name": "Standing Desk Adjustable",
     "type": "Desk",
@@ -599,7 +599,7 @@
     "price": 8500000
   },
   {
-    "id": "DEV016",
+    "id": "DEV029",
     "qrCode": "QR-DEV016-CHAIR002",
     "name": "Gaming Chair Pro",
     "type": "Chair",
