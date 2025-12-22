@@ -106,8 +106,6 @@
           <div class="custom-dropdown-option" data-value="IN_USE">In Use</div>
           <div class="custom-dropdown-option" data-value="MAINTENANCE">Maintenance</div>
           <div class="custom-dropdown-option" data-value="BROKEN">Broken</div>
-          <div class="custom-dropdown-option" data-value="ACTIVE">Active</div>
-          <div class="custom-dropdown-option" data-value="EXPIRED">Expired</div>
         </div>
         <select class="filter-dropdown hidden" id="statusFilter">
           <option value="">All statuses</option>
@@ -115,8 +113,6 @@
           <option value="IN_USE">In Use</option>
           <option value="MAINTENANCE">Maintenance</option>
           <option value="BROKEN">Broken</option>
-          <option value="ACTIVE">Active</option>
-          <option value="EXPIRED">Expired</option>
         </select>
       </div>
       <a href="import-device.html" class="btn-import">
@@ -152,7 +148,7 @@
     
     <div class="toolbar">
       <div class="toolbar-left">
-        <a href="add-device.html" class="btn btn-primary add-device-btn">
+        <a href="add-device.html" class="btn btn-primary">
           <span class="add-icon">+</span>
           <span>Add Device</span>
         </a>
@@ -1056,15 +1052,37 @@
           licenseInfo = `<div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem;">📊 ${used}/${total} licenses</div>`;
         }
         
-        // For software accounts, show assigned users
-        let assignedUsersDisplay = '<span style="color: var(--text-secondary);">-</span>';
-        if (isSoftwareAccount && device.assignedUsers && device.assignedUsers.length > 0) {
-          const userNames = device.assignedUsers.slice(0, 2).map(u => u.name).join(', ');
-          const moreCount = device.assignedUsers.length > 2 ? ` +${device.assignedUsers.length - 2} more` : '';
-          assignedUsersDisplay = `
+        // Holder/Users column content logic
+        let holderUsersHTML = '<span style="color: var(--text-secondary);">-</span>';
+        if (isComponent && parentInfo) {
+          // For components, show parent device name
+          holderUsersHTML = `
             <div class="table-holder">
-              <span class="table-holder-icon">👥</span>
-              <span>${userNames}${moreCount}</span>
+              <span>${parentInfo.name}</span>
+            </div>
+          `;
+        } else if (isSoftwareAccount) {
+          const assigned = Array.isArray(device.assignedUsers) ? device.assignedUsers : [];
+          const count = assigned.length;
+          const used = (typeof device.usedLicenses === 'number') ? device.usedLicenses : count;
+          const total = (typeof device.totalLicenses === 'number') ? device.totalLicenses : Math.max(count, used);
+          if (count === 1) {
+            holderUsersHTML = `
+              <div class="table-holder">
+                <span>${assigned[0].name}</span>
+              </div>
+            `;
+          } else if (total > 0) {
+            holderUsersHTML = `
+              <div class="table-holder">
+                <span>${used}/${total}</span>
+              </div>
+            `;
+          }
+        } else if (device.holder && device.holder.name) {
+          holderUsersHTML = `
+            <div class="table-holder">
+              <span>${device.holder.name}</span>
             </div>
           `;
         }
@@ -1078,12 +1096,6 @@
                   ${device.name}
                   ${isComponent ? '<span class="component-badge-inline">Component</span>' : ''}
                   ${isSoftwareAccount ? '<span class="component-badge-inline" style="background: var(--info-color);">Software</span>' : ''}
-                  ${isComponent && parentInfo ? `
-                    <div style="font-size: 0.75rem; color: var(--primary-color); margin-top: 0.25rem;">
-                      🔗 Part of: ${parentInfo.name}
-                    </div>
-                  ` : ''}
-                ${licenseInfo}
               </div>
             </div>
           </td>
@@ -1091,30 +1103,25 @@
             <div class="table-serial" title="${device.serialNumber || device.id}">${device.serialNumber || device.id}</div>
           </td>
           <td>
-            <div class="table-type">${device.type}</div>
+            <div>${device.type}</div>
           </td>
           <td>
-            <span style="font-size: 0.875rem; color: var(--text-secondary);">${device.category}</span>
+            <span">${device.category}</span>
           </td>
           <td>
             <span class="status-badge status-${device.status}">${AssetFlowUtils.getStatusDisplayName(device.status)}</span>
           </td>
           <td>
-            ${!isSoftwareAccount && device.holder ? `
-              <div class="table-holder">
-                <span>${device.holder.name}</span>
-              </div>
-            ` : assignedUsersDisplay}
+            ${holderUsersHTML}
           </td>
           <td>
             ${!isSoftwareAccount ? `
-              <div class="table-location">
+              <div>
                 <span>${device.location || 'N/A'}</span>
               </div>
             ` : `
-              <div class="table-location">
-                <span>📅</span>
-                <span>${device.expiryDate ? AssetFlowUtils.formatDate(device.expiryDate) : 'N/A'}</span>
+              <div>
+                -
               </div>
             `}
           </td>

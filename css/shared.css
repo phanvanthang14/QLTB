@@ -588,7 +588,7 @@ p, span, div, a {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.625rem 1.25rem;
+  padding: 0.5rem 1rem;
   border-radius: var(--radius-md);
   font-size: 14px;
   font-weight: 500;
@@ -602,12 +602,11 @@ p, span, div, a {
 .btn-primary {
   background: var(--primary-color);
   color: white;
+  transition: none;
 }
 
 .btn-primary:hover {
   background: var(--primary-dark);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
 }
 
 .btn-secondary {

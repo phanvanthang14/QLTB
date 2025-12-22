@@ -6,7 +6,7 @@
     "type": "Office Suite",
     "provider": "Microsoft",
     "licenseType": "Subscription",
-    "status": "ACTIVE",
+    "status": "IN_USE",
     "totalLicenses": 50,
     "usedLicenses": 5,
     "assignedUsers": [
@@ -64,7 +64,7 @@
     "type": "Creative Suite",
     "provider": "Adobe",
     "licenseType": "Subscription",
-    "status": "ACTIVE",
+    "status": "IN_USE",
     "totalLicenses": 10,
     "usedLicenses": 8,
     "assignedUsers": [
@@ -146,7 +146,7 @@
     "type": "Communication",
     "provider": "Slack",
     "licenseType": "Subscription",
-    "status": "ACTIVE",
+    "status": "IN_USE",
     "totalLicenses": 100,
     "usedLicenses": 10,
     "assignedUsers": [
@@ -244,7 +244,7 @@
     "type": "Development",
     "provider": "GitHub",
     "licenseType": "Subscription",
-    "status": "ACTIVE",
+    "status": "IN_USE",
     "totalLicenses": 25,
     "usedLicenses": 5,
     "assignedUsers": [
@@ -302,7 +302,7 @@
     "type": "Video Conferencing",
     "provider": "Zoom",
     "licenseType": "Subscription",
-    "status": "ACTIVE",
+    "status": "IN_USE",
     "totalLicenses": 30,
     "usedLicenses": 6,
     "assignedUsers": [
