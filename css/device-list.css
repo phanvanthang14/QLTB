@@ -25,7 +25,7 @@
   border-radius: var(--radius-lg);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   border: 1px solid var(--border-color);
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .search-input-wrapper {
@@ -544,7 +544,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.75rem;
   gap: 1rem;
 }
 
@@ -881,13 +881,13 @@
 .device-table-wrapper {
   background: var(--bg-primary);
   border-radius: 0;
-  overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   border: 1px solid var(--border-color);
   border-top: none;
   border-bottom: none;
+  height: calc(100vh - 346px);
+  overflow-y: auto;
   overflow-x: auto;
-  overflow-y: hidden;
 }
 
 .device-table-wrapper.hidden {
@@ -898,7 +898,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 1.5rem;
+  padding: 0.5rem 1.5rem;
   background: var(--bg-tertiary);
   border-bottom: 1px solid var(--border-color);
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
@@ -963,7 +963,7 @@
 }
 
 .device-table th {
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 1rem;
   text-align: left;
   font-weight: 600;
   font-size: 13px;
@@ -1015,7 +1015,7 @@
 }
 
 .device-table td {
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 1rem;
   border-bottom: 1px solid var(--border-color);
   vertical-align: middle;
   font-size: 14px;
@@ -1052,8 +1052,8 @@
 
 .table-device-icon {
   font-size: 2rem;
-  width: 48px;
-  height: 48px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1142,7 +1142,7 @@
 }
 
 .table-pagination {
-  padding: 1.5rem;
+  padding: 0.5rem 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
