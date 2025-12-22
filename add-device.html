@@ -300,7 +300,7 @@
       
       // Only show Container devices as parent options
       originalDevices.forEach(device => {
-        if (device.category === 'Container') {
+        if (device.isParent === true) {
           const option = document.createElement('option');
           option.value = device.id;
           option.textContent = `${device.name} (${device.serialNumber})`;

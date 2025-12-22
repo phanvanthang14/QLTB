@@ -246,7 +246,10 @@
                   name: device.name,
                   serialNumber: device.serialNumber,
                   location: device.location,
-                  holder: device.holder
+                  holder: device.holder,
+                  purchaseDate: device.purchaseDate,
+                  warrantyExpiry: device.warrantyExpiry,
+                  price: device.price
                 },
                 // Inherit location & holder từ cha để hiển thị thống nhất
                 location: device.location,
@@ -673,20 +676,23 @@
         </option>
       `).join('');
       
+      const isComponentDevice = currentDevice.isChild === true;
+      
+      // Thông tin thiết bị cha cho Component
       let parentInfoHtml = '';
-      if (currentDevice.category === 'Component' && currentDevice.parentDevice) {
+      if (isComponentDevice && currentDevice.parentDevice) {
         parentInfoHtml = `
           <div class="info-item">
             <div class="info-label">Parent Device</div>
             <div class="info-value">
-              <a href="device-detail.html?id=${currentDevice.parentDevice.id}" style="color: var(--primary-color); text-decoration: none;">
+              <a id="overviewParentName" href="device-detail.html?id=${currentDevice.parentDevice.id}" style="color: var(--primary-color); text-decoration: none;">
                 ${currentDevice.parentDevice.name}
               </a>
             </div>
           </div>
           <div class="info-item">
             <div class="info-label">Parent Serial</div>
-            <div class="info-value">${currentDevice.parentDevice.serialNumber}</div>
+            <div class="info-value" id="overviewParentSerial">${currentDevice.parentDevice.serialNumber}</div>
           </div>
         `;
       }
@@ -705,32 +711,43 @@
         `;
       }
       
+      // Với Component (thiết bị con), nếu thiếu thông tin thì fallback sang thiết bị cha
+      const effectivePurchaseDate = currentDevice.purchaseDate 
+        || (isComponentDevice && currentDevice.parentDevice && currentDevice.parentDevice.purchaseDate);
+      const effectiveWarrantyExpiry = currentDevice.warrantyExpiry 
+        || (isComponentDevice && currentDevice.parentDevice && currentDevice.parentDevice.warrantyExpiry);
+      const effectivePrice = typeof currentDevice.price === 'number' 
+        ? currentDevice.price 
+        : (isComponentDevice && typeof currentDevice.parentDevice?.price === 'number' 
+          ? currentDevice.parentDevice.price 
+          : null);
+      
       let purchaseHtml = '';
-      if (currentDevice.purchaseDate) {
+      if (effectivePurchaseDate) {
         purchaseHtml = `
           <div class="info-item">
             <div class="info-label">Purchase Date</div>
-            <div class="info-value">${AssetFlowUtils.formatDate(currentDevice.purchaseDate)}</div>
+            <div class="info-value">${AssetFlowUtils.formatDate(effectivePurchaseDate)}</div>
           </div>
         `;
       }
       
       let warrantyHtml = '';
-      if (currentDevice.warrantyExpiry) {
+      if (effectiveWarrantyExpiry) {
         warrantyHtml = `
           <div class="info-item">
             <div class="info-label">Warranty Expiry</div>
-            <div class="info-value">${AssetFlowUtils.formatDate(currentDevice.warrantyExpiry)}</div>
+            <div class="info-value">${AssetFlowUtils.formatDate(effectiveWarrantyExpiry)}</div>
           </div>
         `;
       }
       
       let priceHtml = '';
-      if (currentDevice.price) {
+      if (effectivePrice) {
         priceHtml = `
           <div class="info-item">
             <div class="info-label">Price</div>
-            <div class="info-value">${AssetFlowUtils.formatCurrency(currentDevice.price)}</div>
+            <div class="info-value">${AssetFlowUtils.formatCurrency(effectivePrice)}</div>
           </div>
         `;
       }
@@ -965,17 +982,37 @@
           ${priceHtml}
           ${!isSoftwareAccount ? assignedDateHtml : ''}
           ${softwareAccountHtml}
-          ${!isSoftwareAccount ? `
-            <div class="info-item">
-              <div class="info-label">Quick Holder Change</div>
-              <div class="info-value">
-                <select id="detailHolderSelect" class="holder-select">
-                  <option value="">Unassigned</option>
-                  ${holderOptions}
-                </select>
-              </div>
-            </div>
-          ` : ''}
+          ${!isSoftwareAccount ? (
+            isComponentDevice
+              ? `
+                <div class="info-item">
+                  <div class="info-label">Quick Parent Device Change</div>
+                  <div class="info-value">
+                    <select id="detailParentDeviceSelect" class="holder-select">
+                      <option value="">Unassigned</option>
+                      ${allDevices
+                        .filter(d => d.isParent === true)
+                        .map(d => `
+                          <option value="${d.id}" ${currentDevice.parentDevice && currentDevice.parentDevice.id === d.id ? 'selected' : ''}>
+                            ${d.name} (${d.serialNumber || d.id})
+                          </option>
+                        `).join('')}
+                    </select>
+                  </div>
+                </div>
+              `
+              : `
+                <div class="info-item">
+                  <div class="info-label">Quick Holder Change</div>
+                  <div class="info-value">
+                    <select id="detailHolderSelect" class="holder-select">
+                      <option value="">Unassigned</option>
+                      ${holderOptions}
+                    </select>
+                  </div>
+                </div>
+              `
+          ) : ''}
         </div>
         ${assignedCardHtml}
       `;
@@ -996,8 +1033,9 @@
         });
       }
       
+      // Quick change holder cho thiết bị thường (không phải Component / Software)
       const holderSelectEl = document.getElementById('detailHolderSelect');
-      if (holderSelectEl) {
+      if (holderSelectEl && !isComponentDevice && !isSoftwareAccount) {
         holderSelectEl.addEventListener('change', () => {
           const holderId = holderSelectEl.value;
           
@@ -1034,6 +1072,61 @@
         });
       }
       
+      // Quick change Parent Device cho Component
+      const parentSelectEl = document.getElementById('detailParentDeviceSelect');
+      if (parentSelectEl && isComponentDevice && !isSoftwareAccount) {
+        parentSelectEl.addEventListener('change', () => {
+          const parentId = parentSelectEl.value;
+          
+          if (!parentId) {
+            currentDevice.parentDevice = null;
+            AssetFlowUtils.showToast('Component is now detached from parent device (mock only, not saved).', 'success');
+            return;
+          }
+          
+          const parentDevice = allDevices.find(d => d.id === parentId);
+          if (!parentDevice) {
+            AssetFlowUtils.showToast('Selected parent device not found.', 'error');
+            return;
+          }
+          
+          // Cập nhật thông tin thiết bị cha và kế thừa holder/location từ cha
+          currentDevice.parentDevice = {
+            id: parentDevice.id,
+            name: parentDevice.name,
+            serialNumber: parentDevice.serialNumber,
+            location: parentDevice.location,
+            holder: parentDevice.holder
+          };
+          
+          currentDevice.location = parentDevice.location;
+          currentDevice.holder = parentDevice.holder;
+          
+          // Cập nhật UI phần Parent info
+          const parentNameEl = document.getElementById('overviewParentName');
+          const parentSerialEl = document.getElementById('overviewParentSerial');
+          if (parentNameEl) {
+            parentNameEl.textContent = parentDevice.name;
+            parentNameEl.href = `device-detail.html?id=${parentDevice.id}`;
+          }
+          if (parentSerialEl) {
+            parentSerialEl.textContent = parentDevice.serialNumber || parentDevice.id;
+          }
+          
+          // Cập nhật Assigned To card nếu có
+          const assignedEl2 = document.getElementById('overviewAssignedName');
+          const teamEl2 = document.getElementById('overviewTeamName');
+          if (assignedEl2 && parentDevice.holder) {
+            assignedEl2.textContent = parentDevice.holder.name;
+          }
+          if (teamEl2 && parentDevice.holder) {
+            teamEl2.textContent = parentDevice.holder.team || 'N/A';
+          }
+          
+          AssetFlowUtils.showToast('Component parent device changed (mock only, not saved).', 'success');
+        });
+      }
+      
       // Initialize assigned devices search for Software & Licenses
       if (isSoftwareAccount) {
         initializeAssignedDevicesSearch();
@@ -1061,7 +1154,7 @@
         if (specsTabTitle) specsTabTitle.textContent = 'Technical Specifications';
         // Show Add Component button only for container devices
         if (addComponentBtn) {
-          addComponentBtn.style.display = currentDevice.category === 'Container' ? 'inline-flex' : 'none';
+          addComponentBtn.style.display = currentDevice.isParent === true ? 'inline-flex' : 'none';
         }
       }
       
@@ -1187,7 +1280,7 @@
     
     // ----- Add Component Flow -----
     function openAddComponentModal() {
-      if (!currentDevice || currentDevice.category !== 'Container') return;
+      if (!currentDevice || currentDevice.isParent !== true) return;
       
       const modal = document.getElementById('addComponentModal');
       const wrapper = document.getElementById('componentSelectWrapper');
@@ -1205,7 +1298,7 @@
       );
       
       const availableComponents = allDevices
-        .filter(d => d.category === 'Component' && d.id !== currentDevice.id && !existingIds.has(d.id));
+        .filter(d => d.isChild === true && d.id !== currentDevice.id && !existingIds.has(d.id));
       
       // Reset UI
       select.innerHTML = '';

@@ -21,6 +21,7 @@
     },
     "assignedDate": "2024-01-15",
     "location": "Office Floor 3",
+    "isParent": true,
     "children": [
       {
         "id": "COMP001",
@@ -29,7 +30,8 @@
         "type": "RAM",
         "category": "IT Equipment",
         "serialNumber": "RAM-DELL-001",
-        "status": "IN_USE"
+        "status": "IN_USE",
+        "isChild": true
       },
       {
         "id": "COMP002",
@@ -38,7 +40,8 @@
         "type": "SSD",
         "category": "IT Equipment",
         "serialNumber": "SSD-SAM-512-001",
-        "status": "IN_USE"
+        "status": "IN_USE",
+        "isChild": true
       }
     ],
     "purchaseDate": "2023-12-01",
@@ -112,6 +115,7 @@
     "holder": null,
     "assignedDate": null,
     "location": "Warehouse A",
+    "isParent": true,
     "children": [
       {
         "id": "COMP003",
@@ -120,7 +124,8 @@
         "type": "CPU",
         "category": "IT Equipment",
         "serialNumber": "CPU-INTEL-12400-001",
-        "status": "IN_STOCK"
+        "status": "IN_STOCK",
+        "isChild": true
       },
       {
         "id": "COMP004",
@@ -129,7 +134,8 @@
         "type": "RAM",
         "category": "IT Equipment",
         "serialNumber": "RAM-CORSAIR-32-001",
-        "status": "IN_STOCK"
+        "status": "IN_STOCK",
+        "isChild": true
       }
     ],
     "purchaseDate": "2024-01-10",
