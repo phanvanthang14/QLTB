@@ -51,20 +51,22 @@
 }
 
 .add-user-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
   padding: 0.625rem 1.25rem;
   background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
   color: white;
   border: none;
   border-radius: var(--radius-md);
-  font-weight: 600;
   font-size: 14px;
+  font-weight: 600;
   line-height: 1.5;
   cursor: pointer;
   transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+  text-decoration: none;
 }
 
 .add-user-btn:hover {
@@ -77,8 +79,8 @@
 }
 
 .add-icon {
-  font-size: 1.25rem;
-  font-weight: 300;
+  font-size: 20px;
+  line-height: 1;
 }
 
 /* Search and Filter Bar */
@@ -89,7 +91,6 @@
   background: var(--bg-primary);
   padding: 1rem;
   border-radius: var(--radius-lg);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   border: 1px solid var(--border-color);
   margin-bottom: 1.5rem;
 }
@@ -319,7 +320,6 @@
   background: var(--bg-primary);
   padding: 1rem;
   border-radius: var(--radius-lg);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   border: 1px solid var(--border-color);
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));

@@ -70,7 +70,29 @@
     },
     "assignedDate": "2024-01-15",
     "location": "Office Floor 3",
-    "children": [],
+    "isParent": true,
+    "children": [
+      {
+        "id": "COMP021",
+        "qrCode": "QR-COMP021-MON-STAND",
+        "name": "Monitor Stand Base",
+        "type": "Stand",
+        "category": "IT Equipment",
+        "serialNumber": "STAND-HP24-001",
+        "status": "IN_USE",
+        "isChild": true
+      },
+      {
+        "id": "COMP022",
+        "qrCode": "QR-COMP022-HDMI-CABLE",
+        "name": "HDMI Cable 1.5m",
+        "type": "Cable",
+        "category": "IT Equipment",
+        "serialNumber": "CABLE-HDMI-001",
+        "status": "IN_USE",
+        "isChild": true
+      }
+    ],
     "purchaseDate": "2023-11-20",
     "warrantyExpiry": "2026-11-20",
     "price": 5000000
@@ -95,7 +117,29 @@
     },
     "assignedDate": "2024-01-15",
     "location": "Office Floor 3",
-    "children": [],
+    "isParent": true,
+    "children": [
+      {
+        "id": "COMP023",
+        "qrCode": "QR-COMP023-KB-BATTERY",
+        "name": "AA Battery x2",
+        "type": "Battery",
+        "category": "IT Equipment",
+        "serialNumber": "BAT-AA-001",
+        "status": "IN_USE",
+        "isChild": true
+      },
+      {
+        "id": "COMP024",
+        "qrCode": "QR-COMP024-KB-RECEIVER",
+        "name": "USB Receiver",
+        "type": "Receiver",
+        "category": "IT Equipment",
+        "serialNumber": "RCV-LOGI-001",
+        "status": "IN_USE",
+        "isChild": true
+      }
+    ],
     "purchaseDate": "2023-10-15",
     "warrantyExpiry": "2025-10-15",
     "price": 1200000
@@ -164,7 +208,39 @@
     },
     "assignedDate": "2024-02-01",
     "location": "IT Service Center",
-    "children": [],
+    "isParent": true,
+    "children": [
+      {
+        "id": "COMP025",
+        "qrCode": "QR-COMP025-LAPTOP-RAM32",
+        "name": "DDR5 32GB RAM",
+        "type": "RAM",
+        "category": "IT Equipment",
+        "serialNumber": "RAM-LENOVO-32-001",
+        "status": "MAINTENANCE",
+        "isChild": true
+      },
+      {
+        "id": "COMP026",
+        "qrCode": "QR-COMP026-LAPTOP-SSD1TB",
+        "name": "Samsung SSD 1TB",
+        "type": "SSD",
+        "category": "IT Equipment",
+        "serialNumber": "SSD-SAM-1TB-002",
+        "status": "MAINTENANCE",
+        "isChild": true
+      },
+      {
+        "id": "COMP027",
+        "qrCode": "QR-COMP027-LAPTOP-BATTERY",
+        "name": "Laptop Battery 57Wh",
+        "type": "Battery",
+        "category": "IT Equipment",
+        "serialNumber": "BAT-LENOVO-57-001",
+        "status": "MAINTENANCE",
+        "isChild": true
+      }
+    ],
     "purchaseDate": "2024-01-05",
     "warrantyExpiry": "2027-01-05",
     "price": 35000000
@@ -184,7 +260,29 @@
     "holder": null,
     "assignedDate": null,
     "location": "IT Service Center",
-    "children": [],
+    "isParent": true,
+    "children": [
+      {
+        "id": "COMP028",
+        "qrCode": "QR-COMP028-PC-CPU",
+        "name": "Intel Core i7-11700",
+        "type": "CPU",
+        "category": "IT Equipment",
+        "serialNumber": "CPU-INTEL-11700-001",
+        "status": "BROKEN",
+        "isChild": true
+      },
+      {
+        "id": "COMP029",
+        "qrCode": "QR-COMP029-PC-RAM16",
+        "name": "DDR4 16GB RAM",
+        "type": "RAM",
+        "category": "IT Equipment",
+        "serialNumber": "RAM-DELL-16-002",
+        "status": "BROKEN",
+        "isChild": true
+      }
+    ],
     "purchaseDate": "2022-06-15",
     "warrantyExpiry": "2025-06-15",
     "price": 18000000
@@ -211,7 +309,39 @@
     },
     "assignedDate": "2024-02-10",
     "location": "Office Floor 3",
-    "children": [],
+    "isParent": true,
+    "children": [
+      {
+        "id": "COMP030",
+        "qrCode": "QR-COMP030-MAC-RAM32",
+        "name": "Unified Memory 32GB",
+        "type": "RAM",
+        "category": "IT Equipment",
+        "serialNumber": "RAM-APPLE-32-001",
+        "status": "IN_USE",
+        "isChild": true
+      },
+      {
+        "id": "COMP031",
+        "qrCode": "QR-COMP031-MAC-SSD1TB",
+        "name": "Apple SSD 1TB",
+        "type": "SSD",
+        "category": "IT Equipment",
+        "serialNumber": "SSD-APPLE-1TB-001",
+        "status": "IN_USE",
+        "isChild": true
+      },
+      {
+        "id": "COMP032",
+        "qrCode": "QR-COMP032-MAC-CHARGER",
+        "name": "MagSafe 3 Charger 140W",
+        "type": "Charger",
+        "category": "IT Equipment",
+        "serialNumber": "CHG-APPLE-140W-001",
+        "status": "IN_USE",
+        "isChild": true
+      }
+    ],
     "purchaseDate": "2024-01-20",
     "warrantyExpiry": "2027-01-20",
     "price": 45000000,
@@ -238,7 +368,29 @@
     },
     "assignedDate": "2024-02-10",
     "location": "Office Floor 3",
-    "children": [],
+    "isParent": true,
+    "children": [
+      {
+        "id": "COMP033",
+        "qrCode": "QR-COMP033-MON-STAND27",
+        "name": "Monitor Stand Adjustable",
+        "type": "Stand",
+        "category": "IT Equipment",
+        "serialNumber": "STAND-DELL27-001",
+        "status": "IN_USE",
+        "isChild": true
+      },
+      {
+        "id": "COMP034",
+        "qrCode": "QR-COMP034-DP-CABLE",
+        "name": "DisplayPort Cable 2m",
+        "type": "Cable",
+        "category": "IT Equipment",
+        "serialNumber": "CABLE-DP-001",
+        "status": "IN_USE",
+        "isChild": true
+      }
+    ],
     "purchaseDate": "2024-01-15",
     "warrantyExpiry": "2027-01-15",
     "price": 8000000
@@ -265,7 +417,29 @@
     },
     "assignedDate": "2024-01-20",
     "location": "Office Floor 2",
-    "children": [],
+    "isParent": true,
+    "children": [
+      {
+        "id": "COMP035",
+        "qrCode": "QR-COMP035-HP-RAM16",
+        "name": "DDR4 16GB RAM",
+        "type": "RAM",
+        "category": "IT Equipment",
+        "serialNumber": "RAM-HP-16-001",
+        "status": "IN_USE",
+        "isChild": true
+      },
+      {
+        "id": "COMP036",
+        "qrCode": "QR-COMP036-HP-SSD512",
+        "name": "NVMe SSD 512GB",
+        "type": "SSD",
+        "category": "IT Equipment",
+        "serialNumber": "SSD-HP-512-001",
+        "status": "IN_USE",
+        "isChild": true
+      }
+    ],
     "purchaseDate": "2024-01-10",
     "warrantyExpiry": "2027-01-10",
     "price": 22000000,
@@ -293,7 +467,29 @@
     },
     "assignedDate": "2024-02-15",
     "location": "Office Floor 3",
-    "children": [],
+    "isParent": true,
+    "children": [
+      {
+        "id": "COMP038",
+        "qrCode": "QR-COMP038-ASUS-RAM16",
+        "name": "DDR4 16GB RAM",
+        "type": "RAM",
+        "category": "IT Equipment",
+        "serialNumber": "RAM-ASUS-16-001",
+        "status": "IN_USE",
+        "isChild": true
+      },
+      {
+        "id": "COMP039",
+        "qrCode": "QR-COMP039-ASUS-SSD512",
+        "name": "Samsung SSD 512GB",
+        "type": "SSD",
+        "category": "IT Equipment",
+        "serialNumber": "SSD-SAM-512-002",
+        "status": "IN_USE",
+        "isChild": true
+      }
+    ],
     "purchaseDate": "2024-02-01",
     "warrantyExpiry": "2027-02-01",
     "price": 18000000
@@ -320,7 +516,39 @@
     },
     "assignedDate": "2024-02-20",
     "location": "Office Floor 2",
-    "children": [],
+    "isParent": true,
+    "children": [
+      {
+        "id": "COMP040",
+        "qrCode": "QR-COMP040-MBA-RAM16",
+        "name": "Unified Memory 16GB",
+        "type": "RAM",
+        "category": "IT Equipment",
+        "serialNumber": "RAM-APPLE-16-001",
+        "status": "IN_USE",
+        "isChild": true
+      },
+      {
+        "id": "COMP041",
+        "qrCode": "QR-COMP041-MBA-SSD512",
+        "name": "Apple SSD 512GB",
+        "type": "SSD",
+        "category": "IT Equipment",
+        "serialNumber": "SSD-APPLE-512-001",
+        "status": "IN_USE",
+        "isChild": true
+      },
+      {
+        "id": "COMP042",
+        "qrCode": "QR-COMP042-MBA-CHARGER",
+        "name": "MagSafe Charger 67W",
+        "type": "Charger",
+        "category": "IT Equipment",
+        "serialNumber": "CHG-APPLE-67W-001",
+        "status": "IN_USE",
+        "isChild": true
+      }
+    ],
     "purchaseDate": "2024-02-10",
     "warrantyExpiry": "2027-02-10",
     "price": 32000000,
@@ -349,7 +577,39 @@
     },
     "assignedDate": "2024-03-01",
     "location": "Office Floor 3",
-    "children": [],
+    "isParent": true,
+    "children": [
+      {
+        "id": "COMP043",
+        "qrCode": "QR-COMP043-DELL-PC-CPU",
+        "name": "Intel Core i7-13700",
+        "type": "CPU",
+        "category": "IT Equipment",
+        "serialNumber": "CPU-INTEL-13700-001",
+        "status": "IN_USE",
+        "isChild": true
+      },
+      {
+        "id": "COMP044",
+        "qrCode": "QR-COMP044-DELL-PC-RAM32",
+        "name": "DDR5 32GB RAM",
+        "type": "RAM",
+        "category": "IT Equipment",
+        "serialNumber": "RAM-DELL-32-001",
+        "status": "IN_USE",
+        "isChild": true
+      },
+      {
+        "id": "COMP045",
+        "qrCode": "QR-COMP045-DELL-PC-SSD1TB",
+        "name": "NVMe SSD 1TB",
+        "type": "SSD",
+        "category": "IT Equipment",
+        "serialNumber": "SSD-DELL-1TB-001",
+        "status": "IN_USE",
+        "isChild": true
+      }
+    ],
     "purchaseDate": "2024-02-20",
     "warrantyExpiry": "2027-02-20",
     "price": 20000000,
@@ -377,7 +637,29 @@
     },
     "assignedDate": "2024-03-05",
     "location": "Office Floor 2",
-    "children": [],
+    "isParent": true,
+    "children": [
+      {
+        "id": "COMP046",
+        "qrCode": "QR-COMP046-HP-PAV-RAM16",
+        "name": "DDR4 16GB RAM",
+        "type": "RAM",
+        "category": "IT Equipment",
+        "serialNumber": "RAM-HP-PAV-16-001",
+        "status": "IN_USE",
+        "isChild": true
+      },
+      {
+        "id": "COMP047",
+        "qrCode": "QR-COMP047-HP-PAV-SSD512",
+        "name": "Samsung SSD 512GB",
+        "type": "SSD",
+        "category": "IT Equipment",
+        "serialNumber": "SSD-SAM-512-003",
+        "status": "IN_USE",
+        "isChild": true
+      }
+    ],
     "purchaseDate": "2024-02-25",
     "warrantyExpiry": "2027-02-25",
     "price": 15000000,
@@ -405,7 +687,39 @@
     },
     "assignedDate": "2024-03-10",
     "location": "Office Floor 2",
-    "children": [],
+    "isParent": true,
+    "children": [
+      {
+        "id": "COMP048",
+        "qrCode": "QR-COMP048-TP-RAM32",
+        "name": "DDR5 32GB RAM",
+        "type": "RAM",
+        "category": "IT Equipment",
+        "serialNumber": "RAM-LENOVO-32-001",
+        "status": "IN_USE",
+        "isChild": true
+      },
+      {
+        "id": "COMP049",
+        "qrCode": "QR-COMP049-TP-SSD1TB",
+        "name": "Samsung SSD 1TB",
+        "type": "SSD",
+        "category": "IT Equipment",
+        "serialNumber": "SSD-SAM-1TB-003",
+        "status": "IN_USE",
+        "isChild": true
+      },
+      {
+        "id": "COMP050",
+        "qrCode": "QR-COMP050-TP-BATTERY",
+        "name": "Laptop Battery 57Wh",
+        "type": "Battery",
+        "category": "IT Equipment",
+        "serialNumber": "BAT-LENOVO-57-002",
+        "status": "IN_USE",
+        "isChild": true
+      }
+    ],
     "purchaseDate": "2024-03-01",
     "warrantyExpiry": "2027-03-01",
     "price": 25000000,
@@ -433,7 +747,39 @@
     },
     "assignedDate": "2024-03-15",
     "location": "Office Floor 3",
-    "children": [],
+    "isParent": true,
+    "children": [
+      {
+        "id": "COMP051",
+        "qrCode": "QR-COMP051-DL-RAM32",
+        "name": "DDR5 32GB RAM",
+        "type": "RAM",
+        "category": "IT Equipment",
+        "serialNumber": "RAM-DELL-32-002",
+        "status": "IN_USE",
+        "isChild": true
+      },
+      {
+        "id": "COMP052",
+        "qrCode": "QR-COMP052-DL-SSD1TB",
+        "name": "Samsung SSD 1TB",
+        "type": "SSD",
+        "category": "IT Equipment",
+        "serialNumber": "SSD-SAM-1TB-004",
+        "status": "IN_USE",
+        "isChild": true
+      },
+      {
+        "id": "COMP053",
+        "qrCode": "QR-COMP053-DL-DOCK",
+        "name": "Dell Docking Station",
+        "type": "Dock",
+        "category": "IT Equipment",
+        "serialNumber": "DOCK-DELL-001",
+        "status": "IN_USE",
+        "isChild": true
+      }
+    ],
     "purchaseDate": "2024-03-05",
     "warrantyExpiry": "2027-03-05",
     "price": 24000000,
@@ -460,7 +806,29 @@
     },
     "assignedDate": "2024-02-01",
     "location": "Office Floor 2",
-    "children": [],
+    "isParent": true,
+    "children": [
+      {
+        "id": "COMP054",
+        "qrCode": "QR-COMP054-LG-STAND",
+        "name": "Monitor Stand VESA",
+        "type": "Stand",
+        "category": "IT Equipment",
+        "serialNumber": "STAND-LG27-001",
+        "status": "IN_USE",
+        "isChild": true
+      },
+      {
+        "id": "COMP055",
+        "qrCode": "QR-COMP055-LG-CABLE",
+        "name": "HDMI Cable 2m",
+        "type": "Cable",
+        "category": "IT Equipment",
+        "serialNumber": "CABLE-HDMI-002",
+        "status": "IN_USE",
+        "isChild": true
+      }
+    ],
     "purchaseDate": "2024-01-25",
     "warrantyExpiry": "2027-01-25",
     "price": 6000000
@@ -486,7 +854,29 @@
     },
     "assignedDate": "2024-01-10",
     "location": "Office Floor 3",
-    "children": [],
+    "isParent": true,
+    "children": [
+      {
+        "id": "COMP056",
+        "qrCode": "QR-COMP056-DESK-DRAWER",
+        "name": "Desk Drawer Unit",
+        "type": "Drawer",
+        "category": "Office Equipment & Furniture",
+        "serialNumber": "DRAWER-DESK-001",
+        "status": "IN_USE",
+        "isChild": true
+      },
+      {
+        "id": "COMP057",
+        "qrCode": "QR-COMP057-DESK-CABLE",
+        "name": "Cable Management Tray",
+        "type": "Accessory",
+        "category": "Office Equipment & Furniture",
+        "serialNumber": "CABLE-TRAY-001",
+        "status": "IN_USE",
+        "isChild": true
+      }
+    ],
     "purchaseDate": "2023-12-15",
     "warrantyExpiry": null,
     "price": 3500000
@@ -512,7 +902,39 @@
     },
     "assignedDate": "2024-01-10",
     "location": "Office Floor 3",
-    "children": [],
+    "isParent": true,
+    "children": [
+      {
+        "id": "COMP058",
+        "qrCode": "QR-COMP058-CHAIR-WHEELS",
+        "name": "Office Chair Wheels Set",
+        "type": "Wheels",
+        "category": "Office Equipment & Furniture",
+        "serialNumber": "WHEELS-CHAIR-001",
+        "status": "IN_USE",
+        "isChild": true
+      },
+      {
+        "id": "COMP059",
+        "qrCode": "QR-COMP059-CHAIR-ARMREST",
+        "name": "Adjustable Armrest Pads",
+        "type": "Armrest",
+        "category": "Office Equipment & Furniture",
+        "serialNumber": "ARMREST-001",
+        "status": "IN_USE",
+        "isChild": true
+      },
+      {
+        "id": "COMP060",
+        "qrCode": "QR-COMP060-CHAIR-LUMBAR",
+        "name": "Lumbar Support Cushion",
+        "type": "Cushion",
+        "category": "Office Equipment & Furniture",
+        "serialNumber": "LUMBAR-001",
+        "status": "IN_USE",
+        "isChild": true
+      }
+    ],
     "purchaseDate": "2023-12-15",
     "warrantyExpiry": "2026-12-15",
     "price": 4500000
@@ -647,7 +1069,39 @@
     },
     "assignedDate": "2024-01-08",
     "location": "Office Floor 1 - Main Server Room",
-    "children": [],
+    "isParent": true,
+    "children": [
+      {
+        "id": "COMP061",
+        "qrCode": "QR-COMP061-ROUTER-ANTENNA",
+        "name": "WiFi Antenna Set (4 units)",
+        "type": "Antenna",
+        "category": "IT Equipment",
+        "serialNumber": "ANT-CISCO-001",
+        "status": "IN_USE",
+        "isChild": true
+      },
+      {
+        "id": "COMP062",
+        "qrCode": "QR-COMP062-ROUTER-POWER",
+        "name": "Power Adapter 12V 5A",
+        "type": "Power Adapter",
+        "category": "IT Equipment",
+        "serialNumber": "PWR-CISCO-001",
+        "status": "IN_USE",
+        "isChild": true
+      },
+      {
+        "id": "COMP063",
+        "qrCode": "QR-COMP063-ROUTER-CABLE",
+        "name": "Ethernet Cable 5m",
+        "type": "Cable",
+        "category": "IT Equipment",
+        "serialNumber": "CABLE-ETH-001",
+        "status": "IN_USE",
+        "isChild": true
+      }
+    ],
     "purchaseDate": "2023-12-01",
     "warrantyExpiry": "2026-12-01",
     "price": 12000000
@@ -669,7 +1123,29 @@
     "holder": null,
     "assignedDate": null,
     "location": "Office Floor 1 - Meeting Room",
-    "children": [],
+    "isParent": true,
+    "children": [
+      {
+        "id": "COMP064",
+        "qrCode": "QR-COMP064-FAN-REMOTE",
+        "name": "Remote Control",
+        "type": "Remote",
+        "category": "Office Equipment & Furniture",
+        "serialNumber": "REM-FAN-001",
+        "status": "IN_USE",
+        "isChild": true
+      },
+      {
+        "id": "COMP065",
+        "qrCode": "QR-COMP065-FAN-LED",
+        "name": "LED Light Module",
+        "type": "Light",
+        "category": "Office Equipment & Furniture",
+        "serialNumber": "LED-FAN-001",
+        "status": "IN_USE",
+        "isChild": true
+      }
+    ],
     "purchaseDate": "2023-10-15",
     "warrantyExpiry": "2026-10-15",
     "price": 2500000
@@ -690,7 +1166,29 @@
     "holder": null,
     "assignedDate": null,
     "location": "Office Floor 1 - Meeting Room",
-    "children": [],
+    "isParent": true,
+    "children": [
+      {
+        "id": "COMP066",
+        "qrCode": "QR-COMP066-CONF-TABLE-LEG",
+        "name": "Table Leg Set (4 units)",
+        "type": "Leg",
+        "category": "Office Equipment & Furniture",
+        "serialNumber": "LEG-CONF-001",
+        "status": "IN_USE",
+        "isChild": true
+      },
+      {
+        "id": "COMP067",
+        "qrCode": "QR-COMP067-CONF-TABLE-PAD",
+        "name": "Table Protection Pad Set",
+        "type": "Accessory",
+        "category": "Office Equipment & Furniture",
+        "serialNumber": "PAD-CONF-001",
+        "status": "IN_USE",
+        "isChild": true
+      }
+    ],
     "purchaseDate": "2023-09-20",
     "warrantyExpiry": null,
     "price": 15000000
@@ -711,7 +1209,29 @@
     "holder": null,
     "assignedDate": null,
     "location": "Office Floor 1 - Meeting Room",
-    "children": [],
+    "isParent": true,
+    "children": [
+      {
+        "id": "COMP068",
+        "qrCode": "QR-COMP068-CONF-CHAIR-BASE",
+        "name": "Chair Base Set (10 units)",
+        "type": "Base",
+        "category": "Office Equipment & Furniture",
+        "serialNumber": "BASE-CONF-001",
+        "status": "IN_USE",
+        "isChild": true
+      },
+      {
+        "id": "COMP069",
+        "qrCode": "QR-COMP069-CONF-CHAIR-CUSHION",
+        "name": "Seat Cushion Set (10 units)",
+        "type": "Cushion",
+        "category": "Office Equipment & Furniture",
+        "serialNumber": "CUSHION-CONF-001",
+        "status": "IN_USE",
+        "isChild": true
+      }
+    ],
     "purchaseDate": "2023-09-20",
     "warrantyExpiry": "2026-09-20",
     "price": 12000000
@@ -738,7 +1258,29 @@
     },
     "assignedDate": "2024-01-12",
     "location": "Office Floor 2",
-    "children": [],
+    "isParent": true,
+    "children": [
+      {
+        "id": "COMP070",
+        "qrCode": "QR-COMP070-AP-MOUNT",
+        "name": "Ceiling Mount Bracket",
+        "type": "Mount",
+        "category": "IT Equipment",
+        "serialNumber": "MOUNT-AP-001",
+        "status": "IN_USE",
+        "isChild": true
+      },
+      {
+        "id": "COMP071",
+        "qrCode": "QR-COMP071-AP-POE",
+        "name": "PoE Injector 802.3af",
+        "type": "PoE Injector",
+        "category": "IT Equipment",
+        "serialNumber": "POE-AP-001",
+        "status": "IN_USE",
+        "isChild": true
+      }
+    ],
     "purchaseDate": "2024-01-05",
     "warrantyExpiry": "2027-01-05",
     "price": 2800000
@@ -765,7 +1307,29 @@
     },
     "assignedDate": "2024-02-10",
     "location": "Office Floor 2",
-    "children": [],
+    "isParent": true,
+    "children": [
+      {
+        "id": "COMP072",
+        "qrCode": "QR-COMP072-USB-FAN-BASE",
+        "name": "Fan Stand Base",
+        "type": "Stand",
+        "category": "IT Equipment",
+        "serialNumber": "BASE-USB-FAN-001",
+        "status": "IN_USE",
+        "isChild": true
+      },
+      {
+        "id": "COMP073",
+        "qrCode": "QR-COMP073-USB-FAN-CABLE",
+        "name": "USB Cable 1m",
+        "type": "Cable",
+        "category": "IT Equipment",
+        "serialNumber": "CABLE-USB-001",
+        "status": "IN_USE",
+        "isChild": true
+      }
+    ],
     "purchaseDate": "2024-01-30",
     "warrantyExpiry": "2025-01-30",
     "price": 250000

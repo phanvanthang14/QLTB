@@ -33,7 +33,7 @@
           <i class="fas fa-th-large sidebar-item-icon"></i>
           <span>Dashboard</span>
         </a>
-        <a href="device-list.html" class="sidebar-item" data-title="Device list">
+        <a href="index.html" class="sidebar-item" data-title="Device list">
           <i class="fas fa-box sidebar-item-icon"></i>
           <span>Device List</span>
         </a>
@@ -541,6 +541,228 @@
       }
     });
     
+    // Initialize custom dropdowns for detail page
+    function initializeDetailDropdowns() {
+      // Status Dropdown
+      const statusDropdown = document.getElementById('detailStatusDropdown');
+      if (statusDropdown) {
+        const button = statusDropdown.querySelector('.custom-dropdown-button');
+        const menu = statusDropdown.querySelector('.custom-dropdown-menu');
+        const hiddenSelect = statusDropdown.querySelector('select');
+        const options = menu.querySelectorAll('.custom-dropdown-option');
+        
+        button.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = menu.classList.contains('show');
+          closeAllDetailDropdowns();
+          if (!isOpen) {
+            menu.classList.add('show');
+            button.classList.add('active');
+          }
+        });
+        
+        options.forEach(option => {
+          option.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const value = option.dataset.value || '';
+            
+            // Update button text
+            button.querySelector('.custom-dropdown-text').textContent = option.textContent.trim();
+            
+            // Update selected state
+            options.forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+            
+            // Update hidden select
+            if (hiddenSelect) {
+              hiddenSelect.value = value;
+              hiddenSelect.dispatchEvent(new Event('change'));
+            }
+            
+            // Close menu
+            menu.classList.remove('show');
+            button.classList.remove('active');
+          });
+        });
+      }
+      
+      // Holder Dropdown
+      const holderDropdown = document.getElementById('detailHolderDropdown');
+      if (holderDropdown) {
+        const button = holderDropdown.querySelector('.custom-dropdown-button');
+        const menu = holderDropdown.querySelector('.custom-dropdown-menu');
+        const hiddenSelect = holderDropdown.querySelector('select');
+        const optionsContainer = holderDropdown.querySelector('#holderOptionsContainer');
+        const searchInput = holderDropdown.querySelector('#holderSearchInput');
+        
+        button.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = menu.classList.contains('show');
+          closeAllDetailDropdowns();
+          if (!isOpen) {
+            menu.classList.add('show');
+            button.classList.add('active');
+            // Clear search and show all options when opening
+            if (searchInput) {
+              searchInput.value = '';
+              filterHolderOptions('', optionsContainer);
+            }
+            // Focus search input when opening
+            setTimeout(() => {
+              if (searchInput) searchInput.focus();
+            }, 100);
+          }
+        });
+        
+        // Search functionality
+        if (searchInput && optionsContainer) {
+          let searchTimeout = null;
+          
+          searchInput.addEventListener('input', (e) => {
+            e.stopPropagation();
+            const query = e.target.value.trim().toLowerCase();
+            
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+              filterHolderOptions(query, optionsContainer);
+            }, 200);
+          });
+          
+          searchInput.addEventListener('click', (e) => {
+            e.stopPropagation();
+          });
+        }
+        
+        // Handle option clicks (using event delegation for filtered options)
+        if (optionsContainer) {
+          optionsContainer.addEventListener('click', (e) => {
+            const option = e.target.closest('.custom-dropdown-option');
+            if (!option) return;
+            
+            e.stopPropagation();
+            const value = option.dataset.value || '';
+            
+            // Update button text
+            button.querySelector('.custom-dropdown-text').textContent = option.textContent.trim();
+            
+            // Update selected state
+            const allOptions = optionsContainer.querySelectorAll('.custom-dropdown-option');
+            allOptions.forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+            
+            // Update hidden select
+            if (hiddenSelect) {
+              hiddenSelect.value = value;
+              hiddenSelect.dispatchEvent(new Event('change'));
+            }
+            
+            // Clear search and close menu
+            if (searchInput) searchInput.value = '';
+            filterHolderOptions('', optionsContainer);
+            menu.classList.remove('show');
+            button.classList.remove('active');
+          });
+        }
+      }
+      
+      // Parent Device Dropdown
+      const parentDropdown = document.getElementById('detailParentDeviceDropdown');
+      if (parentDropdown) {
+        const button = parentDropdown.querySelector('.custom-dropdown-button');
+        const menu = parentDropdown.querySelector('.custom-dropdown-menu');
+        const hiddenSelect = parentDropdown.querySelector('select');
+        const options = menu.querySelectorAll('.custom-dropdown-option');
+        
+        button.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = menu.classList.contains('show');
+          closeAllDetailDropdowns();
+          if (!isOpen) {
+            menu.classList.add('show');
+            button.classList.add('active');
+          }
+        });
+        
+        options.forEach(option => {
+          option.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const value = option.dataset.value || '';
+            
+            // Update button text
+            button.querySelector('.custom-dropdown-text').textContent = option.textContent.trim();
+            
+            // Update selected state
+            options.forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+            
+            // Update hidden select
+            if (hiddenSelect) {
+              hiddenSelect.value = value;
+              hiddenSelect.dispatchEvent(new Event('change'));
+            }
+            
+            // Close menu
+            menu.classList.remove('show');
+            button.classList.remove('active');
+          });
+        });
+      }
+      
+      // Close dropdowns when clicking outside
+      document.addEventListener('click', (e) => {
+        // Don't close if clicking inside dropdown menu (including search input)
+        if (e.target.closest('.custom-dropdown-menu')) {
+          return;
+        }
+        // Don't close if clicking on dropdown button (handled separately)
+        if (e.target.closest('.custom-dropdown-button')) {
+          return;
+        }
+        closeAllDetailDropdowns();
+      });
+    }
+    
+    function closeAllDetailDropdowns() {
+      document.querySelectorAll('#detailStatusDropdown .custom-dropdown-menu, #detailHolderDropdown .custom-dropdown-menu, #detailParentDeviceDropdown .custom-dropdown-menu').forEach(menu => {
+        menu.classList.remove('show');
+      });
+      document.querySelectorAll('#detailStatusDropdown .custom-dropdown-button, #detailHolderDropdown .custom-dropdown-button, #detailParentDeviceDropdown .custom-dropdown-button').forEach(button => {
+        button.classList.remove('active');
+      });
+    }
+    
+    function filterHolderOptions(query, container) {
+      const options = container.querySelectorAll('.custom-dropdown-option');
+      let hasVisible = false;
+      
+      options.forEach(option => {
+        const searchText = option.dataset.searchText || '';
+        const matches = !query || searchText.includes(query);
+        
+        if (matches) {
+          option.style.display = '';
+          hasVisible = true;
+        } else {
+          option.style.display = 'none';
+        }
+      });
+      
+      // Show "No results" message if no options match
+      let noResultsMsg = container.querySelector('.holder-no-results');
+      if (!hasVisible && query) {
+        if (!noResultsMsg) {
+          noResultsMsg = document.createElement('div');
+          noResultsMsg.className = 'holder-no-results';
+          noResultsMsg.style.cssText = 'padding: 1rem; text-align: center; color: var(--text-secondary); font-size: 0.875rem;';
+          noResultsMsg.textContent = 'No users found';
+          container.appendChild(noResultsMsg);
+        }
+        noResultsMsg.style.display = 'block';
+      } else if (noResultsMsg) {
+        noResultsMsg.style.display = 'none';
+      }
+    }
+    
     function renderDevice() {
       const isSoftwareAccount = currentDevice.isSoftwareAccount || currentDevice.category === 'Software Account';
       
@@ -971,9 +1193,22 @@
           <div class="info-item">
             <div class="info-label">Status</div>
             <div class="info-value">
-              <select id="detailStatusSelect" class="holder-select">
-                ${statusSelectOptions}
-              </select>
+              <div class="custom-dropdown" id="detailStatusDropdown">
+                <button class="custom-dropdown-button" type="button">
+                  <span class="custom-dropdown-text">${AssetFlowUtils.getStatusDisplayName(currentDevice.status)}</span>
+                  <i class="fas fa-chevron-down custom-dropdown-icon"></i>
+                </button>
+                <div class="custom-dropdown-menu">
+                  ${statusOptions.map(s => `
+                    <div class="custom-dropdown-option ${currentDevice.status === s ? 'selected' : ''}" data-value="${s}">
+                      ${AssetFlowUtils.getStatusDisplayName(s)}
+                    </div>
+                  `).join('')}
+                </div>
+                <select class="filter-dropdown hidden" id="detailStatusSelect">
+                  ${statusSelectOptions}
+                </select>
+              </div>
             </div>
           </div>
           ${!isSoftwareAccount ? holderInfoHtml : ''}
@@ -988,16 +1223,32 @@
                 <div class="info-item">
                   <div class="info-label">Quick Parent Device Change</div>
                   <div class="info-value">
-                    <select id="detailParentDeviceSelect" class="holder-select">
-                      <option value="">Unassigned</option>
-                      ${allDevices
-                        .filter(d => d.isParent === true)
-                        .map(d => `
-                          <option value="${d.id}" ${currentDevice.parentDevice && currentDevice.parentDevice.id === d.id ? 'selected' : ''}>
-                            ${d.name} (${d.serialNumber || d.id})
-                          </option>
-                        `).join('')}
-                    </select>
+                    <div class="custom-dropdown" id="detailParentDeviceDropdown">
+                      <button class="custom-dropdown-button" type="button">
+                        <span class="custom-dropdown-text">${currentDevice.parentDevice ? `${currentDevice.parentDevice.name} (${currentDevice.parentDevice.serialNumber || currentDevice.parentDevice.id})` : 'Unassigned'}</span>
+                        <i class="fas fa-chevron-down custom-dropdown-icon"></i>
+                      </button>
+                      <div class="custom-dropdown-menu">
+                        <div class="custom-dropdown-option ${!currentDevice.parentDevice ? 'selected' : ''}" data-value="">Unassigned</div>
+                        ${allDevices
+                          .filter(d => d.isParent === true)
+                          .map(d => `
+                            <div class="custom-dropdown-option ${currentDevice.parentDevice && currentDevice.parentDevice.id === d.id ? 'selected' : ''}" data-value="${d.id}">
+                              ${d.name} (${d.serialNumber || d.id})
+                            </div>
+                          `).join('')}
+                      </div>
+                      <select class="filter-dropdown hidden" id="detailParentDeviceSelect">
+                        <option value="">Unassigned</option>
+                        ${allDevices
+                          .filter(d => d.isParent === true)
+                          .map(d => `
+                            <option value="${d.id}" ${currentDevice.parentDevice && currentDevice.parentDevice.id === d.id ? 'selected' : ''}>
+                              ${d.name} (${d.serialNumber || d.id})
+                            </option>
+                          `).join('')}
+                      </select>
+                    </div>
                   </div>
                 </div>
               `
@@ -1005,10 +1256,32 @@
                 <div class="info-item">
                   <div class="info-label">Quick Holder Change</div>
                   <div class="info-value">
-                    <select id="detailHolderSelect" class="holder-select">
-                      <option value="">Unassigned</option>
-                      ${holderOptions}
-                    </select>
+                    <div class="custom-dropdown" id="detailHolderDropdown">
+                      <button class="custom-dropdown-button" type="button">
+                        <span class="custom-dropdown-text">${currentDevice.holder ? `${currentDevice.holder.name} (${currentDevice.holder.team || currentDevice.holder.department || ''})` : 'Unassigned'}</span>
+                        <i class="fas fa-chevron-down custom-dropdown-icon"></i>
+                      </button>
+                      <div class="custom-dropdown-menu">
+                        <div class="holder-search-wrapper" style="padding: 0.5rem; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; background: var(--bg-primary); z-index: 10;">
+                          <div style="position: relative;">
+                            <i class="fas fa-search" style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 0.875rem; pointer-events: none;"></i>
+                            <input type="text" id="holderSearchInput" class="holder-search-input" placeholder="Search by name, email, team..." style="width: 100%; padding: 0.5rem 0.75rem 0.5rem 2.25rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.875rem; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--primary-color)'" onblur="this.style.borderColor='var(--border-color)'">
+                          </div>
+                        </div>
+                        <div class="holder-options-container" id="holderOptionsContainer">
+                          <div class="custom-dropdown-option ${!currentDevice.holder ? 'selected' : ''}" data-value="" data-search-text="unassigned">Unassigned</div>
+                          ${allEmployees.map(u => `
+                            <div class="custom-dropdown-option ${currentDevice.holder && currentDevice.holder.id === u.id ? 'selected' : ''}" data-value="${u.id}" data-search-text="${(u.name + ' ' + (u.email || '') + ' ' + (u.department || '') + ' ' + (u.team || '')).toLowerCase()}">
+                              ${u.name} (${u.department || u.team || ''})
+                            </div>
+                          `).join('')}
+                        </div>
+                      </div>
+                      <select class="filter-dropdown hidden" id="detailHolderSelect">
+                        <option value="">Unassigned</option>
+                        ${holderOptions}
+                      </select>
+                    </div>
                   </div>
                 </div>
               `
@@ -1016,6 +1289,9 @@
         </div>
         ${assignedCardHtml}
       `;
+      
+      // Initialize custom dropdowns for detail page
+      initializeDetailDropdowns();
       
       // Gắn handler cho quick status & holder
       const statusSelectEl = document.getElementById('detailStatusSelect');
@@ -1028,6 +1304,23 @@
           // Cập nhật header badge
           headerStatusBadge.className = `status-badge status-${currentDevice.status}`;
           headerStatusBadge.textContent = AssetFlowUtils.getStatusDisplayName(currentDevice.status);
+          
+          // Update custom dropdown button text
+          const statusDropdown = document.getElementById('detailStatusDropdown');
+          if (statusDropdown) {
+            const buttonText = statusDropdown.querySelector('.custom-dropdown-text');
+            if (buttonText) {
+              buttonText.textContent = AssetFlowUtils.getStatusDisplayName(newStatus);
+            }
+            // Update selected option
+            const options = statusDropdown.querySelectorAll('.custom-dropdown-option');
+            options.forEach(opt => {
+              opt.classList.remove('selected');
+              if (opt.dataset.value === newStatus) {
+                opt.classList.add('selected');
+              }
+            });
+          }
           
           AssetFlowUtils.showToast(`Device status changed to ${AssetFlowUtils.getStatusDisplayName(newStatus)} (mock only, not saved).`, 'success');
         });
@@ -1045,6 +1338,24 @@
             const teamEl = document.getElementById('overviewTeamName');
             if (assignedEl) assignedEl.textContent = 'Unassigned';
             if (teamEl) teamEl.textContent = 'N/A';
+            
+            // Update custom dropdown button text
+            const holderDropdown = document.getElementById('detailHolderDropdown');
+            if (holderDropdown) {
+              const buttonText = holderDropdown.querySelector('.custom-dropdown-text');
+              if (buttonText) {
+                buttonText.textContent = 'Unassigned';
+              }
+              // Update selected option
+              const options = holderDropdown.querySelectorAll('.custom-dropdown-option');
+              options.forEach(opt => {
+                opt.classList.remove('selected');
+                if (!opt.dataset.value) {
+                  opt.classList.add('selected');
+                }
+              });
+            }
+            
             AssetFlowUtils.showToast('Device holder cleared (mock only, not saved).', 'success');
             return;
           }
@@ -1068,6 +1379,23 @@
           if (teamEl2) teamEl2.textContent = currentDevice.holder.team || 'N/A';
           document.getElementById('locationText').textContent = currentDevice.holder.team || currentDevice.location;
           
+          // Update custom dropdown button text
+          const holderDropdown = document.getElementById('detailHolderDropdown');
+          if (holderDropdown) {
+            const buttonText = holderDropdown.querySelector('.custom-dropdown-text');
+            if (buttonText) {
+              buttonText.textContent = `${user.name} (${user.team || user.department || ''})`;
+            }
+            // Update selected option
+            const options = holderDropdown.querySelectorAll('.custom-dropdown-option');
+            options.forEach(opt => {
+              opt.classList.remove('selected');
+              if (opt.dataset.value === holderId) {
+                opt.classList.add('selected');
+              }
+            });
+          }
+          
           AssetFlowUtils.showToast(`Device assigned to ${user.name} (mock only, not saved).`, 'success');
         });
       }
@@ -1080,6 +1408,24 @@
           
           if (!parentId) {
             currentDevice.parentDevice = null;
+            
+            // Update custom dropdown button text
+            const parentDropdown = document.getElementById('detailParentDeviceDropdown');
+            if (parentDropdown) {
+              const buttonText = parentDropdown.querySelector('.custom-dropdown-text');
+              if (buttonText) {
+                buttonText.textContent = 'Unassigned';
+              }
+              // Update selected option
+              const options = parentDropdown.querySelectorAll('.custom-dropdown-option');
+              options.forEach(opt => {
+                opt.classList.remove('selected');
+                if (!opt.dataset.value) {
+                  opt.classList.add('selected');
+                }
+              });
+            }
+            
             AssetFlowUtils.showToast('Component is now detached from parent device (mock only, not saved).', 'success');
             return;
           }
@@ -1121,6 +1467,23 @@
           }
           if (teamEl2 && parentDevice.holder) {
             teamEl2.textContent = parentDevice.holder.team || 'N/A';
+          }
+          
+          // Update custom dropdown button text
+          const parentDropdown = document.getElementById('detailParentDeviceDropdown');
+          if (parentDropdown) {
+            const buttonText = parentDropdown.querySelector('.custom-dropdown-text');
+            if (buttonText) {
+              buttonText.textContent = `${parentDevice.name} (${parentDevice.serialNumber || parentDevice.id})`;
+            }
+            // Update selected option
+            const options = parentDropdown.querySelectorAll('.custom-dropdown-option');
+            options.forEach(opt => {
+              opt.classList.remove('selected');
+              if (opt.dataset.value === parentId) {
+                opt.classList.add('selected');
+              }
+            });
           }
           
           AssetFlowUtils.showToast('Component parent device changed (mock only, not saved).', 'success');
