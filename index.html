@@ -118,6 +118,7 @@
           <div class="custom-dropdown-option" data-value="IN_USE">In use</div>
           <div class="custom-dropdown-option" data-value="MAINTENANCE">Maintenance</div>
           <div class="custom-dropdown-option" data-value="BROKEN">Broken</div>
+          <div class="custom-dropdown-option" data-value="BROKEN">Lost</div>
         </div>
         <select class="filter-dropdown hidden" id="statusFilter">
           <option value="">All statuses</option>
@@ -196,7 +197,7 @@
                 <span class="sort-indicator"></span>
               </div>
             </th>
-            <th>QR Code</th>
+            <th style="text-align: center;">QR Code</th>
             <th class="sortable" data-sort="serialNumber">
               <div class="th-content">
                 <span>Serial/ID</span>
@@ -1360,8 +1361,6 @@
     
     function renderDeviceRow(device, index, isChild = false, hasChildren = false, parentId = null) {
         const row = document.createElement('tr');
-        row.className = 'animate-fade-in';
-        row.style.animationDelay = `${index * 0.03}s`;
         const isSoftwareAccount = device.isSoftwareAccount || device.category === 'Software & Licenses';
         const isComponent = device.isComponent || false;
         const parentInfo = device.parentDevice;
@@ -1430,7 +1429,6 @@
           <td>
             <div class="table-device-info ${indentClass}">
               ${arrowIcon}
-              <div class="table-device-icon">${isSoftwareAccount ? '<i class="fas fa-key" style="font-size: 1.5rem; color: var(--primary-color);"></i>' : AssetFlowUtils.getDeviceIcon(device.type)}</div>
               <div class="table-device-details">
                 <div class="table-device-name" title="${device.name}">
                   ${device.name}
@@ -1481,11 +1479,6 @@
               <button class="btn btn-icon btn-secondary table-action-btn" onclick="event.stopPropagation(); editDevice('${targetId}')" title="Edit Device">
                 <i class="fas fa-edit"></i>
               </button>
-              ${device.qrCode ? `
-                <button class="btn btn-icon btn-secondary table-action-btn" onclick="event.stopPropagation(); showQRCode('${device.qrCode}', '${device.name}', '${device.id}')" title="Show QR Code">
-                  <i class="fas fa-qrcode"></i>
-                </button>
-              ` : ''}
             </div>
           </td>
         `;
