@@ -67,39 +67,83 @@
   </div>
 
   <main class="main-content">
-    <div class="page-header">
-      <button class="back-btn" onclick="window.history.back()">← back</button>
-      <h1 class="page-title">Add new device</h1>
-    </div>
-
-    <form id="addDeviceForm" onsubmit="handleAddDevice(event)">
+    <h1 class="page-title">Add new device</h1>
+    <div class="detail-container">
+      <div class="detail-main">
+        <div class="detail-header">
+          <form id="addDeviceForm" onsubmit="handleAddDevice(event)">
       <div class="form-layout">
         <!-- Left Column -->
         <div class="form-column">
           <!-- Basic information -->
           <div class="form-section">
             <div class="form-section-header">
+              <button class="back-btn" onclick="window.history.back()">←</button>
               <h2>Basic information</h2>
             </div>
             <div class="form-section-content">
-              <div class="form-group">
-                <label>Device level <span class="required">*</span></label>
-                <select id="deviceCategorySelect" class="form-input" onchange="handleDeviceCategoryChange(this.value)">
-                  <option value="Container">Parent device</option>
-                  <option value="Component">Child component</option>
-                </select>
+              <!-- Device Image, Device level, Device name row -->
+              <div class="form-row-image">
+                <!-- Device Image Upload -->
+                <div class="form-group-image">
+                  <div class="image-upload-wrapper">
+                    <div class="image-upload-area" id="imageUploadArea">
+                      <div class="image-upload-icon">📷</div>
+                      <div class="image-upload-text">Click to upload</div>
+                      <div class="image-upload-hint">JPG, PNG, GIF (max 5MB)</div>
+                    </div>
+                    
+                    <input type="file" id="deviceImageInput" class="file-input" accept="image/jpeg,image/png,image/gif" style="display: none;">
+                    
+                    <div class="image-preview-container" id="imagePreviewContainer" style="display: none;">
+                      <div class="image-preview-wrapper">
+                        <img id="imagePreview" class="image-preview" src="" alt="Device preview">
+                        <button type="button" class="btn-remove-image" onclick="removeImage()" title="Remove image">×</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-group-fields">
+                  <div class="form-group">
+                    <label>Device level <span class="required">*</span></label>
+                    <div class="custom-dropdown" id="deviceCategorySelectDropdown">
+                      <button type="button" class="custom-dropdown-button">
+                        <span class="custom-dropdown-text">Parent device</span>
+                        <i class="fas fa-chevron-down custom-dropdown-icon"></i>
+                      </button>
+                      <div class="custom-dropdown-menu">
+                        <div class="custom-dropdown-option selected" data-value="Container">Parent device</div>
+                        <div class="custom-dropdown-option" data-value="Component">Child component</div>
+                      </div>
+                      <select id="deviceCategorySelect" class="hidden">
+                        <option value="Container" selected>Parent device</option>
+                        <option value="Component">Child component</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Device name <span class="required">*</span></label>
+                    <input type="text" id="deviceName" class="form-input" required>
+                  </div>
+                </div>
               </div>
 
               <div class="form-group" id="parentDeviceGroup" style="display: none;">
                 <label>Parent Device</label>
-                <select id="parentDeviceSelect" class="form-input">
-                  <option value="">Select parent device...</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label>Device name <span class="required">*</span></label>
-                <input type="text" id="deviceName" class="form-input" required>
+                <div class="custom-dropdown" id="parentDeviceSelectDropdown">
+                  <button type="button" class="custom-dropdown-button">
+                    <span class="custom-dropdown-text">Select parent device...</span>
+                    <i class="fas fa-chevron-down custom-dropdown-icon"></i>
+                  </button>
+                  <div class="custom-dropdown-menu">
+                    <!-- Options will be populated dynamically -->
+                  </div>
+                  <select id="parentDeviceSelect" class="hidden">
+                    <option value="">Select parent device...</option>
+                  </select>
+                </div>
               </div>
 
               <div class="form-row">
@@ -108,31 +152,86 @@
                   <input type="text" id="serialNumber" class="form-input" required>
                 </div>
                 <div class="form-group">
-                  <label>QR code</label>
-                  <input type="text" id="qrCode" class="form-input" placeholder="Auto-generate">
+                  <label>Category <span class="required">*</span></label>
+                  <div class="custom-dropdown" id="deviceCategoryDropdown">
+                    <button type="button" class="custom-dropdown-button">
+                      <span class="custom-dropdown-text">Select category...</span>
+                      <i class="fas fa-chevron-down custom-dropdown-icon"></i>
+                    </button>
+                    <div class="custom-dropdown-menu">
+                      <div class="custom-dropdown-option" data-value="IT Equipment">IT Equipment</div>
+                      <div class="custom-dropdown-option" data-value="Office Equipment & Furniture">Office Equipment & Furniture</div>
+                    </div>
+                    <select id="deviceCategory" class="hidden" required>
+                      <option value="">Select category...</option>
+                      <option value="IT Equipment">IT Equipment</option>
+                      <option value="Office Equipment & Furniture">Office Equipment & Furniture</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 
+              <!-- Hidden QR code field, auto-generated if empty -->
+              <input type="hidden" id="qrCode">
+
               <div class="form-group">
                 <label>Type <span class="required">*</span></label>
-                <select id="deviceType" class="form-input" required>
-                  <option value="">Select type...</option>
-                  <option value="Laptop">Laptop</option>
-                  <option value="Desktop">Desktop</option>
-                  <option value="Monitor">Monitor</option>
-                  <option value="Keyboard">Keyboard</option>
-                  <option value="Mouse">Mouse</option>
-                  <option value="RAM">RAM</option>
-                  <option value="SSD">SSD</option>
-                  <option value="HDD">HDD</option>
-                  <option value="Printer">Printer</option>
-                  <option value="Scanner">Scanner</option>
-                  <option value="Router">Router</option>
-                  <option value="Switch">Switch</option>
-                  <option value="Server">Server</option>
-                  <option value="Tablet">Tablet</option>
-                  <option value="Phone">Phone</option>
-                </select>
+                <div class="custom-dropdown" id="deviceTypeDropdown">
+                  <button type="button" class="custom-dropdown-button">
+                    <span class="custom-dropdown-text">Select type...</span>
+                    <i class="fas fa-chevron-down custom-dropdown-icon"></i>
+                  </button>
+                  <div class="custom-dropdown-menu">
+                    <div class="type-search-wrapper" style="padding: 0.5rem; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; background: var(--bg-primary); z-index: 10;">
+                      <div style="position: relative;">
+                        <i class="fas fa-search" style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 0.875rem; pointer-events: none;"></i>
+                        <input
+                          type="text"
+                          id="deviceTypeSearchInput"
+                          placeholder="Search type..."
+                          style="width: 100%; padding: 0.5rem 0.75rem 0.5rem 2.25rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.875rem; outline: none; transition: border-color 0.2s;"
+                          onfocus="this.style.borderColor='var(--primary-color)'"
+                          onblur="this.style.borderColor='var(--border-color)'"
+                        />
+                      </div>
+                    </div>
+                    <div class="type-options-container" id="deviceTypeOptionsContainer">
+                      <div class="custom-dropdown-option" data-value="Laptop" data-search-text="laptop">Laptop</div>
+                      <div class="custom-dropdown-option" data-value="Desktop" data-search-text="desktop">Desktop</div>
+                      <div class="custom-dropdown-option" data-value="Monitor" data-search-text="monitor">Monitor</div>
+                      <div class="custom-dropdown-option" data-value="Keyboard" data-search-text="keyboard">Keyboard</div>
+                      <div class="custom-dropdown-option" data-value="Mouse" data-search-text="mouse">Mouse</div>
+                      <div class="custom-dropdown-option" data-value="RAM" data-search-text="ram">RAM</div>
+                      <div class="custom-dropdown-option" data-value="SSD" data-search-text="ssd">SSD</div>
+                      <div class="custom-dropdown-option" data-value="HDD" data-search-text="hdd">HDD</div>
+                      <div class="custom-dropdown-option" data-value="Printer" data-search-text="printer">Printer</div>
+                      <div class="custom-dropdown-option" data-value="Scanner" data-search-text="scanner">Scanner</div>
+                      <div class="custom-dropdown-option" data-value="Router" data-search-text="router">Router</div>
+                      <div class="custom-dropdown-option" data-value="Switch" data-search-text="switch">Switch</div>
+                      <div class="custom-dropdown-option" data-value="Server" data-search-text="server">Server</div>
+                      <div class="custom-dropdown-option" data-value="Tablet" data-search-text="tablet">Tablet</div>
+                      <div class="custom-dropdown-option" data-value="Phone" data-search-text="phone">Phone</div>
+                    </div>
+                  </div>
+                  <select id="deviceType" class="hidden" required>
+                    <option value="">Select type...</option>
+                    <option value="Laptop">Laptop</option>
+                    <option value="Desktop">Desktop</option>
+                    <option value="Monitor">Monitor</option>
+                    <option value="Keyboard">Keyboard</option>
+                    <option value="Mouse">Mouse</option>
+                    <option value="RAM">RAM</option>
+                    <option value="SSD">SSD</option>
+                    <option value="HDD">HDD</option>
+                    <option value="Printer">Printer</option>
+                    <option value="Scanner">Scanner</option>
+                    <option value="Router">Router</option>
+                    <option value="Switch">Switch</option>
+                    <option value="Server">Server</option>
+                    <option value="Tablet">Tablet</option>
+                    <option value="Phone">Phone</option>
+                  </select>
+                </div>
               </div>
             </div>
           </div>
@@ -146,13 +245,26 @@
               <div class="form-row">
                 <div class="form-group">
                   <label>Status <span class="required">*</span></label>
-                  <select id="deviceStatus" class="form-input" required>
-                    <option value="IN_STOCK">In Stock</option>
-                    <option value="IN_USE">In Use</option>
-                    <option value="MAINTENANCE">Maintenance</option>
-                    <option value="BROKEN">Broken</option>
-                    <option value="RETIRED">Retired</option>
-                  </select>
+                  <div class="custom-dropdown" id="deviceStatusDropdown">
+                    <button type="button" class="custom-dropdown-button">
+                      <span class="custom-dropdown-text">In Stock</span>
+                      <i class="fas fa-chevron-down custom-dropdown-icon"></i>
+                    </button>
+                    <div class="custom-dropdown-menu">
+                      <div class="custom-dropdown-option selected" data-value="IN_STOCK">In Stock</div>
+                      <div class="custom-dropdown-option" data-value="IN_USE">In Use</div>
+                      <div class="custom-dropdown-option" data-value="MAINTENANCE">Maintenance</div>
+                      <div class="custom-dropdown-option" data-value="BROKEN">Broken</div>
+                      <div class="custom-dropdown-option" data-value="RETIRED">Retired</div>
+                    </div>
+                    <select id="deviceStatus" class="hidden" required>
+                      <option value="IN_STOCK" selected>In Stock</option>
+                      <option value="IN_USE">In Use</option>
+                      <option value="MAINTENANCE">Maintenance</option>
+                      <option value="BROKEN">Broken</option>
+                      <option value="RETIRED">Retired</option>
+                    </select>
+                  </div>
                 </div>
                 <div class="form-group">
                   <label>Location</label>
@@ -162,20 +274,16 @@
             </div>
           </div>
 
-          <!-- Specifications (container only) -->
-          <div class="form-section" id="specsGroup">
+          <!-- Notes -->
+          <div class="form-section">
             <div class="form-section-header">
-              <h2>Specifications</h2>
+              <h2>Notes</h2>
             </div>
             <div class="form-section-content">
-              <div id="specsContainer">
-                <div class="spec-row">
-                  <input type="text" class="spec-key" placeholder="Key">
-                  <input type="text" class="spec-value" placeholder="Value">
-                  <button type="button" class="btn-remove-spec" onclick="removeSpecRow(this)">×</button>
-                </div>
+              <div class="form-group">
+                <label>Note</label>
+                <textarea id="deviceNote" class="form-input" rows="3" placeholder="Additional information, special instructions, etc."></textarea>
               </div>
-              <button type="button" class="btn-add-spec" onclick="addSpecRow()">+ Add Spec</button>
             </div>
           </div>
         </div>
@@ -190,9 +298,33 @@
             <div class="form-section-content">
               <div class="form-group">
                 <label>Holder (employee) <span class="required">*</span></label>
-                <select id="holderSelect" class="form-input">
-                  <option value="">Select employee...</option>
-                </select>
+                <div class="custom-dropdown" id="holderSelectDropdown">
+                  <button type="button" class="custom-dropdown-button">
+                    <span class="custom-dropdown-text">Select employee...</span>
+                    <i class="fas fa-chevron-down custom-dropdown-icon"></i>
+                  </button>
+                  <div class="custom-dropdown-menu">
+                    <div class="holder-search-wrapper" style="padding: 0.5rem; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; background: var(--bg-primary); z-index: 10;">
+                      <div style="position: relative;">
+                        <i class="fas fa-search" style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 0.875rem; pointer-events: none;"></i>
+                        <input
+                          type="text"
+                          id="holderSearchInputAdd"
+                          placeholder="Search by name, email, team..."
+                          style="width: 100%; padding: 0.5rem 0.75rem 0.5rem 2.25rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.875rem; outline: none; transition: border-color 0.2s;"
+                          onfocus="this.style.borderColor='var(--primary-color)'"
+                          onblur="this.style.borderColor='var(--border-color)'"
+                        />
+                      </div>
+                    </div>
+                    <div class="holder-options-container" id="holderOptionsContainerAdd">
+                      <!-- Options will be populated dynamically -->
+                    </div>
+                  </div>
+                  <select id="holderSelect" class="hidden">
+                    <option value="">Select employee...</option>
+                  </select>
+                </div>
               </div>
               <div class="form-group">
                 <label>Assigned date</label>
@@ -224,27 +356,43 @@
             </div>
           </div>
 
-          <!-- Notes -->
-          <div class="form-section">
+          <!-- Specifications (container only) -->
+          <div class="form-section" id="specsGroup">
             <div class="form-section-header">
-              <h2>Notes</h2>
+              <h2>Specifications</h2>
             </div>
             <div class="form-section-content">
-              <div class="form-group">
-                <label>Note</label>
-                <textarea id="deviceNote" class="form-input" rows="3" placeholder="Additional information, special instructions, etc."></textarea>
+              <div id="specsContainer" class="specs-container-scroll">
+                <div class="spec-row">
+                  <input type="text" class="form-input spec-key" placeholder="Key">
+                  <input type="text" class="form-input spec-value" placeholder="Value">
+                  <button type="button" class="btn-remove-spec" onclick="removeSpecRow(this)">×</button>
+                </div>
+                <div class="spec-row">
+                  <input type="text" class="form-input spec-key" placeholder="Key">
+                  <input type="text" class="form-input spec-value" placeholder="Value">
+                  <button type="button" class="btn-remove-spec" onclick="removeSpecRow(this)">×</button>
+                </div>
+                <div class="spec-row">
+                  <input type="text" class="form-input spec-key" placeholder="Key">
+                  <input type="text" class="form-input spec-value" placeholder="Value">
+                  <button type="button" class="btn-remove-spec" onclick="removeSpecRow(this)">×</button>
+                </div>
               </div>
+              <button type="button" class="btn-add-spec" onclick="addSpecRow()">+ Add Spec</button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Form Actions -->
-      <div class="form-actions">
-        <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
-        <button type="submit" class="btn btn-primary">Add device</button>
+            <!-- Form Actions -->
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+          </form>
+        </div>
       </div>
-    </form>
+    </div>
   </main>
 
   <script src="js/shared.js"></script>
@@ -265,16 +413,39 @@
     
     function populateHolderSelect() {
       const select = document.getElementById('holderSelect');
-      if (!select) return;
+      const dropdown = document.getElementById('holderSelectDropdown');
+      const menu = dropdown?.querySelector('.custom-dropdown-menu');
+      const optionsContainer = dropdown?.querySelector('#holderOptionsContainerAdd');
+      if (!select || !menu || !optionsContainer) return;
+      
       select.innerHTML = '<option value="">Select employee...</option>';
+      optionsContainer.innerHTML = '';
+      
+      // Add default option to options container
+      const defaultOption = document.createElement('div');
+      defaultOption.className = 'custom-dropdown-option';
+      defaultOption.dataset.value = '';
+      defaultOption.textContent = 'Select employee...';
+      defaultOption.dataset.searchText = 'unassigned';
+      optionsContainer.appendChild(defaultOption);
       
       // Only show Employee role users
       allUsers.filter(u => u.role === 'Employee').forEach(user => {
+        // Add to hidden select
         const option = document.createElement('option');
         option.value = user.id;
         option.textContent = `${user.name} (${user.department || user.team || ''})`;
         option.dataset.userData = JSON.stringify(user);
         select.appendChild(option);
+        
+        // Add to custom dropdown menu (options container)
+        const menuOption = document.createElement('div');
+        menuOption.className = 'custom-dropdown-option';
+        menuOption.dataset.value = user.id;
+        menuOption.dataset.userData = JSON.stringify(user);
+        menuOption.textContent = `${user.name} (${user.department || user.team || ''})`;
+        menuOption.dataset.searchText = `${user.name} ${user.email || ''} ${user.department || ''} ${user.team || ''}`.toLowerCase();
+        optionsContainer.appendChild(menuOption);
       });
     }
     
@@ -287,9 +458,23 @@
       const priceGroup = document.getElementById('priceGroup');
       const specsGroup = document.getElementById('specsGroup');
       const categorySelect = document.getElementById('deviceCategorySelect');
+      const categoryDropdown = document.getElementById('deviceCategorySelectDropdown');
+      const categoryButton = categoryDropdown?.querySelector('.custom-dropdown-button');
+      const categoryText = categoryButton?.querySelector('.custom-dropdown-text');
+      const categoryOptions = categoryDropdown?.querySelectorAll('.custom-dropdown-option');
 
       if (categorySelect && categorySelect.value !== type) {
         categorySelect.value = type;
+      }
+      
+      // Update custom dropdown button text and selected state
+      if (categoryText && categoryOptions) {
+        categoryOptions.forEach(opt => opt.classList.remove('selected'));
+        const selectedOption = Array.from(categoryOptions).find(opt => opt.dataset.value === type);
+        if (selectedOption) {
+          selectedOption.classList.add('selected');
+          categoryText.textContent = selectedOption.textContent;
+        }
       }
       
       if (type === 'Component') {
@@ -313,16 +498,34 @@
     
     function populateParentDevices() {
       const select = document.getElementById('parentDeviceSelect');
-      if (!select) return;
+      const menu = document.getElementById('parentDeviceSelectDropdown')?.querySelector('.custom-dropdown-menu');
+      if (!select || !menu) return;
+      
       select.innerHTML = '<option value="">Select parent device...</option>';
+      menu.innerHTML = '';
+      
+      // Add default option to menu
+      const defaultOption = document.createElement('div');
+      defaultOption.className = 'custom-dropdown-option';
+      defaultOption.dataset.value = '';
+      defaultOption.textContent = 'Select parent device...';
+      menu.appendChild(defaultOption);
       
       // Only show Container devices as parent options
       originalDevices.forEach(device => {
         if (device.isParent === true) {
+          // Add to hidden select
           const option = document.createElement('option');
           option.value = device.id;
           option.textContent = `${device.name} (${device.serialNumber})`;
           select.appendChild(option);
+          
+          // Add to custom dropdown menu
+          const menuOption = document.createElement('div');
+          menuOption.className = 'custom-dropdown-option';
+          menuOption.dataset.value = device.id;
+          menuOption.textContent = `${device.name} (${device.serialNumber})`;
+          menu.appendChild(menuOption);
         }
       });
     }
@@ -332,8 +535,8 @@
       const row = document.createElement('div');
       row.className = 'spec-row';
       row.innerHTML = `
-        <input type="text" class="spec-key" placeholder="Key (e.g., processor)">
-        <input type="text" class="spec-value" placeholder="Value (e.g., Intel Core i7)">
+        <input type="text" class="form-input spec-key" placeholder="Key (e.g., processor)">
+        <input type="text" class="form-input spec-value" placeholder="Value (e.g., Intel Core i7)">
         <button type="button" class="btn-remove-spec" onclick="removeSpecRow(this)">×</button>
       `;
       container.appendChild(row);
@@ -349,8 +552,13 @@
       toggleDeviceType('Container');
       document.getElementById('specsContainer').innerHTML = `
         <div class="spec-row">
-          <input type="text" class="spec-key" placeholder="Key (e.g., processor)">
-          <input type="text" class="spec-value" placeholder="Value (e.g., Intel Core i7)">
+          <input type="text" class="form-input spec-key" placeholder="Key (e.g., processor)">
+          <input type="text" class="form-input spec-value" placeholder="Value (e.g., Intel Core i7)">
+          <button type="button" class="btn-remove-spec" onclick="removeSpecRow(this)">×</button>
+        </div>
+        <div class="spec-row">
+          <input type="text" class="form-input spec-key" placeholder="Key (e.g., processor)">
+          <input type="text" class="form-input spec-value" placeholder="Value (e.g., Intel Core i7)">
           <button type="button" class="btn-remove-spec" onclick="removeSpecRow(this)">×</button>
         </div>
       `;
@@ -364,7 +572,7 @@
         serialNumber: document.getElementById('serialNumber').value.trim(),
         qrCode: document.getElementById('qrCode').value.trim(),
         type: document.getElementById('deviceType').value,
-        category: currentDeviceCategory,
+        category: document.getElementById('deviceCategory')?.value || currentDeviceCategory,
         status: document.getElementById('deviceStatus').value,
         location: document.getElementById('deviceLocation').value.trim(),
       };
@@ -422,17 +630,17 @@
           originalDevices.push(formData);
         }
         
-        // Save to JSON file
-        await saveDevicesToJSON();
+          // Save to JSON file
+          await saveDevicesToJSON();
+          
+          AssetFlowUtils.showToast('Component added successfully!', 'success');
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 1500);
+          return;
+        }
         
-        AssetFlowUtils.showToast('Component added successfully!', 'success');
-        setTimeout(() => {
-          window.location.href = 'device-list.html';
-        }, 1500);
-        return;
-      }
-      
-      // Handle Container
+        // Handle Container
       const specs = {};
       document.querySelectorAll('.spec-row').forEach(row => {
         const key = row.querySelector('.spec-key').value.trim();
@@ -470,18 +678,81 @@
       const price = document.getElementById('devicePrice').value;
       if (price) formData.price = parseInt(price);
       
-      formData.children = [];
+      // Helper function to process form data after image is read (if any)
+      const processFormSubmission = async (imageData) => {
+        // Add device image if uploaded
+        if (imageData) {
+          formData.image = imageData; // Base64 encoded image
+          formData.imageName = deviceImageFile.name;
+        }
+        
+        // Handle Component
+        if (currentDeviceCategory === 'Component') {
+          const parentId = document.getElementById('parentDeviceSelect').value;
+          
+          if (parentId) {
+            // Component has parent - add to parent's children array
+            const parentDevice = originalDevices.find(d => d.id === parentId);
+            if (!parentDevice) {
+              alert('Parent device not found');
+              return;
+            }
+            
+            // Add component to parent's children array
+            if (!parentDevice.children) {
+              parentDevice.children = [];
+            }
+            
+            parentDevice.children.push({
+              id: formData.id,
+              qrCode: formData.qrCode,
+              name: formData.name,
+              type: formData.type,
+              category: formData.category,
+              serialNumber: formData.serialNumber,
+              status: formData.status
+            });
+          } else {
+            // Component without parent - add as standalone device
+            formData.children = [];
+            originalDevices.push(formData);
+          }
+          
+          // Save to JSON file
+          await saveDevicesToJSON();
+          
+          AssetFlowUtils.showToast('Component added successfully!', 'success');
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 1500);
+          return;
+        }
+        
+        // Handle Container
+        formData.children = [];
+        
+        // Add to devices array
+        originalDevices.push(formData);
+        
+        // Save to JSON file
+        await saveDevicesToJSON();
+        
+        AssetFlowUtils.showToast('Device added successfully!', 'success');
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 1500);
+      };
       
-      // Add to devices array
-      originalDevices.push(formData);
-      
-      // Save to JSON file
-      await saveDevicesToJSON();
-      
-      AssetFlowUtils.showToast('Device added successfully!', 'success');
-      setTimeout(() => {
-        window.location.href = 'device-list.html';
-      }, 1500);
+      // If image is uploaded, read it first, then process form
+      if (deviceImageFile) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          processFormSubmission(e.target.result);
+        };
+        reader.readAsDataURL(deviceImageFile);
+      } else {
+        processFormSubmission(null);
+      }
     }
     
     async function saveDevicesToJSON() {
@@ -495,7 +766,429 @@
       }
     }
     
+    // Image Upload Handling
+    let deviceImageFile = null;
+    
+    const imageUploadArea = document.getElementById('imageUploadArea');
+    const deviceImageInput = document.getElementById('deviceImageInput');
+    const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+    const imagePreview = document.getElementById('imagePreview');
+    const imageName = document.getElementById('imageName');
+    const imageSize = document.getElementById('imageSize');
+    
+    imageUploadArea.addEventListener('click', () => deviceImageInput.click());
+    
+    imageUploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      imageUploadArea.classList.add('dragover');
+    });
+    
+    imageUploadArea.addEventListener('dragleave', () => {
+      imageUploadArea.classList.remove('dragover');
+    });
+    
+    imageUploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      imageUploadArea.classList.remove('dragover');
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        handleImageFile(files[0]);
+      }
+    });
+    
+    deviceImageInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        handleImageFile(e.target.files[0]);
+      }
+    });
+    
+    function handleImageFile(file) {
+      // Validate file type
+      if (!file.type.match(/^image\/(jpeg|png|gif)$/i)) {
+        AssetFlowUtils.showToast('Please upload an image file (JPG, PNG, or GIF)', 'error');
+        return;
+      }
+      
+      // Validate file size (5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        AssetFlowUtils.showToast('File size must be less than 5MB', 'error');
+        return;
+      }
+      
+      deviceImageFile = file;
+      
+      // Show preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        imagePreview.src = e.target.result;
+        imagePreviewContainer.classList.add('show');
+        imageUploadArea.style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    }
+    
+    function removeImage() {
+      deviceImageFile = null;
+      deviceImageInput.value = '';
+      imagePreviewContainer.classList.remove('show');
+      imageUploadArea.style.display = 'flex';
+      imagePreview.src = '';
+    }
+    
+    function formatFileSize(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+    }
+    
     // Initialize on page load
+    // Initialize custom dropdowns
+    function initializeCustomDropdowns() {
+      // Device Category Dropdown (Device level)
+      const deviceCategoryDropdown = document.getElementById('deviceCategorySelectDropdown');
+      if (deviceCategoryDropdown) {
+        const button = deviceCategoryDropdown.querySelector('.custom-dropdown-button');
+        const menu = deviceCategoryDropdown.querySelector('.custom-dropdown-menu');
+        const hiddenSelect = deviceCategoryDropdown.querySelector('select');
+        const options = menu.querySelectorAll('.custom-dropdown-option');
+        
+        button.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = menu.classList.contains('show');
+          closeAllDropdowns();
+          if (!isOpen) {
+            menu.classList.add('show');
+            button.classList.add('active');
+          }
+        });
+        
+        options.forEach(option => {
+          option.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const value = option.dataset.value || '';
+            const text = option.textContent;
+            
+            // Update button text
+            button.querySelector('.custom-dropdown-text').textContent = text;
+            
+            // Update selected state
+            options.forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+            
+            // Update hidden select
+            if (hiddenSelect) {
+              hiddenSelect.value = value;
+              hiddenSelect.dispatchEvent(new Event('change'));
+            }
+            
+            // Close menu
+            menu.classList.remove('show');
+            button.classList.remove('active');
+            
+            // Trigger category change handler
+            handleDeviceCategoryChange(value);
+          });
+        });
+      }
+      
+      // Parent Device Dropdown
+      const parentDeviceDropdown = document.getElementById('parentDeviceSelectDropdown');
+      if (parentDeviceDropdown) {
+        const button = parentDeviceDropdown.querySelector('.custom-dropdown-button');
+        const menu = parentDeviceDropdown.querySelector('.custom-dropdown-menu');
+        const hiddenSelect = parentDeviceDropdown.querySelector('select');
+        
+        button.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = menu.classList.contains('show');
+          closeAllDropdowns();
+          if (!isOpen) {
+            menu.classList.add('show');
+            button.classList.add('active');
+          }
+        });
+        
+        menu.addEventListener('click', (e) => {
+          const option = e.target.closest('.custom-dropdown-option');
+          if (!option) return;
+          
+          e.stopPropagation();
+          const value = option.dataset.value || '';
+          const text = option.textContent;
+          
+          // Update button text
+          button.querySelector('.custom-dropdown-text').textContent = text;
+          
+          // Update selected state
+          menu.querySelectorAll('.custom-dropdown-option').forEach(opt => opt.classList.remove('selected'));
+          option.classList.add('selected');
+          
+          // Update hidden select
+          if (hiddenSelect) {
+            hiddenSelect.value = value;
+            hiddenSelect.dispatchEvent(new Event('change'));
+          }
+          
+          // Close menu
+          menu.classList.remove('show');
+          button.classList.remove('active');
+        });
+      }
+      
+      // Category Dropdown
+      const categoryDropdown = document.getElementById('deviceCategoryDropdown');
+      if (categoryDropdown) {
+        const button = categoryDropdown.querySelector('.custom-dropdown-button');
+        const menu = categoryDropdown.querySelector('.custom-dropdown-menu');
+        const hiddenSelect = categoryDropdown.querySelector('select');
+        const options = menu.querySelectorAll('.custom-dropdown-option');
+        
+        button.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = menu.classList.contains('show');
+          closeAllDropdowns();
+          if (!isOpen) {
+            menu.classList.add('show');
+            button.classList.add('active');
+          }
+        });
+        
+        options.forEach(option => {
+          option.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const value = option.dataset.value || '';
+            const text = option.textContent;
+            
+            // Update button text
+            button.querySelector('.custom-dropdown-text').textContent = text;
+            
+            // Update selected state
+            options.forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+            
+            // Update hidden select
+            if (hiddenSelect) {
+              hiddenSelect.value = value;
+              hiddenSelect.dispatchEvent(new Event('change'));
+            }
+            
+            // Close menu
+            menu.classList.remove('show');
+            button.classList.remove('active');
+          });
+        });
+      }
+      
+    // Device Type Dropdown (with search)
+    const deviceTypeDropdown = document.getElementById('deviceTypeDropdown');
+    if (deviceTypeDropdown) {
+      const button = deviceTypeDropdown.querySelector('.custom-dropdown-button');
+      const menu = deviceTypeDropdown.querySelector('.custom-dropdown-menu');
+      const hiddenSelect = deviceTypeDropdown.querySelector('select');
+      const optionsContainer = menu.querySelector('#deviceTypeOptionsContainer');
+      const options = optionsContainer ? optionsContainer.querySelectorAll('.custom-dropdown-option') : menu.querySelectorAll('.custom-dropdown-option');
+      const searchInput = menu.querySelector('#deviceTypeSearchInput');
+      
+      button.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = menu.classList.contains('show');
+        closeAllDropdowns();
+        if (!isOpen) {
+          menu.classList.add('show');
+          button.classList.add('active');
+          if (searchInput) {
+            searchInput.focus();
+          }
+        }
+      });
+      
+      options.forEach(option => {
+        option.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const value = option.dataset.value || '';
+          const text = option.textContent;
+          
+          // Update button text
+          button.querySelector('.custom-dropdown-text').textContent = text;
+          
+          // Update selected state
+          options.forEach(opt => opt.classList.remove('selected'));
+          option.classList.add('selected');
+          
+          // Update hidden select
+          if (hiddenSelect) {
+            hiddenSelect.value = value;
+            hiddenSelect.dispatchEvent(new Event('change'));
+          }
+
+          // Clear search and reset options
+          if (searchInput && optionsContainer) {
+            searchInput.value = '';
+            filterDeviceTypeOptions('', optionsContainer);
+          }
+          
+          // Close menu
+          menu.classList.remove('show');
+          button.classList.remove('active');
+        });
+      });
+
+      if (searchInput && optionsContainer) {
+        searchInput.addEventListener('input', (e) => {
+          const query = e.target.value.toLowerCase();
+          filterDeviceTypeOptions(query, optionsContainer);
+        });
+      }
+    }
+
+    // Holder Select Dropdown (with search)
+    const holderSelectDropdown = document.getElementById('holderSelectDropdown');
+    if (holderSelectDropdown) {
+      const button = holderSelectDropdown.querySelector('.custom-dropdown-button');
+      const menu = holderSelectDropdown.querySelector('.custom-dropdown-menu');
+      const hiddenSelect = holderSelectDropdown.querySelector('select');
+      const optionsContainer = holderSelectDropdown.querySelector('#holderOptionsContainerAdd');
+      const searchInput = holderSelectDropdown.querySelector('#holderSearchInputAdd');
+      
+      button.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = menu.classList.contains('show');
+        closeAllDropdowns();
+        if (!isOpen) {
+          menu.classList.add('show');
+          button.classList.add('active');
+          if (searchInput) {
+            searchInput.focus();
+          }
+        }
+      });
+      
+      menu.addEventListener('click', (e) => {
+        const option = e.target.closest('.custom-dropdown-option');
+        if (!option || !optionsContainer) return;
+        
+        e.stopPropagation();
+        const value = option.dataset.value || '';
+        const text = option.textContent;
+        
+        // Update button text
+        button.querySelector('.custom-dropdown-text').textContent = text;
+        
+        // Update selected state
+        optionsContainer.querySelectorAll('.custom-dropdown-option').forEach(opt => opt.classList.remove('selected'));
+        option.classList.add('selected');
+        
+        // Update hidden select
+        if (hiddenSelect) {
+          hiddenSelect.value = value;
+          hiddenSelect.dispatchEvent(new Event('change'));
+        }
+
+        // Clear search and reset options
+        if (searchInput && optionsContainer) {
+          searchInput.value = '';
+          filterHolderOptionsAdd('', optionsContainer);
+        }
+        
+        // Close menu
+        menu.classList.remove('show');
+        button.classList.remove('active');
+      });
+
+      if (searchInput && optionsContainer) {
+        searchInput.addEventListener('input', (e) => {
+          const query = e.target.value.toLowerCase();
+          filterHolderOptionsAdd(query, optionsContainer);
+        });
+      }
+    }
+      
+      // Device Status Dropdown
+      const deviceStatusDropdown = document.getElementById('deviceStatusDropdown');
+      if (deviceStatusDropdown) {
+        const button = deviceStatusDropdown.querySelector('.custom-dropdown-button');
+        const menu = deviceStatusDropdown.querySelector('.custom-dropdown-menu');
+        const hiddenSelect = deviceStatusDropdown.querySelector('select');
+        const options = menu.querySelectorAll('.custom-dropdown-option');
+        
+        button.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = menu.classList.contains('show');
+          closeAllDropdowns();
+          if (!isOpen) {
+            menu.classList.add('show');
+            button.classList.add('active');
+          }
+        });
+        
+        options.forEach(option => {
+          option.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const value = option.dataset.value || '';
+            const text = option.textContent;
+            
+            // Update button text
+            button.querySelector('.custom-dropdown-text').textContent = text;
+            
+            // Update selected state
+            options.forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+            
+            // Update hidden select
+            if (hiddenSelect) {
+              hiddenSelect.value = value;
+              hiddenSelect.dispatchEvent(new Event('change'));
+            }
+            
+            // Close menu
+            menu.classList.remove('show');
+            button.classList.remove('active');
+          });
+        });
+      }
+      
+      // Close dropdowns when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.custom-dropdown')) {
+          closeAllDropdowns();
+        }
+      });
+    }
+    
+    function closeAllDropdowns() {
+      document.querySelectorAll('.custom-dropdown-menu').forEach(menu => {
+        menu.classList.remove('show');
+      });
+      document.querySelectorAll('.custom-dropdown-button').forEach(button => {
+        button.classList.remove('active');
+      });
+    }
+
+    function filterDeviceTypeOptions(query, container) {
+      const options = container.querySelectorAll('.custom-dropdown-option');
+      options.forEach(option => {
+        const searchText = (option.dataset.searchText || option.textContent || '').toLowerCase();
+        const matches = !query || searchText.includes(query);
+        option.style.display = matches ? '' : 'none';
+      });
+    }
+
+    function filterHolderOptionsAdd(query, container) {
+      const options = container.querySelectorAll('.custom-dropdown-option');
+      options.forEach(option => {
+        const searchText = (option.dataset.searchText || option.textContent || '').toLowerCase();
+        const matches = !query || searchText.includes(query);
+        option.style.display = matches ? '' : 'none';
+      });
+    }
+    
+    // Initialize after DOM is ready
+    document.addEventListener('DOMContentLoaded', () => {
+      initializeCustomDropdowns();
+    });
+    
     loadUsers();
     loadDevices();
   </script>
