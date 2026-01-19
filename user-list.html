@@ -27,7 +27,6 @@
   <div class="sidebar">
     <div class="sidebar-content">
       <div class="sidebar-section">
-        <div class="sidebar-section-header">Admin desktop</div>
         <a href="dashboard.html" class="sidebar-item" data-title="Dashboard">
           <i class="fas fa-th-large sidebar-item-icon"></i>
           <span>Dashboard</span>
@@ -36,18 +35,10 @@
           <i class="fas fa-box sidebar-item-icon"></i>
           <span>Device List</span>
         </a>
-        <a href="import-device.html" class="sidebar-item" data-title="Import device">
-          <i class="fas fa-file-import sidebar-item-icon"></i>
-          <span>Import Device</span>
-        </a>
         <a href="user-list.html" class="sidebar-item active" data-title="User list">
           <i class="fas fa-users sidebar-item-icon"></i>
           <span>User List</span>
         </a>
-      </div>
-      
-      <div class="sidebar-section">
-        <div class="sidebar-section-header">Mobile/tablet UI</div>
         <a href="qr-scan.html" class="sidebar-item" data-title="QR scan">
           <i class="fas fa-qrcode sidebar-item-icon"></i>
           <span>QR scan</span>
@@ -506,7 +497,6 @@
       paginatedUsers.forEach((user, index) => {
         const row = document.createElement('tr');
         row.className = 'animate-fade-in';
-        row.style.animationDelay = `${index * 0.03}s`;
         
         const roleBadgeClass = user.role === 'Admin' ? 'role-admin' : 
                                user.role === 'Technician' ? 'role-technician' : 'role-employee';
@@ -536,10 +526,10 @@
           <td>
             <div style="display: flex; gap: 0.5rem;">
               <button class="btn btn-icon btn-secondary" onclick="editUser('${user.id}')" title="Edit">
-                ✏️
+                <i class="fas fa-edit"></i>
               </button>
               <button class="btn btn-icon btn-danger" onclick="deleteUser('${user.id}')" title="Delete">
-                🗑️
+                <i class="fas fa-trash"></i>
               </button>
             </div>
           </td>

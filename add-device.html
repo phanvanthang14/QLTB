@@ -7,6 +7,64 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="css/shared.css">
   <link rel="stylesheet" href="css/add-device.css">
+  <style>
+    /* Ensure all inputs, selects, and date inputs have the same height */
+    .form-input:not(textarea),
+    .custom-dropdown-button,
+    input[type="date"],
+    input[type="number"],
+    input[type="text"] {
+      height: 44px !important;
+      box-sizing: border-box;
+      padding: 0.75rem 1rem !important;
+    }
+
+    /* Override for textarea */
+    textarea.form-input {
+      height: auto;
+      min-height: 80px;
+      padding: 0.75rem 1rem !important;
+    }
+
+    /* Ensure custom dropdown button maintains height */
+    .custom-dropdown-button {
+      min-height: 44px !important;
+      height: 44px !important;
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem !important;
+    }
+
+    /* Align Holder with Device level - account for form-row-image structure */
+    /* Device level is in form-group-fields inside form-row-image with align-items: flex-start */
+    /* Both should start at the same position after form-section-header */
+    #holderGroup .form-section-content {
+      padding-top: 0;
+    }
+
+    /* Ensure first form-group in holderGroup aligns with Device level */
+    #holderGroup .form-section-content > .form-group:first-child {
+      margin-top: 0;
+    }
+
+    /* Ensure form-group-fields first child also has no margin-top */
+    .form-group-fields > .form-group:first-child {
+      margin-top: 0;
+    }
+
+    /* Ensure form-group spacing is consistent */
+    .form-group {
+      margin-bottom: 0;
+      margin-top: 0;
+    }
+
+    /* Make sure labels have consistent spacing */
+    .form-group label {
+      margin-bottom: 0.375rem;
+      margin-top: 0;
+      display: block;
+    }
+  </style>
 </head>
 <body>
   <header class="header">
@@ -27,30 +85,21 @@
   <div class="sidebar">
     <div class="sidebar-content">
       <div class="sidebar-section">
-        <div class="sidebar-section-header">Admin Desktop</div>
         <a href="dashboard.html" class="sidebar-item" data-title="Dashboard">
           <i class="fas fa-th-large sidebar-item-icon"></i>
           <span>Dashboard</span>
         </a>
-        <a href="index.html" class="sidebar-item" data-title="Device List">
+        <a href="index.html" class="sidebar-item active" data-title="Device list">
           <i class="fas fa-box sidebar-item-icon"></i>
           <span>Device List</span>
         </a>
-        <a href="import-device.html" class="sidebar-item" data-title="Import Device">
-          <i class="fas fa-file-import sidebar-item-icon"></i>
-          <span>Import Device</span>
-        </a>
-        <a href="user-list.html" class="sidebar-item" data-title="User List">
+        <a href="user-list.html" class="sidebar-item active" data-title="User list">
           <i class="fas fa-users sidebar-item-icon"></i>
           <span>User List</span>
         </a>
-      </div>
-      
-      <div class="sidebar-section">
-        <div class="sidebar-section-header">Mobile/Tablet UI</div>
-        <a href="qr-scan.html" class="sidebar-item" data-title="QR Scan">
+        <a href="qr-scan.html" class="sidebar-item" data-title="QR scan">
           <i class="fas fa-qrcode sidebar-item-icon"></i>
-          <span>QR Scan</span>
+          <span>QR scan</span>
         </a>
       </div>
     </div>
@@ -282,7 +331,7 @@
             <div class="form-section-content">
               <div class="form-group">
                 <label>Note</label>
-                <textarea id="deviceNote" class="form-input" rows="3" placeholder="Additional information, special instructions, etc."></textarea>
+                <textarea id="deviceNote" class="form-input" rows="3" placeholder="Additional information, special instructions, etc." style="height: 148px;"></textarea>
               </div>
             </div>
           </div>
@@ -290,13 +339,14 @@
 
         <!-- Right Column -->
         <div class="form-column">
-          <!-- Assignment (container only) -->
+          <!-- Assignment & purchase information -->
           <div class="form-section" id="holderGroup">
-            <div class="form-section-header">
-              <h2>Assignment</h2>
+            <div class="form-section-header" style="height: 44px;">
+              <h2>Assignment & purchase information</h2>
             </div>
-            <div class="form-section-content">
-              <div class="form-group">
+            <div class="form-section-content" style="padding-top: 0;">
+              <!-- Holder (employee) - for Container -->
+              <div class="form-group" id="holderEmployeeGroup">
                 <label>Holder (employee) <span class="required">*</span></label>
                 <div class="custom-dropdown" id="holderSelectDropdown">
                   <button type="button" class="custom-dropdown-button">
@@ -326,19 +376,26 @@
                   </select>
                 </div>
               </div>
+              <!-- Parent Device - for Component -->
+              <div class="form-group" id="holderParentDeviceGroup" style="display: none;">
+                <label>Parent Device <span class="required">*</span></label>
+                <div class="custom-dropdown" id="parentDeviceSelectDropdownInHolder">
+                  <button type="button" class="custom-dropdown-button">
+                    <span class="custom-dropdown-text">Select parent device...</span>
+                    <i class="fas fa-chevron-down custom-dropdown-icon"></i>
+                  </button>
+                  <div class="custom-dropdown-menu">
+                    <!-- Options will be populated dynamically -->
+                  </div>
+                  <select id="parentDeviceSelectInHolder" class="hidden">
+                    <option value="">Select parent device...</option>
+                  </select>
+                </div>
+              </div>
               <div class="form-group">
                 <label>Assigned date</label>
                 <input type="date" id="assignedDate" class="form-input">
               </div>
-            </div>
-          </div>
-
-          <!-- Purchase information (container only) -->
-          <div class="form-section" id="purchaseGroup">
-            <div class="form-section-header">
-              <h2>Purchase information</h2>
-            </div>
-            <div class="form-section-content">
               <div class="form-row">
                 <div class="form-group">
                   <label>Purchase date</label>
@@ -363,6 +420,11 @@
             </div>
             <div class="form-section-content">
               <div id="specsContainer" class="specs-container-scroll">
+                <div class="spec-row">
+                  <input type="text" class="form-input spec-key" placeholder="Key">
+                  <input type="text" class="form-input spec-value" placeholder="Value">
+                  <button type="button" class="btn-remove-spec" onclick="removeSpecRow(this)">×</button>
+                </div>
                 <div class="spec-row">
                   <input type="text" class="form-input spec-key" placeholder="Key">
                   <input type="text" class="form-input spec-value" placeholder="Value">
@@ -409,6 +471,7 @@
     async function loadDevices() {
       originalDevices = await AssetFlowUtils.loadJSON('data/devices.json');
       populateParentDevices();
+      populateParentDevicesInHolder();
     }
     
     function populateHolderSelect() {
@@ -454,8 +517,8 @@
 
       const parentGroup = document.getElementById('parentDeviceGroup');
       const holderGroup = document.getElementById('holderGroup');
-      const purchaseGroup = document.getElementById('purchaseGroup');
-      const priceGroup = document.getElementById('priceGroup');
+      const holderEmployeeGroup = document.getElementById('holderEmployeeGroup');
+      const holderParentDeviceGroup = document.getElementById('holderParentDeviceGroup');
       const specsGroup = document.getElementById('specsGroup');
       const categorySelect = document.getElementById('deviceCategorySelect');
       const categoryDropdown = document.getElementById('deviceCategorySelectDropdown');
@@ -478,17 +541,25 @@
       }
       
       if (type === 'Component') {
-        parentGroup.style.display = 'block';
-        holderGroup.style.display = 'none';
-        purchaseGroup.style.display = 'none';
-        priceGroup.style.display = 'none';
-        specsGroup.style.display = 'none';
-      } else {
+        // Hide the standalone parent device group
         parentGroup.style.display = 'none';
+        // Show all groups (same as Container)
         holderGroup.style.display = '';
-        purchaseGroup.style.display = '';
-        priceGroup.style.display = '';
         specsGroup.style.display = '';
+        // Switch holder group content: hide employee, show parent device
+        if (holderEmployeeGroup) holderEmployeeGroup.style.display = 'none';
+        if (holderParentDeviceGroup) holderParentDeviceGroup.style.display = '';
+        // Populate parent devices in holder group
+        populateParentDevicesInHolder();
+      } else {
+        // Hide the standalone parent device group
+        parentGroup.style.display = 'none';
+        // Show all groups
+        holderGroup.style.display = '';
+        specsGroup.style.display = '';
+        // Switch holder group content: show employee, hide parent device
+        if (holderEmployeeGroup) holderEmployeeGroup.style.display = '';
+        if (holderParentDeviceGroup) holderParentDeviceGroup.style.display = 'none';
       }
     }
 
@@ -499,6 +570,40 @@
     function populateParentDevices() {
       const select = document.getElementById('parentDeviceSelect');
       const menu = document.getElementById('parentDeviceSelectDropdown')?.querySelector('.custom-dropdown-menu');
+      if (!select || !menu) return;
+      
+      select.innerHTML = '<option value="">Select parent device...</option>';
+      menu.innerHTML = '';
+      
+      // Add default option to menu
+      const defaultOption = document.createElement('div');
+      defaultOption.className = 'custom-dropdown-option';
+      defaultOption.dataset.value = '';
+      defaultOption.textContent = 'Select parent device...';
+      menu.appendChild(defaultOption);
+      
+      // Only show Container devices as parent options
+      originalDevices.forEach(device => {
+        if (device.isParent === true) {
+          // Add to hidden select
+          const option = document.createElement('option');
+          option.value = device.id;
+          option.textContent = `${device.name} (${device.serialNumber})`;
+          select.appendChild(option);
+          
+          // Add to custom dropdown menu
+          const menuOption = document.createElement('div');
+          menuOption.className = 'custom-dropdown-option';
+          menuOption.dataset.value = device.id;
+          menuOption.textContent = `${device.name} (${device.serialNumber})`;
+          menu.appendChild(menuOption);
+        }
+      });
+    }
+    
+    function populateParentDevicesInHolder() {
+      const select = document.getElementById('parentDeviceSelectInHolder');
+      const menu = document.getElementById('parentDeviceSelectDropdownInHolder')?.querySelector('.custom-dropdown-menu');
       if (!select || !menu) return;
       
       select.innerHTML = '<option value="">Select parent device...</option>';
@@ -600,36 +705,77 @@
       
       // Handle Component
       if (currentDeviceCategory === 'Component') {
-        const parentId = document.getElementById('parentDeviceSelect').value;
+        const parentId = document.getElementById('parentDeviceSelectInHolder').value;
         
-        if (parentId) {
-          // Component has parent - add to parent's children array
-          const parentDevice = originalDevices.find(d => d.id === parentId);
-          if (!parentDevice) {
-            alert('Parent device not found');
-            return;
+        // Collect specs for Component (same as Container)
+        const specs = {};
+        document.querySelectorAll('.spec-row').forEach(row => {
+          const key = row.querySelector('.spec-key').value.trim();
+          const value = row.querySelector('.spec-value').value.trim();
+          if (key && value) {
+            specs[key] = value;
           }
-          
-          // Add component to parent's children array
-          if (!parentDevice.children) {
-            parentDevice.children = [];
-          }
-          
-          parentDevice.children.push({
-            id: formData.id,
-            qrCode: formData.qrCode,
-            name: formData.name,
-            type: formData.type,
-            category: formData.category,
-            serialNumber: formData.serialNumber,
-            status: formData.status
-          });
-        } else {
-          // Component without parent - add as standalone device
-          formData.children = [];
-          originalDevices.push(formData);
+        });
+        if (Object.keys(specs).length > 0) {
+          formData.specs = specs;
         }
         
+        // Collect purchase info for Component (same as Container)
+        const purchaseDate = document.getElementById('purchaseDate').value;
+        if (purchaseDate) formData.purchaseDate = purchaseDate;
+        
+        const warrantyExpiry = document.getElementById('warrantyExpiry').value;
+        if (warrantyExpiry) formData.warrantyExpiry = warrantyExpiry;
+        
+        const price = document.getElementById('devicePrice').value;
+        if (price) formData.price = parseInt(price);
+        
+        const assignedDate = document.getElementById('assignedDate').value;
+        if (assignedDate) formData.assignedDate = assignedDate;
+        
+        // Helper function to process form data after image is read (if any)
+        const processFormSubmission = async (imageData) => {
+          // Add device image if uploaded
+          if (imageData) {
+            formData.image = imageData; // Base64 encoded image
+            formData.imageName = deviceImageFile.name;
+          }
+          
+          if (parentId) {
+            // Component has parent - add to parent's children array
+            const parentDevice = originalDevices.find(d => d.id === parentId);
+            if (!parentDevice) {
+              alert('Parent device not found');
+              return;
+            }
+            
+            // Add component to parent's children array
+            if (!parentDevice.children) {
+              parentDevice.children = [];
+            }
+            
+            parentDevice.children.push({
+              id: formData.id,
+              qrCode: formData.qrCode,
+              name: formData.name,
+              type: formData.type,
+              category: formData.category,
+              serialNumber: formData.serialNumber,
+              status: formData.status,
+              specs: formData.specs,
+              purchaseDate: formData.purchaseDate,
+              warrantyExpiry: formData.warrantyExpiry,
+              price: formData.price,
+              assignedDate: formData.assignedDate,
+              image: formData.image,
+              imageName: formData.imageName
+            });
+          } else {
+            // Component without parent - add as standalone device
+            formData.children = [];
+            originalDevices.push(formData);
+          }
+          
           // Save to JSON file
           await saveDevicesToJSON();
           
@@ -637,10 +783,23 @@
           setTimeout(() => {
             window.location.href = 'index.html';
           }, 1500);
-          return;
+        };
+        
+        // If image is uploaded, read it first, then process form
+        if (deviceImageFile) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            processFormSubmission(e.target.result);
+          };
+          reader.readAsDataURL(deviceImageFile);
+        } else {
+          processFormSubmission(null);
         }
         
-        // Handle Container
+        return;
+      }
+        
+      // Handle Container
       const specs = {};
       document.querySelectorAll('.spec-row').forEach(row => {
         const key = row.querySelector('.spec-key').value.trim();
@@ -684,48 +843,6 @@
         if (imageData) {
           formData.image = imageData; // Base64 encoded image
           formData.imageName = deviceImageFile.name;
-        }
-        
-        // Handle Component
-        if (currentDeviceCategory === 'Component') {
-          const parentId = document.getElementById('parentDeviceSelect').value;
-          
-          if (parentId) {
-            // Component has parent - add to parent's children array
-            const parentDevice = originalDevices.find(d => d.id === parentId);
-            if (!parentDevice) {
-              alert('Parent device not found');
-              return;
-            }
-            
-            // Add component to parent's children array
-            if (!parentDevice.children) {
-              parentDevice.children = [];
-            }
-            
-            parentDevice.children.push({
-              id: formData.id,
-              qrCode: formData.qrCode,
-              name: formData.name,
-              type: formData.type,
-              category: formData.category,
-              serialNumber: formData.serialNumber,
-              status: formData.status
-            });
-          } else {
-            // Component without parent - add as standalone device
-            formData.children = [];
-            originalDevices.push(formData);
-          }
-          
-          // Save to JSON file
-          await saveDevicesToJSON();
-          
-          AssetFlowUtils.showToast('Component added successfully!', 'success');
-          setTimeout(() => {
-            window.location.href = 'index.html';
-          }, 1500);
-          return;
         }
         
         // Handle Container
@@ -821,6 +938,7 @@
       const reader = new FileReader();
       reader.onload = (e) => {
         imagePreview.src = e.target.result;
+        imagePreviewContainer.style.display = 'block';
         imagePreviewContainer.classList.add('show');
         imageUploadArea.style.display = 'none';
       };
@@ -831,6 +949,7 @@
       deviceImageFile = null;
       deviceImageInput.value = '';
       imagePreviewContainer.classList.remove('show');
+      imagePreviewContainer.style.display = 'none';
       imageUploadArea.style.display = 'flex';
       imagePreview.src = '';
     }
@@ -899,6 +1018,50 @@
         const button = parentDeviceDropdown.querySelector('.custom-dropdown-button');
         const menu = parentDeviceDropdown.querySelector('.custom-dropdown-menu');
         const hiddenSelect = parentDeviceDropdown.querySelector('select');
+        
+        button.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = menu.classList.contains('show');
+          closeAllDropdowns();
+          if (!isOpen) {
+            menu.classList.add('show');
+            button.classList.add('active');
+          }
+        });
+        
+        menu.addEventListener('click', (e) => {
+          const option = e.target.closest('.custom-dropdown-option');
+          if (!option) return;
+          
+          e.stopPropagation();
+          const value = option.dataset.value || '';
+          const text = option.textContent;
+          
+          // Update button text
+          button.querySelector('.custom-dropdown-text').textContent = text;
+          
+          // Update selected state
+          menu.querySelectorAll('.custom-dropdown-option').forEach(opt => opt.classList.remove('selected'));
+          option.classList.add('selected');
+          
+          // Update hidden select
+          if (hiddenSelect) {
+            hiddenSelect.value = value;
+            hiddenSelect.dispatchEvent(new Event('change'));
+          }
+          
+          // Close menu
+          menu.classList.remove('show');
+          button.classList.remove('active');
+        });
+      }
+      
+      // Parent Device Dropdown in Holder Group (for Component)
+      const parentDeviceDropdownInHolder = document.getElementById('parentDeviceSelectDropdownInHolder');
+      if (parentDeviceDropdownInHolder) {
+        const button = parentDeviceDropdownInHolder.querySelector('.custom-dropdown-button');
+        const menu = parentDeviceDropdownInHolder.querySelector('.custom-dropdown-menu');
+        const hiddenSelect = parentDeviceDropdownInHolder.querySelector('select');
         
         button.addEventListener('click', (e) => {
           e.stopPropagation();

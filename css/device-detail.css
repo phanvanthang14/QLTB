@@ -780,7 +780,11 @@
 .tabs {
   display: flex;
   gap: 0.5rem;
-  margin-bottom: 1.5rem;
+  background-color: var(--bg-primary);
+  border-top: 1px solid var(--border-color);
+  border-left: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
   border-bottom: 2px solid var(--border-color);
 }
 
@@ -814,7 +818,10 @@
 
 .content-card {
   background: var(--bg-primary);
-  border-radius: var(--radius-lg);
+  border-bottom: 1px solid var(--border-color);
+  border-left: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   padding: 1.5rem;
   box-shadow: var(--shadow-md);
   margin-bottom: 1.5rem;

@@ -20,7 +20,6 @@
 .form-column {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
   background: var(--bg-primary);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
@@ -118,12 +117,13 @@
 .image-upload-wrapper {
   display: flex;
   align-items: flex-start;
+  height: 100%;
   gap: 0;
 }
 
 .image-upload-area {
-  width: 120px;
-  height: 115px;
+  width: 140px;
+  height: 140px;
   border: 2px dashed var(--border-color);
   border-radius: var(--radius-md);
   padding: 0.75rem;
@@ -177,8 +177,8 @@
 
 .image-preview-wrapper {
   position: relative;
-  width: 120px;
-  height: 115px;
+  width: 140px;
+  height: 140px;
   border-radius: var(--radius-md);
   overflow: hidden;
   border: 1px solid var(--border-color);
@@ -285,6 +285,7 @@
 }
 
 .form-group-image {
+  height: 100%;
   flex-shrink: 0;
 }
 
@@ -333,7 +334,7 @@
 }
 
 .specs-container-scroll {
-  height: 10rem;
+  height: calc(100vh - 45rem);
   overflow-y: auto;
   overflow-x: hidden;
   padding-right: 0.5rem;
@@ -601,5 +602,32 @@ textarea.form-input {
 
 .hidden {
   display: none !important;
+}
+
+/* Align Holder with Device level */
+#holderGroup .form-section-content {
+  padding-top: 0;
+}
+
+/* Ensure all inputs, selects, and date inputs have the same height */
+.form-input,
+.custom-dropdown-button,
+input[type="date"],
+input[type="number"],
+input[type="text"] {
+  height: 44px;
+  box-sizing: border-box;
+}
+
+/* Override for textarea */
+textarea.form-input {
+  height: auto;
+  min-height: 80px;
+}
+
+/* Ensure custom dropdown button maintains height */
+.custom-dropdown-button {
+  min-height: 44px;
+  height: 44px;
 }
 
