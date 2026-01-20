@@ -50,26 +50,7 @@
   gap: 0.75rem;
 }
 
-.add-user-btn {
-  /* Use common button styles (shared.css): .btn + .btn-primary */
-  padding: 0.5rem 1rem;
-  font-weight: 500;
-  box-shadow: none;
-}
-
-.add-user-btn:hover {
-  transform: none;
-  box-shadow: none;
-}
-
-.add-user-btn:active {
-  transform: translateY(0);
-}
-
-.add-icon {
-  font-size: 20px;
-  line-height: 1;
-}
+/* Use common .add-device-btn from shared.css for consistency */
 
 /* Search and Filter Bar */
 .search-filter-bar {
@@ -409,6 +390,18 @@
   overflow-y: auto;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  width: 100%;
+}
+
+/* Ensure table can scroll horizontally on small screens */
+@media (max-width: 1200px) {
+  .user-table-wrapper {
+    overflow-x: auto;
+  }
+  
+  .user-table {
+    min-width: 800px;
+  }
 }
 
 .table-controls {
@@ -425,7 +418,7 @@
 }
 
 .table-info {
-  font-size: 13px;
+  font-size: 13px; /* Table Footer: 13px */
   line-height: 1.5;
   color: var(--text-secondary);
   font-weight: 500;
@@ -476,8 +469,8 @@
 
 .user-table th {
   padding: 0.5rem 1rem;
-  text-align: left;
-  font-size: 13px;
+  text-align: left; /* Default: left align, will be overridden for Actions column */
+  font-size: 13px; /* Table Header: 13px */
   font-weight: 600;
   line-height: 1.5;
   color: var(--text-primary);
@@ -488,6 +481,11 @@
   user-select: none;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* Center align for Actions column */
+.user-table th:nth-child(7) {
+  text-align: center;
 }
 
 .user-table th.sortable {
@@ -533,7 +531,7 @@
 
 .user-table td {
   padding: 0.5rem 1rem;
-  font-size: 14px;
+  font-size: 14px; /* Table Cell: 14px */
   line-height: 1.5;
   color: var(--text-primary);
   border-bottom: 1px solid var(--border-color);
@@ -541,28 +539,30 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-align: left; /* Default: left align, will be overridden for Actions column */
 }
 
-/* Column widths (match device list feel) */
-.user-table th:nth-child(1),
-.user-table td:nth-child(1) { width: 18%; }
-.user-table th:nth-child(2),
-.user-table td:nth-child(2) { width: 22%; }
-.user-table th:nth-child(3),
-.user-table td:nth-child(3) { width: 14%; }
-.user-table th:nth-child(4),
-.user-table td:nth-child(4) { width: 14%; }
-.user-table th:nth-child(5),
-.user-table td:nth-child(5) { width: 18%; }
-.user-table th:nth-child(6),
-.user-table td:nth-child(6) { width: 8%; }
-.user-table th:nth-child(7),
-.user-table td:nth-child(7) { width: 6%; }
-
-.user-table th:nth-child(7),
+/* Center align for Actions column */
 .user-table td:nth-child(7) {
   text-align: center;
 }
+
+/* Column widths (match device list feel) */
+/* Column order: Name, Email, Department, Team, Position, Role, Actions */
+.user-table th:nth-child(1),
+.user-table td:nth-child(1) { width: 18%; text-align: left; }
+.user-table th:nth-child(2),
+.user-table td:nth-child(2) { width: 22%; text-align: left; }
+.user-table th:nth-child(3),
+.user-table td:nth-child(3) { width: 14%; text-align: left; }
+.user-table th:nth-child(4),
+.user-table td:nth-child(4) { width: 14%; text-align: left; }
+.user-table th:nth-child(5),
+.user-table td:nth-child(5) { width: 18%; text-align: left; }
+.user-table th:nth-child(6),
+.user-table td:nth-child(6) { width: 8%; text-align: left; }
+.user-table th:nth-child(7),
+.user-table td:nth-child(7) { width: 6%; text-align: center; } /* Actions */
 
 .user-table td:nth-child(7) > div {
   justify-content: center;
@@ -570,20 +570,21 @@
 
 @media (max-width: 768px) {
   /* Mobile: fixed widths for readability (7 columns) */
+  /* Column order: Name, Email, Department, Team, Position, Role, Actions */
   .user-table th:nth-child(1),
-  .user-table td:nth-child(1) { width: 200px !important; }
+  .user-table td:nth-child(1) { width: 200px !important; text-align: left; }
   .user-table th:nth-child(2),
-  .user-table td:nth-child(2) { width: 220px !important; }
+  .user-table td:nth-child(2) { width: 220px !important; text-align: left; }
   .user-table th:nth-child(3),
-  .user-table td:nth-child(3) { width: 160px !important; }
+  .user-table td:nth-child(3) { width: 160px !important; text-align: left; }
   .user-table th:nth-child(4),
-  .user-table td:nth-child(4) { width: 160px !important; }
+  .user-table td:nth-child(4) { width: 160px !important; text-align: left; }
   .user-table th:nth-child(5),
-  .user-table td:nth-child(5) { width: 200px !important; }
+  .user-table td:nth-child(5) { width: 200px !important; text-align: left; }
   .user-table th:nth-child(6),
-  .user-table td:nth-child(6) { width: 130px !important; }
+  .user-table td:nth-child(6) { width: 130px !important; text-align: left; }
   .user-table th:nth-child(7),
-  .user-table td:nth-child(7) { width: 110px !important; }
+  .user-table td:nth-child(7) { width: 110px !important; text-align: center; } /* Actions */
 }
 
 .user-name-cell {
@@ -908,7 +909,7 @@
     flex-wrap: wrap;
   }
   
-  .add-user-btn {
+  .add-device-btn {
     flex: 1;
     min-width: 140px;
   }
@@ -952,10 +953,53 @@
   .user-table-wrapper {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    width: 100%;
   }
   
   .user-table {
     min-width: 800px;
   }
+}
+
+/* Common styles for all action icon buttons in user list */
+.user-action-btn {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: transparent !important;
+  border: none;
+}
+
+/* Icon colors for action buttons */
+.user-action-edit i {
+  color: var(--primary-color);
+}
+
+.user-action-delete i {
+  color: var(--danger-color);
+}
+
+/* Common hover effect for ALL action buttons (edit, delete) - override btn-secondary:hover and btn-danger:hover */
+.btn.btn-icon.btn-secondary.user-action-btn:hover,
+.btn.btn-icon.btn-secondary.user-action-btn[style*="pointer-events: none"]:hover,
+.btn.btn-icon.btn-danger.user-action-btn:hover,
+.btn.btn-icon.btn-danger.user-action-btn[style*="pointer-events: none"]:hover {
+  background: var(--bg-primary) !important;
+  border: none !important;
+}
+
+.user-action-btn:hover i,
+.user-action-btn[style*="pointer-events: none"]:hover i {
+  opacity: 1 !important;
+}
+
+/* Icon colors on hover - all buttons */
+.user-action-edit:hover i,
+.user-action-edit[style*="pointer-events: none"]:hover i {
+  color: var(--primary-color) !important;
+}
+
+.user-action-delete:hover i,
+.user-action-delete[style*="pointer-events: none"]:hover i {
+  color: var(--danger-color) !important;
 }
 

@@ -28,10 +28,6 @@
   <div class="sidebar">
     <div class="sidebar-content">
       <div class="sidebar-section">
-        <a href="dashboard.html" class="sidebar-item" data-title="Dashboard">
-          <i class="fas fa-th-large sidebar-item-icon"></i>
-          <span>Dashboard</span>
-        </a>
         <a href="index.html" class="sidebar-item active" data-title="Device list">
           <i class="fas fa-box sidebar-item-icon"></i>
           <span>Device List</span>
@@ -155,10 +151,6 @@
         <button class="qr-action-btn" onclick="downloadQRCodeModal()">
           <i class="fas fa-download"></i>
           <span>Tải xuống</span>
-        </button>
-        <button class="qr-action-btn" onclick="printQRCodeModal()">
-          <i class="fas fa-print"></i>
-          <span>In</span>
         </button>
         <button class="qr-action-btn" onclick="shareQRCodeModal()">
           <i class="fas fa-share-alt"></i>
@@ -416,60 +408,6 @@
       link.click();
       
       AssetFlowUtils.showToast('QR code downloaded', 'success');
-    }
-    
-    function printQRCodeModal() {
-      if (!currentQRModalData) return;
-      
-      const canvas = document.getElementById('qr-canvas');
-      if (!canvas) {
-        AssetFlowUtils.showToast('QR code not ready', 'error');
-        return;
-      }
-      
-      const printWindow = window.open('', '_blank');
-      printWindow.document.write(`
-        <html>
-          <head>
-            <title>QR Code - ${currentQRModalData.deviceId}</title>
-            <style>
-              body {
-                margin: 0;
-                padding: 2rem;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                font-family: Arial, sans-serif;
-              }
-              h2 {
-                margin: 0 0 0.5rem 0;
-                font-size: 1.5rem;
-              }
-              p {
-                margin: 0.5rem 0 0 0;
-                color: #666;
-                font-size: 0.875rem;
-              }
-              img {
-                margin: 1rem 0;
-              }
-            </style>
-          </head>
-          <body>
-            <h2>QR Code - ${currentQRModalData.deviceId}</h2>
-            <p>${currentQRModalData.deviceName}</p>
-            <img src="${canvas.toDataURL('image/png')}" alt="QR Code">
-            <p>Quét QR code để xem thông tin tài sản</p>
-          </body>
-        </html>
-      `);
-      printWindow.document.close();
-      printWindow.focus();
-      setTimeout(() => {
-        printWindow.print();
-        printWindow.close();
-      }, 250);
     }
     
     function shareQRCodeModal() {

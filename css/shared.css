@@ -37,48 +37,83 @@ body {
   font-size: 14px;
   background-color: #f5f5f7;
   color: var(--text-primary);
-  line-height: 1.5;
+  line-height: 1.5; /* Within range 1.4-1.6 */
+  font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* ============================================
+   TYPOGRAPHY STANDARDS
+   ============================================
+   
+   Base Rules:
+   - Font-size: 14px (base)
+   - Font-family: Inter, Roboto, Noto Sans (priority order)
+   - Line-height: 1.4 - 1.6 (no auto)
+   - Font-weight: 400 / 500 / 600 (standard weights)
+   
+   Font Size by Component:
+   - Page Title (H1): 24px
+   - Section Title (H2): 20px
+   - Subsection (H3): 16px
+   - Main content: 14px
+   - Secondary text: 13px
+   - Helper/Hint: 12px
+   
+   Table:
+   - Header: 13px
+   - Cell: 14px
+   - Footer: 13px
+   
+   Form:
+   - Input text: 14px
+   - Label: 13px
+   - Placeholder: 12px
+   - Error message: 12px
+   
+   Button:
+   - Font-size: 14px
+   - Font-weight: 500 (standardized)
+   ============================================ */
+
 /* Typography - Base Rules */
 h1, .h1 {
-  font-size: 24px;
+  font-size: 24px; /* Page Title */
   font-weight: 600;
   line-height: 1.4;
   margin: 0;
 }
 
 h2, .h2 {
-  font-size: 20px;
+  font-size: 20px; /* Section Title */
   font-weight: 600;
   line-height: 1.4;
   margin: 0;
 }
 
 h3, .h3 {
-  font-size: 16px;
+  font-size: 16px; /* Subsection */
   font-weight: 600;
-  line-height: 1.5;
+  line-height: 1.4;
   margin: 0;
 }
 
 /* Main content */
 p, span, div, a {
-  font-size: 14px;
+  font-size: 14px; /* Main content */
   line-height: 1.5;
 }
 
 /* Secondary text */
 .text-secondary, .secondary-text {
-  font-size: 13px;
+  font-size: 13px; /* Secondary text */
   line-height: 1.5;
 }
 
 /* Helper / Hint */
 .helper-text, .hint-text, .error-message {
-  font-size: 12px;
+  font-size: 12px; /* Helper / Hint */
   line-height: 1.4;
 }
 
@@ -615,21 +650,77 @@ p, span, div, a {
   color: #374151;
 }
 
-/* Buttons */
+/* Buttons - Standardized */
+/* Ensure both <a> and <button> with .btn class render identically */
+a.btn,
+button.btn,
 .btn {
   display: inline-flex;
-  align-items: center;
+  align-items: center; /* Center align items vertically */
   justify-content: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
   border-radius: var(--radius-md);
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 14px; /* Button: 14px */
+  font-weight: 500; /* Standardized: ALL buttons use 500 */
   line-height: 1.5;
   border: none;
   cursor: pointer;
-  transition: var(--transition);
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; /* Only transition colors, not transform */
   text-decoration: none;
+  font-family: inherit; /* Ensure same font family */
+  box-sizing: border-box;
+  vertical-align: middle; /* Align baseline */
+}
+
+/* Reset default button styles */
+button.btn {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: transparent; /* Will be overridden by .btn-primary, etc. */
+}
+
+/* Reset default anchor styles */
+a.btn {
+  color: inherit; /* Will be overridden by .btn-primary, etc. */
+}
+
+/* Common style for add-device-btn and add-user-btn */
+/* Ensure both <a> and <button> render identically */
+a.add-device-btn,
+button.add-device-btn,
+.add-device-btn {
+  /* Extend from .btn base class - use same padding */
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  color: white;
+  border: none;
+  font-weight: 500; /* Standardized: all buttons use 500 */
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+  /* .btn already has display: inline-flex, align-items: center, gap: 0.5rem */
+  line-height: 1.5; /* Ensure consistent line-height */
+  font-family: inherit; /* Ensure same font family */
+  transition: none; /* Remove transition to prevent flickering on hover */
+}
+
+/* Remove hover effects that cause flickering */
+a.add-device-btn:hover,
+button.add-device-btn:hover,
+.add-device-btn:hover {
+  transform: none;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3); /* Keep same shadow */
+}
+
+.add-icon {
+  font-size: 20px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 1em; /* Match line-height of text */
+  vertical-align: middle; /* Ensure vertical alignment */
+  font-family: inherit; /* Ensure same font family */
 }
 
 .btn-primary {
@@ -682,7 +773,7 @@ p, span, div, a {
 .form-label {
   display: block;
   margin-bottom: 0.5rem;
-  font-size: 13px;
+  font-size: 13px; /* Form Label: 13px */
   font-weight: 500;
   line-height: 1.5;
   color: var(--text-primary);
@@ -693,13 +784,13 @@ p, span, div, a {
   padding: 0.75rem;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
-  font-size: 14px;
+  font-size: 14px; /* Form Input: 14px */
   line-height: 1.5;
   transition: var(--transition);
 }
 
 .form-input::placeholder {
-  font-size: 12px;
+  font-size: 12px; /* Form Placeholder: 12px */
   color: var(--text-secondary);
 }
 
@@ -710,7 +801,7 @@ p, span, div, a {
 }
 
 .error-message {
-  font-size: 12px;
+  font-size: 12px; /* Form Error: 12px */
   line-height: 1.4;
   color: var(--danger-color);
   margin-top: 0.25rem;

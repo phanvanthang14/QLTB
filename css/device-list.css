@@ -552,39 +552,7 @@
   gap: 0.75rem;
 }
 
-.add-device-btn {
-  padding: 0.625rem 1.25rem;
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-  color: white;
-  border: none;
-  border-radius: var(--radius-md);
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.5;
-  cursor: pointer;
-  transition: var(--transition);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
-  text-decoration: none;
-}
-
-.add-device-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
-}
-
-.add-device-btn:active {
-  transform: translateY(0);
-}
-
-
-.add-icon {
-  font-size: 20px;
-  line-height: 1;
-}
+/* Use common .add-device-btn from shared.css for consistency */
 
 .device-grid {
   display: grid;
@@ -858,21 +826,19 @@
 }
 
 .view-btn {
+  /* Match add-device-btn style: same padding, border, box-shadow, hover */
   padding: 0.5rem 1rem;
-  border: 1px solid var(--border-color);
+  border: none;
   background: var(--bg-primary);
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  transition: var(--transition);
-  font-size: 14px;
+  color: var(--text-primary);
   font-weight: 500;
-  line-height: 1.5;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .view-btn.active {
-  background: var(--primary-color);
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
   color: white;
-  border-color: var(--primary-color);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
 }
 
 .device-table-wrapper {
@@ -905,7 +871,7 @@
 }
 
 .table-info {
-  font-size: 13px;
+  font-size: 13px; /* Table Footer: 13px */
   line-height: 1.5;
   color: var(--text-secondary);
   font-weight: 500;
@@ -964,7 +930,7 @@
   padding: 0.5rem 1rem;
   text-align: left;
   font-weight: 600;
-  font-size: 13px;
+  font-size: 13px; /* Table Header: 13px */
   line-height: 1.5;
   color: var(--text-primary);
   border-bottom: 2px solid var(--border-color);
@@ -974,6 +940,12 @@
   user-select: none;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* Center align for QR Code and Actions columns */
+.device-table th:nth-child(2),
+.device-table th:nth-child(9) {
+  text-align: center;
 }
 
 .device-table th.sortable {
@@ -1015,57 +987,73 @@
 }
 
 /* Desktop: percent-based widths for stability */
+/* Column order: Device, QR Code, Serial/ID, Type, Category, Holder/Users, Location/Info, Status, Actions */
 .device-table th:nth-child(1),
-.device-table td:nth-child(1) { width: 18%; }
+.device-table td:nth-child(1) { width: 18%; text-align: left; }
 .device-table th:nth-child(2),
-.device-table td:nth-child(2) { width: 8%; }
+.device-table td:nth-child(2) { width: 8%; text-align: center; } /* QR Code */
 .device-table th:nth-child(3),
-.device-table td:nth-child(3) { width: 10%; }
+.device-table td:nth-child(3) { width: 10%; text-align: left; }
 .device-table th:nth-child(4),
-.device-table td:nth-child(4) { width: 8%; }
+.device-table td:nth-child(4) { width: 8%; text-align: left; }
 .device-table th:nth-child(5),
-.device-table td:nth-child(5) { width: 10%; }
+.device-table td:nth-child(5) { width: 10%; text-align: left; }
 .device-table th:nth-child(6),
-.device-table td:nth-child(6) { width: 10%; }
+.device-table td:nth-child(6) { width: 13%; text-align: left; }
 .device-table th:nth-child(7),
-.device-table td:nth-child(7) { width: 14%; }
+.device-table td:nth-child(7) { width: 13%; text-align: left; }
 .device-table th:nth-child(8),
-.device-table td:nth-child(8) { width: 14%; }
+.device-table td:nth-child(8) { width: 10%; text-align: left; } /* Status */
 .device-table th:nth-child(9),
-.device-table td:nth-child(9) { width: 8%; }
+.device-table td:nth-child(9) { width: 10%; text-align: center; } /* Actions */
 
 
 @media (max-width: 768px) {
   /* Mobile: use fixed pixel widths for all columns to preserve readability (9 columns) */
+  /* Column order: Device, QR Code, Serial/ID, Type, Category, Holder/Users, Location/Info, Status, Actions */
   .device-table th:nth-child(1),
-  .device-table td:nth-child(1) { width: 220px !important; }
+  .device-table td:nth-child(1) { width: 220px !important; text-align: left; }
   .device-table th:nth-child(2),
-  .device-table td:nth-child(2) { width: 100px !important; }
+  .device-table td:nth-child(2) { width: 100px !important; text-align: center; } /* QR Code */
   .device-table th:nth-child(3),
-  .device-table td:nth-child(3) { width: 120px !important; }
+  .device-table td:nth-child(3) { width: 120px !important; text-align: left; }
   .device-table th:nth-child(4),
-  .device-table td:nth-child(4) { width: 100px !important; }
+  .device-table td:nth-child(4) { width: 100px !important; text-align: left; }
   .device-table th:nth-child(5),
-  .device-table td:nth-child(5) { width: 120px !important; }
+  .device-table td:nth-child(5) { width: 120px !important; text-align: left; }
   .device-table th:nth-child(6),
-  .device-table td:nth-child(6) { width: 130px !important; }
+  .device-table td:nth-child(6) { width: 150px !important; text-align: left; }
   .device-table th:nth-child(7),
-  .device-table td:nth-child(7) { width: 150px !important; }
+  .device-table td:nth-child(7) { width: 160px !important; text-align: left; }
   .device-table th:nth-child(8),
-  .device-table td:nth-child(8) { width: 160px !important; }
+  .device-table td:nth-child(8) { width: 130px !important; text-align: left; } /* Status */
   .device-table th:nth-child(9),
-  .device-table td:nth-child(9) { width: 100px !important; }
+  .device-table td:nth-child(9) { width: 100px !important; text-align: center; } /* Actions */
 }
 
 .device-table td {
   padding: 0.5rem 1rem;
   border-bottom: 1px solid var(--border-color);
   vertical-align: middle;
-  font-size: 14px;
+  font-size: 14px; /* Table Cell: 14px */
   line-height: 1.5;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-align: left; /* Default: left align, will be overridden for specific columns */
+}
+
+/* Center align for QR Code and Actions columns */
+.device-table td:nth-child(2),
+.device-table td:nth-child(9) {
+  text-align: center;
+}
+
+/* Center align content in QR Code and Actions cells */
+.device-table td:nth-child(2) > div,
+.device-table td:nth-child(9) > div {
+  justify-content: center;
+  display: flex;
 }
 
 .device-table td:first-child {
@@ -1222,8 +1210,98 @@
   opacity: 0.5;
 }
 
+/* Common styles for all action icon buttons */
 .table-action-btn {
   cursor: pointer;
+  transition: all 0.2s ease;
+  background: transparent !important;
+  border: none;
+}
+
+/* Icon colors for action buttons */
+.table-action-edit i {
+  color: var(--primary-color);
+}
+
+.table-action-delete i {
+  color: var(--danger-color);
+}
+
+/* Common hover effect for ALL action buttons (view, edit, delete) - override btn-secondary:hover */
+.btn.btn-icon.btn-secondary.table-action-btn:hover,
+.btn.btn-icon.btn-secondary.table-action-btn[style*="pointer-events: none"]:hover {
+  background: var(--bg-primary) !important;
+  border: none !important;
+}
+
+.table-action-btn:hover i,
+.table-action-btn[style*="pointer-events: none"]:hover i {
+  opacity: 1 !important;
+}
+
+/* Icon colors on hover - all buttons */
+.table-action-view:hover i,
+.table-action-edit:hover i,
+.table-action-view[style*="pointer-events: none"]:hover i,
+.table-action-edit[style*="pointer-events: none"]:hover i {
+  color: var(--primary-color) !important;
+}
+
+.table-action-delete:hover i,
+.table-action-delete[style*="pointer-events: none"]:hover i {
+  color: var(--danger-color) !important;
+}
+
+/* Cursor for disabled buttons */
+.table-action-btn[style*="pointer-events: none"]:hover {
+  cursor: not-allowed !important;
+}
+
+/* Common styles for icon buttons in grid view */
+.device-card-controls .btn-icon {
+  transition: all 0.2s ease;
+  background: transparent !important;
+  border: none;
+}
+
+/* Icon colors for grid view action buttons */
+.device-card-controls .grid-action-edit i {
+  color: var(--primary-color);
+}
+
+.device-card-controls .grid-action-delete i {
+  color: var(--danger-color);
+}
+
+/* Common hover effect for ALL icon buttons in grid (view, edit, delete) - override btn-secondary:hover */
+.device-card-controls .btn.btn-icon.btn-secondary:hover,
+.device-card-controls .btn.btn-icon.btn-secondary[style*="pointer-events: none"]:hover,
+.device-card-controls .btn.btn-icon.btn-danger:hover,
+.device-card-controls .btn.btn-icon.btn-danger[style*="pointer-events: none"]:hover {
+  transform: scale(1.1) !important;
+  background: var(--bg-primary) !important;
+  border: none !important;
+}
+
+.device-card-controls .btn-icon:hover i,
+.device-card-controls .btn-icon[style*="pointer-events: none"]:hover i {
+  opacity: 1 !important;
+}
+
+/* Icon colors on hover in grid - all buttons */
+.device-card-controls .grid-action-edit:hover i,
+.device-card-controls .grid-action-edit[style*="pointer-events: none"]:hover i {
+  color: var(--primary-color) !important;
+}
+
+.device-card-controls .grid-action-delete:hover i,
+.device-card-controls .grid-action-delete[style*="pointer-events: none"]:hover i {
+  color: var(--danger-color) !important;
+}
+
+/* Cursor for disabled buttons in grid */
+.device-card-controls .btn-icon[style*="pointer-events: none"]:hover {
+  cursor: not-allowed !important;
 }
 
 /* Tree structure styles */

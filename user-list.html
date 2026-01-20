@@ -27,10 +27,6 @@
   <div class="sidebar">
     <div class="sidebar-content">
       <div class="sidebar-section">
-        <a href="dashboard.html" class="sidebar-item" data-title="Dashboard">
-          <i class="fas fa-th-large sidebar-item-icon"></i>
-          <span>Dashboard</span>
-        </a>
         <a href="index.html" class="sidebar-item" data-title="Device list">
           <i class="fas fa-box sidebar-item-icon"></i>
           <span>Device List</span>
@@ -106,7 +102,7 @@
     
     <div class="toolbar">
       <div class="toolbar-left">
-        <button class="btn btn-primary add-user-btn" onclick="openAddUserModal()">
+        <button class="btn btn-primary add-device-btn" onclick="openAddUserModal()">
           <span class="add-icon">+</span>
           <span>Add user</span>
         </button>
@@ -525,10 +521,10 @@
           </td>
           <td>
             <div style="display: flex; gap: 0.5rem;">
-              <button class="btn btn-icon btn-secondary" onclick="editUser('${user.id}')" title="Edit">
+              <button class="btn btn-icon btn-secondary user-action-btn user-action-edit" onclick="editUser('${user.id}')" title="Edit">
                 <i class="fas fa-edit"></i>
               </button>
-              <button class="btn btn-icon btn-danger" onclick="deleteUser('${user.id}')" title="Delete">
+              <button class="btn btn-icon btn-secondary user-action-btn user-action-delete" onclick="deleteUser('${user.id}')" title="Delete">
                 <i class="fas fa-trash"></i>
               </button>
             </div>

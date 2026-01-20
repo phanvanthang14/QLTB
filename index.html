@@ -28,10 +28,6 @@
   <div class="sidebar">
     <div class="sidebar-content">
       <div class="sidebar-section">
-        <a href="dashboard.html" class="sidebar-item" data-title="Dashboard">
-          <i class="fas fa-th-large sidebar-item-icon"></i>
-          <span>Dashboard</span>
-        </a>
         <a href="index.html" class="sidebar-item active" data-title="Device list">
           <i class="fas fa-box sidebar-item-icon"></i>
           <span>Device List</span>
@@ -152,14 +148,18 @@
     
     <div class="toolbar">
       <div class="toolbar-left">
-        <a href="add-device.html" class="btn btn-primary">
+        <a href="add-device.html" class="btn btn-primary add-device-btn">
           <span class="add-icon">+</span>
           <span>Add device</span>
         </a>
+        <button class="btn btn-primary add-device-btn" title="Duplicate">
+          <i class="fas fa-copy"></i>
+          <span>Duplicate</span>
+        </button>
       </div>
       <div class="view-toggle">
-        <button class="view-btn active" data-view="table" id="tableViewBtn">Table</button>
-        <button class="view-btn" data-view="grid" id="gridViewBtn">Grid</button>
+        <button class="btn view-btn active" data-view="table" id="tableViewBtn">Table</button>
+        <button class="btn view-btn" data-view="grid" id="gridViewBtn">Grid</button>
       </div>
     </div>
     
@@ -188,7 +188,7 @@
                 <span class="sort-indicator"></span>
               </div>
             </th>
-            <th style="text-align: center;">QR Code</th>
+            <th>QR Code</th>
             <th class="sortable" data-sort="serialNumber">
               <div class="th-content">
                 <span>Serial/ID</span>
@@ -207,12 +207,6 @@
                 <span class="sort-indicator"></span>
               </div>
             </th>
-            <th class="sortable" data-sort="status">
-              <div class="th-content">
-                <span>Status</span>
-                <span class="sort-indicator"></span>
-              </div>
-            </th>
             <th class="sortable" data-sort="holder">
               <div class="th-content">
                 <span>Holder/Users</span>
@@ -222,6 +216,12 @@
             <th class="sortable" data-sort="location">
               <div class="th-content">
                 <span>Location/Info</span>
+                <span class="sort-indicator"></span>
+              </div>
+            </th>
+            <th class="sortable" data-sort="status">
+              <div class="th-content">
+                <span>Status</span>
                 <span class="sort-indicator"></span>
               </div>
             </th>
@@ -255,10 +255,6 @@
         <button class="qr-action-btn" onclick="downloadQRCode()">
           <i class="fas fa-download"></i>
           <span>Tải xuống</span>
-        </button>
-        <button class="qr-action-btn" onclick="printQRCode()">
-          <i class="fas fa-print"></i>
-          <span>In</span>
         </button>
         <button class="qr-action-btn" onclick="shareQRCode()">
           <i class="fas fa-share-alt"></i>
@@ -1182,7 +1178,8 @@
                   </button>
                 ` : ''}
                 <button class="btn btn-icon btn-secondary" onclick="event.stopPropagation(); viewDevice('${device.id}')" style="padding: 0.5rem;" title="View Details"><i class="fas fa-eye"></i></button>
-                <button class="btn btn-icon btn-secondary" onclick="event.stopPropagation(); editDevice('${device.id}')" style="padding: 0.5rem;" title="Edit Device"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-icon btn-secondary grid-action-edit" style="padding: 0.5rem;" title="Edit Device"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-icon btn-secondary grid-action-delete" style="padding: 0.5rem;" title="Delete"><i class="fas fa-trash"></i></button>
               </div>
             </div>
           </div>
@@ -1358,8 +1355,15 @@
         const targetId = device.id;
         
         row.onclick = (e) => {
-          // Don't navigate if clicking on action buttons or tree toggle
-          if (!e.target.closest('.table-action-btn') && !e.target.closest('.tree-toggle-btn')) {
+          // Don't navigate if clicking on action buttons (except view button which handles its own click), tree toggle, or in the Actions column
+          const clickedElement = e.target;
+          const actionsCell = row.querySelector('td:last-child');
+          const isInActionsColumn = actionsCell && actionsCell.contains(clickedElement);
+          const isViewButton = clickedElement.closest('.table-action-view');
+          const isActionButton = clickedElement.closest('.table-action-btn') && !isViewButton;
+          const isTreeToggle = clickedElement.closest('.tree-toggle-btn');
+          
+          if (!isInActionsColumn && !isActionButton && !isTreeToggle) {
             window.location.href = `device-detail.html?id=${targetId}`;
           }
         };
@@ -1433,7 +1437,9 @@
                 <canvas class="table-qr-code-canvas" data-qr-code="${device.qrCode}" style="width: 40px; height: 40px;"></canvas>
               </div>
             ` : `
-              <span style="color: var(--text-secondary);">-</span>
+              <div style="display: flex; justify-content: center; align-items: center;">
+                <span style="color: var(--text-secondary);">-</span>
+              </div>
             `}
           </td>
           <td>
@@ -1444,9 +1450,6 @@
           </td>
           <td>
             <span">${device.category}</span>
-          </td>
-          <td>
-            <span class="status-badge status-${device.status}">${AssetFlowUtils.getStatusDisplayName(device.status)}</span>
           </td>
           <td>
             ${holderUsersHTML}
@@ -1463,12 +1466,18 @@
             `}
           </td>
           <td>
+            <span class="status-badge status-${device.status}">${AssetFlowUtils.getStatusDisplayName(device.status)}</span>
+          </td>
+          <td>
             <div style="display: flex; gap: 0.5rem;">
-              <button class="btn btn-icon btn-secondary table-action-btn" onclick="event.stopPropagation(); viewDevice('${targetId}')" title="View Details">
+              <button class="btn btn-icon btn-secondary table-action-btn table-action-view" onclick="event.stopPropagation(); viewDevice('${targetId}')" title="View Details">
                 <i class="fas fa-eye"></i>
               </button>
-              <button class="btn btn-icon btn-secondary table-action-btn" onclick="event.stopPropagation(); editDevice('${targetId}')" title="Edit Device">
+              <button class="btn btn-icon btn-secondary table-action-btn table-action-edit" title="Edit Device">
                 <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn btn-icon btn-secondary table-action-btn table-action-delete" title="Delete">
+                <i class="fas fa-trash"></i>
               </button>
             </div>
           </td>
@@ -1568,60 +1577,6 @@
       link.click();
       
       AssetFlowUtils.showToast('QR code downloaded', 'success');
-    }
-    
-    function printQRCode() {
-      if (!currentQRData) return;
-      
-      const canvas = document.getElementById('qr-canvas');
-      if (!canvas) {
-        AssetFlowUtils.showToast('QR code not ready', 'error');
-        return;
-      }
-      
-      const printWindow = window.open('', '_blank');
-      printWindow.document.write(`
-        <html>
-          <head>
-            <title>QR Code - ${currentQRData.deviceId}</title>
-            <style>
-              body {
-                margin: 0;
-                padding: 2rem;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                font-family: Arial, sans-serif;
-              }
-              h2 {
-                margin: 0 0 0.5rem 0;
-                font-size: 1.5rem;
-              }
-              p {
-                margin: 0.5rem 0 0 0;
-                color: #666;
-                font-size: 0.875rem;
-              }
-              img {
-                margin: 1rem 0;
-              }
-            </style>
-          </head>
-          <body>
-            <h2>QR Code - ${currentQRData.deviceId}</h2>
-            <p>${currentQRData.deviceName}</p>
-            <img src="${canvas.toDataURL('image/png')}" alt="QR Code">
-            <p>Quét QR code để xem thông tin tài sản</p>
-          </body>
-        </html>
-      `);
-      printWindow.document.close();
-      printWindow.focus();
-      setTimeout(() => {
-        printWindow.print();
-        printWindow.close();
-      }, 250);
     }
     
     function shareQRCode() {
