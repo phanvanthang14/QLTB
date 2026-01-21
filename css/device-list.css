@@ -441,7 +441,9 @@
   }
   
   .search-input-wrapper {
-    width: 100%;
+    /* Row 1 (left): Search */
+    flex: 1 1 calc(60% - 0.25rem);
+    min-width: 0;
     order: 1;
   }
   
@@ -450,12 +452,37 @@
     min-width: 140px;
     order: 2;
   }
+
+  /* Mobile layout for custom dropdowns used on index.html */
+  .custom-dropdown {
+    min-width: 0;
+  }
+
+  /* Row 1 (right): All categories */
+  #typeCategoryDropdown {
+    flex: 1 1 calc(40% - 0.25rem);
+    min-width: 140px;
+    order: 2;
+  }
+
+  /* Row 2: All types + All statuses */
+  #typeDropdown {
+    flex: 1 1 calc(50% - 0.25rem);
+    min-width: 140px;
+    order: 3;
+  }
+
+  #statusDropdown {
+    flex: 1 1 calc(50% - 0.25rem);
+    min-width: 140px;
+    order: 4;
+  }
   
   .btn-import,
   .btn-export {
     width: 100%;
     justify-content: center;
-    order: 3;
+    order: 5;
   }
   
   .toolbar {

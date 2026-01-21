@@ -678,7 +678,6 @@ button.btn {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background: transparent; /* Will be overridden by .btn-primary, etc. */
 }
 
 /* Reset default anchor styles */
@@ -873,6 +872,7 @@ button.add-device-btn:hover,
 @media (max-width: 1024px) {
   .header {
     width: 100%;
+    padding: 0 !important;
   }
   
   .header.collapsed {
@@ -892,6 +892,8 @@ button.add-device-btn:hover,
   .sidebar {
     transform: translateX(-100%);
     width: 280px;
+    top: 60px;
+    height: calc(100vh - 60px);
   }
   
   .sidebar.open {
