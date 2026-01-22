@@ -28,7 +28,7 @@
   <div class="sidebar">
     <div class="sidebar-content">
       <div class="sidebar-section">
-        <a href="index.html" class="sidebar-item" data-title="Device list">
+        <a href="device-list.html" class="sidebar-item" data-title="Device list">
           <i class="fas fa-box sidebar-item-icon"></i>
           <span>Device List</span>
         </a>
@@ -526,11 +526,14 @@
       
       const holderOptions = users
         .filter(u => u.role === 'Employee')
-        .map(u => `
-          <option value="${u.id}" ${device.holder && device.holder.id === u.id ? 'selected' : ''}>
-            ${u.name} (${u.department || u.team || ''})
-          </option>
-        `).join('');
+        .map(u => {
+          const isSelected = device.holder && device.holder.id === u.id;
+          return `
+            <div class="custom-dropdown-option ${isSelected ? 'selected' : ''}" data-value="${u.id}">
+              ${u.name} (${u.department || u.team || ''})
+            </div>
+          `;
+        }).join('');
       
       const holderName = device.holder ? device.holder.name : 'Unassigned';
       const holderTeam = device.holder ? (device.holder.team || device.location || 'N/A') : 'No owner';
@@ -541,6 +544,27 @@
         .join('')
         .toUpperCase()
         .slice(0, 2);
+      
+      const currentHolderText = holderName === 'Unassigned' ? 'Unassigned' : `${holderName} (${holderTeam})`;
+      
+      const statusOptions = [
+        { value: 'IN_STOCK', label: 'In Stock' },
+        { value: 'IN_USE', label: 'In Use' },
+        { value: 'MAINTENANCE', label: 'Maintenance' },
+        { value: 'BROKEN', label: 'Broken' },
+        { value: 'LOST', label: 'Lost' }
+      ];
+      
+      const statusOptionsHTML = statusOptions.map(s => {
+        const isSelected = device.status === s.value;
+        return `
+          <div class="custom-dropdown-option ${isSelected ? 'selected' : ''}" data-value="${s.value}">
+            ${s.label}
+          </div>
+        `;
+      }).join('');
+      
+      const currentStatusText = AssetFlowUtils.getStatusDisplayName(device.status);
       
       const details = document.getElementById('resultDetails');
       details.innerHTML = `
@@ -566,32 +590,45 @@
             <div class="holder-name" id="resultHolderName">${holderName}</div>
             <div class="holder-meta">${holderTeam}</div>
           </div>
-          <div class="holder-control">
-            <div class="holder-control-label">Change Holder</div>
-            <select class="holder-select" id="holderSelect">
-              <option value="">Unassigned</option>
-              ${holderOptions}
-            </select>
-          </div>
-        </div>
-        
-        <div class="status-card">
-          <div class="status-info">
-            <div class="status-label">Device Status</div>
-            <div class="status-current" id="resultStatusText">
-              <span class="status-badge status-${device.status}">
-                ${AssetFlowUtils.getStatusDisplayName(device.status)}
-              </span>
+          <div class="holder-controls-wrapper">
+            <div class="holder-control">
+              <div class="holder-control-label">Change Holder</div>
+              <div class="custom-dropdown" id="holderDropdown">
+                <button class="custom-dropdown-button" type="button">
+                  <span class="custom-dropdown-text">${currentHolderText}</span>
+                  <i class="fas fa-chevron-down custom-dropdown-icon"></i>
+                </button>
+                <div class="custom-dropdown-menu">
+                  <div class="custom-dropdown-option ${!device.holder ? 'selected' : ''}" data-value="">Unassigned</div>
+                  ${holderOptions}
+                </div>
+                <select class="hidden" id="holderSelect">
+                  <option value="" ${!device.holder ? 'selected' : ''}>Unassigned</option>
+                  ${users.filter(u => u.role === 'Employee').map(u => `
+                    <option value="${u.id}" ${device.holder && device.holder.id === u.id ? 'selected' : ''}>
+                      ${u.name} (${u.department || u.team || ''})
+                    </option>
+                  `).join('')}
+                </select>
+              </div>
             </div>
-          </div>
-          <div class="status-control">
-            <div class="status-control-label">Change Status</div>
-            <select class="status-select" id="statusSelect">
-              <option value="IN_STOCK" ${device.status === 'IN_STOCK' ? 'selected' : ''}>In Stock</option>
-              <option value="IN_USE" ${device.status === 'IN_USE' ? 'selected' : ''}>In Use</option>
-              <option value="MAINTENANCE" ${device.status === 'MAINTENANCE' ? 'selected' : ''}>Maintenance</option>
-              <option value="BROKEN" ${device.status === 'BROKEN' ? 'selected' : ''}>Broken</option>
-            </select>
+            <div class="status-control">
+              <div class="status-control-label">Change Status</div>
+              <div class="custom-dropdown" id="statusDropdown">
+                <button class="custom-dropdown-button" type="button">
+                  <span class="custom-dropdown-text">${currentStatusText}</span>
+                  <i class="fas fa-chevron-down custom-dropdown-icon"></i>
+                </button>
+                <div class="custom-dropdown-menu">
+                  ${statusOptionsHTML}
+                </div>
+                <select class="hidden" id="statusSelect">
+                  ${statusOptions.map(s => `
+                    <option value="${s.value}" ${device.status === s.value ? 'selected' : ''}>${s.label}</option>
+                  `).join('')}
+                </select>
+              </div>
+            </div>
           </div>
         </div>
       `;
@@ -602,20 +639,123 @@
         <button class="btn btn-secondary" onclick="resetScan()">Scan Another</button>
       `;
       
-      // Attach change handler for holder select
-      const holderSelect = document.getElementById('holderSelect');
-      if (holderSelect) {
-        holderSelect.addEventListener('change', () => updateHolder(device));
-      }
-      
-      // Attach change handler for status select
-      const statusSelect = document.getElementById('statusSelect');
-      if (statusSelect) {
-        statusSelect.addEventListener('change', () => updateStatus(device));
-      }
+      // Initialize custom dropdowns
+      initializeCustomDropdowns(device);
       
       document.getElementById('deviceResult').classList.add('show');
       document.getElementById('deviceResult').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    
+    function initializeCustomDropdowns(device) {
+      // Holder Dropdown
+      const holderDropdown = document.getElementById('holderDropdown');
+      if (holderDropdown) {
+        const button = holderDropdown.querySelector('.custom-dropdown-button');
+        const menu = holderDropdown.querySelector('.custom-dropdown-menu');
+        const hiddenSelect = holderDropdown.querySelector('select');
+        const options = menu.querySelectorAll('.custom-dropdown-option');
+        
+        button.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = menu.classList.contains('show');
+          closeAllDropdowns();
+          if (!isOpen) {
+            menu.classList.add('show');
+            button.classList.add('active');
+          }
+        });
+        
+        options.forEach(option => {
+          option.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const value = option.dataset.value || '';
+            const text = option.textContent.trim();
+            
+            // Update button text
+            button.querySelector('.custom-dropdown-text').textContent = text;
+            
+            // Update selected state
+            options.forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+            
+            // Update hidden select
+            if (hiddenSelect) {
+              hiddenSelect.value = value;
+              hiddenSelect.dispatchEvent(new Event('change'));
+            }
+            
+            // Close menu
+            menu.classList.remove('show');
+            button.classList.remove('active');
+            
+            // Trigger update
+            updateHolder(device);
+          });
+        });
+      }
+      
+      // Status Dropdown
+      const statusDropdown = document.getElementById('statusDropdown');
+      if (statusDropdown) {
+        const button = statusDropdown.querySelector('.custom-dropdown-button');
+        const menu = statusDropdown.querySelector('.custom-dropdown-menu');
+        const hiddenSelect = statusDropdown.querySelector('select');
+        const options = menu.querySelectorAll('.custom-dropdown-option');
+        
+        button.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = menu.classList.contains('show');
+          closeAllDropdowns();
+          if (!isOpen) {
+            menu.classList.add('show');
+            button.classList.add('active');
+          }
+        });
+        
+        options.forEach(option => {
+          option.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const value = option.dataset.value || '';
+            const text = option.textContent.trim();
+            
+            // Update button text
+            button.querySelector('.custom-dropdown-text').textContent = text;
+            
+            // Update selected state
+            options.forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+            
+            // Update hidden select
+            if (hiddenSelect) {
+              hiddenSelect.value = value;
+              hiddenSelect.dispatchEvent(new Event('change'));
+            }
+            
+            // Close menu
+            menu.classList.remove('show');
+            button.classList.remove('active');
+            
+            // Trigger update
+            updateStatus(device);
+          });
+        });
+      }
+      
+      // Close dropdowns when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.custom-dropdown')) {
+          closeAllDropdowns();
+        }
+      });
+    }
+    
+    function closeAllDropdowns() {
+      document.querySelectorAll('.custom-dropdown-menu').forEach(menu => {
+        menu.classList.remove('show');
+      });
+      document.querySelectorAll('.custom-dropdown-button').forEach(button => {
+        button.classList.remove('active');
+      });
     }
     
     function resetScan() {
@@ -695,7 +835,17 @@
       if (!userId) {
         // Unassign holder
         currentDevice.holder = null;
-        document.getElementById('resultHolderName').textContent = 'None';
+        document.getElementById('resultHolderName').textContent = 'Unassigned';
+        const holderMeta = document.querySelector('.holder-meta');
+        if (holderMeta) holderMeta.textContent = 'No owner';
+        const holderAvatar = document.querySelector('.holder-avatar');
+        if (holderAvatar) holderAvatar.textContent = '--';
+        // Update dropdown button text
+        const holderDropdown = document.getElementById('holderDropdown');
+        if (holderDropdown) {
+          const buttonText = holderDropdown.querySelector('.custom-dropdown-text');
+          if (buttonText) buttonText.textContent = 'Unassigned';
+        }
         AssetFlowUtils.showToast('Device holder cleared (mock only, not saved).', 'success');
         return;
       }
@@ -714,6 +864,28 @@
       };
       
       document.getElementById('resultHolderName').textContent = currentDevice.holder.name;
+      const holderMeta = document.querySelector('.holder-meta');
+      if (holderMeta) holderMeta.textContent = user.team || user.department || 'N/A';
+      // Update avatar
+      const holderAvatar = document.querySelector('.holder-avatar');
+      if (holderAvatar) {
+        const initials = user.name
+          .split(' ')
+          .filter(Boolean)
+          .map(part => part.charAt(0))
+          .join('')
+          .toUpperCase()
+          .slice(0, 2);
+        holderAvatar.textContent = initials;
+      }
+      // Update dropdown button text
+      const holderDropdown = document.getElementById('holderDropdown');
+      if (holderDropdown) {
+        const buttonText = holderDropdown.querySelector('.custom-dropdown-text');
+        if (buttonText) {
+          buttonText.textContent = `${user.name} (${user.team || user.department || ''})`;
+        }
+      }
       AssetFlowUtils.showToast(`Device assigned to ${user.name} (mock only, not saved).`, 'success');
     }
     
@@ -736,10 +908,11 @@
         statusBadge.className = `status-badge status-${newStatus}`;
       }
       
-      // Cập nhật text trong status card
-      const statusText = document.getElementById('resultStatusText');
-      if (statusText) {
-        statusText.textContent = displayName;
+      // Update dropdown button text
+      const statusDropdown = document.getElementById('statusDropdown');
+      if (statusDropdown) {
+        const buttonText = statusDropdown.querySelector('.custom-dropdown-text');
+        if (buttonText) buttonText.textContent = displayName;
       }
       
       AssetFlowUtils.showToast(`Device status changed to ${displayName} (mock only, not saved).`, 'success');
