@@ -1090,20 +1090,11 @@
       grid.innerHTML = '';
       
       if (filteredDevices.length === 0) {
-        grid.innerHTML = `
-          <div class="empty-state">
-            <div class="empty-state-icon">📦</div>
-            <h3>No devices found</h3>
-            <p>Try adjusting your search or filters</p>
-          </div>
-        `;
         return;
       }
       
       filteredDevices.forEach((device, index) => {
         const card = document.createElement('div');
-        card.className = 'device-card animate-fade-in';
-        card.style.animationDelay = `${index * 0.05}s`;
         
         const isSoftwareAccount = device.isSoftwareAccount || device.category === 'Software & Licenses';
         const location = device.holder ? (device.holder.team || device.location) : device.location;
