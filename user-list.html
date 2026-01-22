@@ -91,7 +91,6 @@
           <option value="">All teams</option>
         </select>
       </div>
-      <button class="clear-filters-btn" id="clearFiltersBtn">Clear all</button>
     </div>
     
     <!-- Advanced Filters (Hidden by default, can be expanded) -->
@@ -473,19 +472,11 @@
       
       document.getElementById('tableInfo').textContent = 
         totalCount === 0 
-          ? 'No users found'
+          ? ''
           : `Showing ${startIndex}-${endIndex} of ${totalCount} users`;
       
       if (paginatedUsers.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="7" class="table-empty">
-              <div class="table-empty-icon">👥</div>
-              <h3>No users found</h3>
-              <p>Try adjusting your search or filters</p>
-            </td>
-          </tr>
-        `;
+        tbody.innerHTML = '';
         renderPagination();
         return;
       }
@@ -767,7 +758,6 @@
       const roleFilter = document.getElementById('roleFilter');
       const departmentFilter = document.getElementById('departmentFilter');
       const teamFilter = document.getElementById('teamFilter');
-      const clearFiltersBtn = document.getElementById('clearFiltersBtn');
       
       // Create debounced function
       debouncedFilterUsers = AssetFlowUtils.debounce(filterUsers, 300);
@@ -781,9 +771,6 @@
       if (teamFilter) {
         teamFilter.onchange = filterUsers;
       }
-      if (clearFiltersBtn) {
-        clearFiltersBtn.onclick = clearAllFilters;
-      }
     }
     
     // Initialize search input listener
@@ -796,49 +783,6 @@
         }
         searchInput.oninput = debouncedFilterUsers;
       }
-    }
-    
-    function clearAllFilters() {
-      document.getElementById('searchInput').value = '';
-      document.getElementById('roleFilter').value = '';
-      document.getElementById('departmentFilter').value = '';
-      document.getElementById('teamFilter').value = '';
-      
-      // Reset custom dropdowns
-      const roleDropdown = document.getElementById('roleDropdown');
-      if (roleDropdown) {
-        const button = roleDropdown.querySelector('.custom-dropdown-button');
-        const menu = roleDropdown.querySelector('.custom-dropdown-menu');
-        const options = menu.querySelectorAll('.custom-dropdown-option');
-        button.querySelector('.custom-dropdown-text').textContent = 'All roles';
-        options.forEach(opt => opt.classList.remove('selected'));
-        const firstOption = menu.querySelector('.custom-dropdown-option[data-value=""]');
-        if (firstOption) firstOption.classList.add('selected');
-      }
-      
-      const departmentDropdown = document.getElementById('departmentDropdown');
-      if (departmentDropdown) {
-        const button = departmentDropdown.querySelector('.custom-dropdown-button');
-        const menu = departmentDropdown.querySelector('.custom-dropdown-menu');
-        const options = menu.querySelectorAll('.custom-dropdown-option');
-        button.querySelector('.custom-dropdown-text').textContent = 'All departments';
-        options.forEach(opt => opt.classList.remove('selected'));
-        const firstOption = menu.querySelector('.custom-dropdown-option[data-value=""]');
-        if (firstOption) firstOption.classList.add('selected');
-      }
-      
-      const teamDropdown = document.getElementById('teamDropdown');
-      if (teamDropdown) {
-        const button = teamDropdown.querySelector('.custom-dropdown-button');
-        const menu = teamDropdown.querySelector('.custom-dropdown-menu');
-        const options = menu.querySelectorAll('.custom-dropdown-option');
-        button.querySelector('.custom-dropdown-text').textContent = 'All teams';
-        options.forEach(opt => opt.classList.remove('selected'));
-        const firstOption = menu.querySelector('.custom-dropdown-option[data-value=""]');
-        if (firstOption) firstOption.classList.add('selected');
-      }
-      
-      filterUsers();
     }
     
     document.querySelectorAll('.sortable').forEach(th => {

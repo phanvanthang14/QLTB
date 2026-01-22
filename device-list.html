@@ -1273,19 +1273,11 @@
       
       document.getElementById('tableInfo').textContent = 
         totalCount === 0 
-          ? 'No devices found'
+          ? ''
           : `Showing ${startIndex}-${endIndex} of ${totalCount} devices`;
       
       if (paginatedDevices.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="9" class="table-empty">
-              <div class="table-empty-icon">📦</div>
-              <h3>No devices found</h3>
-              <p>Try adjusting your search or filters</p>
-            </td>
-          </tr>
-        `;
+        tbody.innerHTML = '';
         renderPagination();
         return;
       }

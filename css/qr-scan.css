@@ -660,3 +660,48 @@
   line-height: 1.6;
 }
 
+/* Device Not Found Modal - Enhanced Styles */
+.device-not-found-modal {
+  max-width: 400px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+}
+
+.device-not-found-modal .permission-modal-header {
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.device-not-found-modal .permission-modal-icon {
+  font-size: 4rem;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
+}
+
+.device-not-found-modal .permission-modal-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.device-not-found-modal .permission-modal-footer {
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 0;
+}
+
+.device-not-found-modal .btn {
+  min-width: 120px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+}
+

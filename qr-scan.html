@@ -161,12 +161,27 @@
     </div>
   </div>
 
+  <!-- Device Not Found Modal -->
+  <div class="permission-modal" id="deviceNotFoundModal">
+    <div class="permission-modal-content device-not-found-modal">
+      <div class="permission-modal-header">
+        <div class="permission-modal-icon">🔍</div>
+        <div class="permission-modal-title">Device not found</div>
+      </div>
+      <div class="permission-modal-footer">
+        <button class="btn btn-secondary" onclick="closeDeviceNotFoundModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="redirectToAddDevice()">Add new device</button>
+      </div>
+    </div>
+  </div>
+
   <script src="js/shared.js"></script>
   <script>
     let currentDevice = null;
     let users = [];
     let html5QrcodeScanner = null;
     let isScanning = false;
+    let pendingQRCode = null;
     
     const cameraFullscreen = document.getElementById('cameraFullscreen');
     const startCameraBtn = document.getElementById('startCameraBtn');
@@ -250,6 +265,24 @@
     
     function closePermissionModal() {
       document.getElementById('permissionModal').classList.remove('show');
+    }
+    
+    function showDeviceNotFoundModal(qrCode) {
+      pendingQRCode = qrCode;
+      document.getElementById('deviceNotFoundModal').classList.add('show');
+    }
+    
+    function closeDeviceNotFoundModal() {
+      document.getElementById('deviceNotFoundModal').classList.remove('show');
+      pendingQRCode = null;
+    }
+    
+    function redirectToAddDevice() {
+      // Redirect đến add-device.html với QR code trong localStorage
+      if (pendingQRCode) {
+        localStorage.setItem('pendingQRCode', pendingQRCode);
+      }
+      window.location.href = 'add-device.html';
     }
     
     function retryCamera() {
@@ -505,7 +538,8 @@
         }
         
         if (!foundDevice) {
-          AssetFlowUtils.showToast('Device not found with QR code: ' + qr, 'error');
+          // Hiển thị popup redirect đến add-device.html
+          showDeviceNotFoundModal(qr);
           return;
         }
         
@@ -820,10 +854,17 @@
       }
     });
     
+    document.getElementById('deviceNotFoundModal').addEventListener('click', (e) => {
+      if (e.target.id === 'deviceNotFoundModal') {
+        closeDeviceNotFoundModal();
+      }
+    });
+    
     // Close modal with Escape key
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         closePermissionModal();
+        closeDeviceNotFoundModal();
       }
     });
     
